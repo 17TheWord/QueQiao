@@ -5,7 +5,12 @@ import com.github.theword.queqiao.payload.modle.CommonSendTitle;
 import com.github.theword.queqiao.payload.modle.CommonTextComponent;
 import com.github.theword.queqiao.utils.ParseJsonToEvent;
 import com.github.theword.queqiao.utils.Tool;
-import net.minecraft.network.packet.Packet;
+// IF >= fabric-1.20
+//import net.minecraft.network.packet.Packet;
+// ELSE IF >= fabric-1.18.2
+//import net.minecraft.network.Packet;
+// END IF
+import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
 import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
@@ -14,6 +19,10 @@ import net.minecraft.text.MutableText;
 import org.java_websocket.WebSocket;
 
 import java.util.List;
+// IF fabric-1.18.2
+//import java.util.UUID;
+//import net.minecraft.network.MessageType;
+// END IF
 
 import static com.github.theword.queqiao.QueQiao.minecraftServer;
 
@@ -30,7 +39,7 @@ public class HandleApiService implements HandleApi {
     public void handleBroadcastMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
         MutableText mutableText = parseJsonToEvent.parsePerMessageToMultiText(Tool.getPrefixComponent());
         mutableText.append(parseJsonToEvent.parseMessages(messageList));
-        // IF fabric-1.20.1 || fabric-1.19.2
+        // IF >= fabric-1.19.2
 // sendPacket(new GameMessageS2CPacket(mutableText, false));
         // ELSE IF  fabric-1.18.2
 // sendPacket(new GameMessageS2CPacket(mutableText, MessageType.CHAT, UUID.randomUUID()));
@@ -59,7 +68,7 @@ public class HandleApiService implements HandleApi {
      */
     @Override
     public void handleActionBarMessage(WebSocket webSocket, List<CommonBaseComponent> messageList) {
-        // IF fabric-1.20.1 || fabric-1.19.2
+        // IF >= fabric-1.19
 // sendPacket(new GameMessageS2CPacket(parseJsonToEvent.parseMessages(messageList), true));
         // ELSE IF fabric-1.18.2
 //        sendPacket(new GameMessageS2CPacket(parseJsonToEvent.parseMessages(messageList), MessageType.GAME_INFO, UUID.randomUUID()));

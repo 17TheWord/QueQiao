@@ -32,7 +32,8 @@ dependencies {
 
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
     implementation "org.projectlombok:lombok:${project.lombok_version}"
-    implementation "com.github.theword.queqiao:queqiao-tool:${project.queqiao_tool_version}"
+
+    include modImplementation("com.github.theword.queqiao:queqiao-tool:${project.queqiao_tool_version}")
 }
 
 processResources {
