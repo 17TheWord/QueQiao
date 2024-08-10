@@ -26,13 +26,20 @@ public class ServerPlayNetworkHandlerMixin {
     @Shadow
     public ServerPlayerEntity player;
 
-    @Inject(method = "onChatMessage", at = @At("HEAD"))
+    // IF > fabric-1.16.5
+// @Inject(method = "onChatMessage", at = @At("HEAD"))
+    // ELSE
+//    @Inject(method = "onGameMessage", at = @At("HEAD"))
+    // END IF
     private void onChatMessage(ChatMessageC2SPacket packet, CallbackInfo info) {
         // IF > fabric-1.18.2
 //        String message = packet.chatMessage();
         // ELSE IF fabric-1.18.2
 //        String message = packet.getChatMessage();
+        // ELSE
+//        String message = packet.getChatMessage();
         // END IF
+
         if (message.startsWith("/")) return;
         if (!config.getSubscribe_event().isPlayer_chat()) return;
 
@@ -40,11 +47,14 @@ public class ServerPlayNetworkHandlerMixin {
         sendWebsocketMessage(event);
     }
 
-    // IF fabric-1.21 || fabric-1.20.1 || fabric-1.19.2
+    // IF > fabric-1.18.2
 //    @Inject(method = "onCommandExecution", at = @At("HEAD"))
 //    private void onCommandExecution(CommandExecutionC2SPacket packet, CallbackInfo ci) {
 //        String input = packet.command();
     // ELSE IF fabric-1.18.2
+//    @Inject(method = "executeCommand", at = @At("HEAD"))
+//    private void executeCommand(String input, CallbackInfo ci) {
+    // ELSE
 //    @Inject(method = "executeCommand", at = @At("HEAD"))
 //    private void executeCommand(String input, CallbackInfo ci) {
         // END IF

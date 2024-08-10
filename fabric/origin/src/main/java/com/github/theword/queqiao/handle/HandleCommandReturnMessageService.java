@@ -17,10 +17,10 @@ public class HandleCommandReturnMessageService implements HandleCommandReturnMes
         CommandContext<ServerCommandSource> context = (CommandContext<ServerCommandSource>) object;
         // IF >= fabric-1.20
 //        context.getSource().sendFeedback(() -> Text.literal(message), false);
-        // ELSE IF fabric-1.19.2
-// context.getSource().sendFeedback(Text.literal(message), false);
-        // ELSE IF fabric-1.18.2
-//        context.getSource().sendFeedback(Text.of(message), false);
+        // ELSE >= fabric-1.19
+//// context.getSource().sendFeedback(Text.literal(message), false);
+        // ELSE fabric-1.18.2
+        context.getSource().sendFeedback(Text.of(message), false);
         // END IF
     }
 }

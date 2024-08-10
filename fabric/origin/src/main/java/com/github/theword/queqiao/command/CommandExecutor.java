@@ -8,7 +8,7 @@ import com.github.theword.queqiao.tool.constant.BaseConstant;
 import com.mojang.brigadier.Command;
 // IF > fabric-1.18.2
 //import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-// ELSE IF fabric-1.18.2
+// ELSE
 //import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 // END IF
 import net.minecraft.server.command.CommandManager;
@@ -18,10 +18,12 @@ import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMess
 public class CommandExecutor {
 
     public CommandExecutor() {
-        // IF fabric-1.21 || fabric-1.20.1 || fabric-1.19.2
-//        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-        // ELSE IF fabric-1.18.2
-//        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
+        // IF >= fabric-1.19
+//        CommandRegistrationCallback.EVENT.register(
+//        (dispatcher, registryAccess, environment) ->
+        // ELSE
+//        CommandRegistrationCallback.EVENT.register(
+//                (dispatcher, dedicated) ->
                 // END IF
                 dispatcher.register(
                         CommandManager.literal(BaseConstant.COMMAND_HEADER)

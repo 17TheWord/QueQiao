@@ -14,9 +14,15 @@ public class FabricTool {
         fabricServerPlayer.setDisplayName(player.getDisplayName().getString());
         fabricServerPlayer.setMovementSpeed(player.getMovementSpeed());
 
-        fabricServerPlayer.setBlockX(player.getBlockX());
-        fabricServerPlayer.setBlockY(player.getBlockY());
-        fabricServerPlayer.setBlockZ(player.getBlockZ());
+        // IF > fabric-1.16.5
+//        fabricServerPlayer.setBlockX(player.getBlockX());
+//        fabricServerPlayer.setBlockY(player.getBlockY());
+//        fabricServerPlayer.setBlockZ(player.getBlockZ());
+        // ELSE
+//        fabricServerPlayer.setBlockX((int) player.getX());
+//        fabricServerPlayer.setBlockY((int) player.getY());
+//        fabricServerPlayer.setBlockX((int) player.getZ());
+        // END IF
 
         player.isCreative();
         player.isSpectator();
