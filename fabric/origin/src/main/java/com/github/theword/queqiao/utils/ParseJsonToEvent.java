@@ -53,11 +53,12 @@ public class ParseJsonToEvent {
                 .withItalic(myBaseComponent.isItalic())
                 .withUnderline(myBaseComponent.isUnderlined())
                 .withInsertion(myBaseComponent.getInsertion())
-                .withFont(identifier);
+                .withFont(identifier)
                 // IF > fabric-1.16.5
 //                .withObfuscated(myBaseComponent.isObfuscated())
 //                .withStrikethrough(myBaseComponent.isStrikethrough())
                 // END IF
+                ;
 
         if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty()) {
             // IF fabric-1.21
@@ -76,7 +77,7 @@ public class ParseJsonToEvent {
         // 配置 TextComponent 额外属性
         // IF > fabric-1.16.5
 //        if (myBaseComponent instanceof CommonTextComponent myTextComponent) {
-        // ELSE
+            // ELSE
 //        if (myBaseComponent instanceof CommonTextComponent) {
 //            CommonTextComponent myTextComponent = (CommonTextComponent) myBaseComponent;
             // END IF
