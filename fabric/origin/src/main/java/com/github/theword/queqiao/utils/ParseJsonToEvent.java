@@ -18,10 +18,10 @@ import java.util.UUID;
 public class ParseJsonToEvent {
 
     public Text parseMessages(List<? extends CommonBaseComponent> myBaseComponentList) {
-        // IF fabric-1.21 || fabric-1.20.1 || fabric-1.19.2
+        // IF > fabric-1.18.2
 //        MutableText mutableText = Text.empty();
         // ELSE IF fabric-1.18.2
-// MutableText mutableText = LiteralText.EMPTY.copy();
+//        MutableText mutableText = LiteralText.EMPTY.copy();
         // END IF
         for (CommonBaseComponent myBaseComponent : myBaseComponentList) {
             mutableText.append(parsePerMessageToMultiText(myBaseComponent));
@@ -30,19 +30,19 @@ public class ParseJsonToEvent {
     }
 
     public MutableText parsePerMessageToMultiText(CommonBaseComponent myBaseComponent) {
-        // IF fabric-1.21
-//        MutableText tempMutableText = Text.literal(myBaseComponent.getText());
-        // ELSE IF fabric-1.20.1 || fabric-1.19.2
-// LiteralTextContent tempTextContent = new LiteralTextContent(myBaseComponent.getText());
+        // IF >= fabric-1.21
+//        MutableText tempTextContent = Text.literal(myBaseComponent.getText());
+        // ELSE IF >= fabric-1.19
+//        LiteralTextContent tempTextContent = new LiteralTextContent(myBaseComponent.getText());
         // ELSE IF fabric-1.18.2
-// LiteralText tempTextContent = new LiteralText(myBaseComponent.getText());
+//        LiteralText tempTextContent = new LiteralText(myBaseComponent.getText());
         // END IF
         Identifier identifier = null;
         if (myBaseComponent.getFont() != null) {
             // IF fabric-1.21
 //            identifier = Identifier.of(Identifier.DEFAULT_NAMESPACE, myBaseComponent.getFont());
             // ELSE
-//identifier = new Identifier(Identifier.DEFAULT_NAMESPACE, myBaseComponent.getFont());
+//            identifier = new Identifier(Identifier.DEFAULT_NAMESPACE, myBaseComponent.getFont());
             // END IF
         }
 
@@ -58,13 +58,13 @@ public class ParseJsonToEvent {
             // IF fabric-1.21
 //            style.withColor(TextColor.parse(myBaseComponent.getColor()).getOrThrow());
             // ELSE
-//style.withColor(TextColor.parse(myBaseComponent.getColor()));
+//            style.withColor(TextColor.parse(myBaseComponent.getColor()));
             // END IF
         } else {
             // IF fabric-1.21
 //            style.withColor(TextColor.fromFormatting(Formatting.WHITE));
             // ELSE
-//style.withColor(TextColor.fromFormatting(Formatting.WHITE));
+//            style.withColor(TextColor.fromFormatting(Formatting.WHITE));
             // END IF
         }
 
@@ -74,7 +74,7 @@ public class ParseJsonToEvent {
                 // IF fabric-1.21
 //                ClickEvent.Action tempAction = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction());
                 // ELSE
-//ClickEvent.Action tempAction = ClickEvent.Action.byName(myTextComponent.getClickEvent().getAction());
+//                ClickEvent.Action tempAction = ClickEvent.Action.byName(myTextComponent.getClickEvent().getAction());
                 // END IF
                 ClickEvent clickEvent = new ClickEvent(tempAction, myTextComponent.getClickEvent().getValue());
                 style.withClickEvent(clickEvent);
@@ -109,12 +109,13 @@ public class ParseJsonToEvent {
                 style.withHoverEvent(hoverEvent);
             }
         }
-        // IF fabric-1.20.1 || fabric-1.19.2
-// MutableText tempMutableText = MutableText.of(tempTextContent);
-        // ELSE IF fabric-1.18.2
-// MutableText tempMutableText = new LiteralText(myBaseComponent.getText());
+        // IF < fabric-1.21 && >= fabric-1.19
+//        MutableText mutableText = MutableText.of(tempTextContent);
+//        mutableText.setStyle(style);
+//        return mutableText;
+        // ELSE
+//        tempTextContent.setStyle(style);
+//        return tempTextContent;
         // END IF
-        tempMutableText.setStyle(style);
-        return tempMutableText;
     }
 }

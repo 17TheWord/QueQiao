@@ -4,10 +4,9 @@ import com.github.theword.queqiao.tool.constant.BaseConstant;
 import com.github.theword.queqiao.tool.event.fabric.FabricServerCommandMessageEvent;
 import com.github.theword.queqiao.tool.event.fabric.FabricServerMessageEvent;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
-// IF fabric-1.21
+// IF > fabric-1.18.2
 //import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 // END IF
-import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,10 +28,10 @@ public class ServerPlayNetworkHandlerMixin {
 
     @Inject(method = "onChatMessage", at = @At("HEAD"))
     private void onChatMessage(ChatMessageC2SPacket packet, CallbackInfo info) {
-        // IF fabric-1.21 || fabric-1.20.1 || fabric-1.19.2
+        // IF > fabric-1.18.2
 //        String message = packet.chatMessage();
         // ELSE IF fabric-1.18.2
-//String message = packet.getChatMessage();
+//        String message = packet.getChatMessage();
         // END IF
         if (message.startsWith("/")) return;
         if (!config.getSubscribe_event().isPlayer_chat()) return;
@@ -45,9 +44,9 @@ public class ServerPlayNetworkHandlerMixin {
 //    @Inject(method = "onCommandExecution", at = @At("HEAD"))
 //    private void onCommandExecution(CommandExecutionC2SPacket packet, CallbackInfo ci) {
 //        String input = packet.command();
-        // ELSE IF fabric-1.18.2
-//@Inject(method = "executeCommand", at = @At("HEAD"))
-//private void executeCommand(String input, CallbackInfo ci) {
+    // ELSE IF fabric-1.18.2
+//    @Inject(method = "executeCommand", at = @At("HEAD"))
+//    private void executeCommand(String input, CallbackInfo ci) {
         // END IF
         if (!config.getSubscribe_event().isPlayer_command()) return;
 

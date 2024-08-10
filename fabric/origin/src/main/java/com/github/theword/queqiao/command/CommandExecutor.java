@@ -6,12 +6,11 @@ import com.github.theword.queqiao.command.subCommand.client.ReconnectAllCommand;
 import com.github.theword.queqiao.command.subCommand.client.ReconnectCommand;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
 import com.mojang.brigadier.Command;
-// IF fabric-1.21 || fabric-1.20.1 || fabric-1.19.2
+// IF > fabric-1.18.2
 //import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 // ELSE IF fabric-1.18.2
 //import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 // END IF
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 
 import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessage;
@@ -21,36 +20,36 @@ public class CommandExecutor {
     public CommandExecutor() {
         // IF fabric-1.21 || fabric-1.20.1 || fabric-1.19.2
 //        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-                        // ELSE IF fabric-1.18.2
-//CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
-                        // END IF
-                        dispatcher.register(
-                                CommandManager.literal(BaseConstant.COMMAND_HEADER)
-                                        .requires(source -> source.hasPermissionLevel(2))
+        // ELSE IF fabric-1.18.2
+//        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
+                // END IF
+                dispatcher.register(
+                        CommandManager.literal(BaseConstant.COMMAND_HEADER)
+                                .requires(source -> source.hasPermissionLevel(2))
+                                .executes(context -> new HelpCommand().onCommand(context))
+                                .then(CommandManager.literal("help")
                                         .executes(context -> new HelpCommand().onCommand(context))
-                                        .then(CommandManager.literal("help")
-                                                .executes(context -> new HelpCommand().onCommand(context))
-                                        )
-                                        .then(CommandManager.literal("reload")
-                                                .executes(context -> new ReloadCommand().onCommand(context))
-                                        )
-                                        .then(CommandManager.literal("client")
-                                                .then(CommandManager.literal("reconnect")
-                                                        .executes(context -> new ReconnectCommand().onCommand(context))
-                                                        .then(CommandManager.literal("all")
-                                                                .executes(context -> new ReconnectAllCommand().onCommand(context))
-                                                        )
+                                )
+                                .then(CommandManager.literal("reload")
+                                        .executes(context -> new ReloadCommand().onCommand(context))
+                                )
+                                .then(CommandManager.literal("client")
+                                        .then(CommandManager.literal("reconnect")
+                                                .executes(context -> new ReconnectCommand().onCommand(context))
+                                                .then(CommandManager.literal("all")
+                                                        .executes(context -> new ReconnectAllCommand().onCommand(context))
                                                 )
                                         )
-                                        .then(CommandManager.literal("server")
-                                                .executes(context -> {
-                                                            // TODO Websocket Server Command
-                                                            handleCommandReturnMessage.handleCommandReturnMessage(context, "Server command is not supported");
-                                                            return Command.SINGLE_SUCCESS;
-                                                        }
-                                                )
+                                )
+                                .then(CommandManager.literal("server")
+                                        .executes(context -> {
+                                                    // TODO Websocket Server Command
+                                                    handleCommandReturnMessage.handleCommandReturnMessage(context, "Server command is not supported");
+                                                    return Command.SINGLE_SUCCESS;
+                                                }
                                         )
-                        )
+                                )
+                )
         );
     }
 }

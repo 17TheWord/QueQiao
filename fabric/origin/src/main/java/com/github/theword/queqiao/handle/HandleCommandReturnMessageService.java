@@ -14,14 +14,13 @@ public class HandleCommandReturnMessageService implements HandleCommandReturnMes
     @Override
     @SuppressWarnings("unchecked")
     public void handleCommandReturnMessage(Object object, String message) {
-        // IF fabric-1.20.1
-// CommandContext<ServerCommandSource> context = (CommandContext<ServerCommandSource>) object;
-// context.getSource().sendFeedback(() -> Text.literal(message), false);
+        CommandContext<ServerCommandSource> context = (CommandContext<ServerCommandSource>) object;
+        // IF >= fabric-1.20
+//        context.getSource().sendFeedback(() -> Text.literal(message), false);
         // ELSE IF fabric-1.19.2
-// CommandContext<ServerCommandSource> context = (CommandContext<ServerCommandSource>) object;
 // context.getSource().sendFeedback(Text.literal(message), false);
         // ELSE IF fabric-1.18.2
-//
+//        context.getSource().sendFeedback(Text.of(message), false);
         // END IF
     }
 }
