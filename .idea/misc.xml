@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/fabric/fabric-1.18.2" />
+    <file type="web" url="file://$PROJECT_DIR$/fabric/fabric-1.19.2" />
     <file type="web" url="file://$PROJECT_DIR$/fabric/fabric-1.20.1" />
+    <file type="web" url="file://$PROJECT_DIR$/fabric/fabric-1.21" />
   </component>
   <component name="GantSettings">
     <option name="SDK_HOME" value="E:/Build/Gant" />
