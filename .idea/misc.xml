@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/fabric/fabric-1.16.5" />
     <file type="web" url="file://$PROJECT_DIR$/fabric/fabric-1.18.2" />
     <file type="web" url="file://$PROJECT_DIR$/fabric/fabric-1.19.2" />
     <file type="web" url="file://$PROJECT_DIR$/fabric/fabric-1.20.1" />
