@@ -13,10 +13,10 @@
     </facet>
   </component>
   <component name="McpModuleSettings">
-    <option name="mappingFile" value="I:\IDEA\MC_QQ\QueQiao\forge\forge-1.20.1\build\createMcpToSrg\output.tsrg" />
-    <option name="mcpVersion" value="official_1.20.1" />
-    <option name="minecraftVersion" value="1.20.1" />
-    <option name="platformVersion" value="47.2.20" />
+    <option name="mappingFile" value="I:\IDEA\MC_QQ\QueQiao\forge\forge-1.18.2\build\createMcpToSrg\output.tsrg" />
+    <option name="mcpVersion" value="official_1.18.2" />
+    <option name="minecraftVersion" value="1.18.2" />
+    <option name="platformVersion" value="40.2.0" />
     <option name="srgType" value="TSRG" />
   </component>
 </module>

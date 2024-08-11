@@ -48,10 +48,42 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/forge/forge-1.16.5" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/forge/forge-1.16.5" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/forge/forge-1.18.2" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/forge/forge-1.18.2" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/forge/forge-1.19.2" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/forge/forge-1.19.2" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/forge/forge-1.20.1" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/forge/forge-1.20.1" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/forge/forge-1.21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/forge/forge-1.21" />
           </set>
         </option>
       </GradleProjectSettings>

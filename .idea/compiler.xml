@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <annotationProcessing>
-      <profile name="Gradle Imported" enabled="true">
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/6d1c8bf4c28e697f472a83bd6add76ec4951734/mixin-0.8.5-processor.jar" />
-        </processorPath>
-        <module name="forge-1.20.1.main" />
-      </profile>
-    </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="fabric-1.16.5.main" target="1.8" />
       <module name="fabric-1.16.5.test" target="1.8" />
