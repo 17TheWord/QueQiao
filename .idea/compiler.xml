@@ -4,16 +4,23 @@
     <annotationProcessing>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
-        <option name="defaultObfuscationEnv" value="named:intermediary" />
-        <option name="inMapFileNamedIntermediary" value="E:\Build\Gradle\caches\fabric-loom\1.20.1\net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2\mappings.tiny" />
-        <option name="outMapFileNamedIntermediary" value="I:\IDEA\MC_QQ\QueQiao\fabric\fabric-1.20.1\build\loom-cache\mixin-map-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.main.tiny" />
-        <option name="outRefMapFile" value="I:\IDEA\MC_QQ\QueQiao\fabric\fabric-1.20.1\build\classes\java\main\QueQiao-refmap.json" />
-        <option name="quiet" value="true" />
         <processorPath useClasspath="false">
-          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/6d1c8bf4c28e697f472a83bd6add76ec4951734/mixin-0.8.5-processor.jar" />
         </processorPath>
-        <module name="fabric-1.20.1.main" />
+        <module name="forge-1.20.1.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="fabric-1.16.5.main" target="1.8" />
+      <module name="fabric-1.16.5.test" target="1.8" />
+      <module name="fabric-1.18.2.main" target="17" />
+      <module name="fabric-1.18.2.test" target="17" />
+      <module name="fabric-1.19.2.main" target="17" />
+      <module name="fabric-1.19.2.test" target="17" />
+      <module name="fabric-1.20.1.main" target="17" />
+      <module name="fabric-1.20.1.test" target="17" />
+      <module name="fabric-1.21.main" target="21" />
+      <module name="fabric-1.21.test" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>
