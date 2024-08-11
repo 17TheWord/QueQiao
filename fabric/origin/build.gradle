@@ -79,5 +79,5 @@ jar {
 
 remapJar {
     destinationDirectory  = file("../../QueQiao-jar/${mod_version}")
-    archiveBaseName = mod_name + "-" + minecraft_version + "-" + "fabric"
+    archiveBaseName = "${mod_name}-fabric+${minecraft_version}"
 }
