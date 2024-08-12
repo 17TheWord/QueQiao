@@ -1,0 +1,96 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version.txt and save to variable
+        shell: pwsh
+        run: |
+          $mod_version = Get-Content version.txt
+          Write-Host "Version: $mod_version"
+          echo "MOD_VERSION=$mod_version" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+
+      - name: Check if Release exists
+        id: check-release
+        run: |
+          # Check if the release exists
+          RELEASE_EXISTS=$(gh release view v${{ env.MOD_VERSION }} -R ${{ github.repository }} 2>&1 || true)
+          if [[ $RELEASE_EXISTS == *"Not Found"* ]]; then
+            echo "Release v${{ env.MOD_VERSION }} does not exist. Skipping deletion."
+            echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
+          else
+            echo "Release v${{ env.MOD_VERSION }} exists."
+            echo "RELEASE_EXISTS=true" >> $GITHUB_ENV
+          fi
+
+      - name: Delete Release if exists
+        if: env.RELEASE_EXISTS == 'true'
+        run: |
+          gh release delete v${{ env.MOD_VERSION }} -R ${{ github.repository }} --yes
+
+      - name: Create Release with temp note
+        run: |
+          echo -e "> ⚠️This is a temp note." > note
+          gh release create v${{ env.MOD_VERSION }} -F ./note -p -t "Release ${{ env.MOD_VERSION }}" -R ${{ github.repository }}
+
+  #      - name: Generate Release Notes
+  #        id: generate-notes
+  #        run: |
+  #          # Generate release notes using GitHub's API
+  #          RELEASE_NOTES=$(curl -s -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+  #            -H "Accept: application/vnd.github.v3+json" \
+  #            -X POST \
+  #            -d '{"tag_name": "v${{ env.MOD_VERSION }}"}' \
+  #            "https://api.github.com/repos/${{ github.repository }}/releases/generate-notes")
+  #
+  #          # Extract the release notes from the response
+  #          NOTES=$(echo "$RELEASE_NOTES" | jq -r .body)
+  #
+  #          echo "RELEASE_NOTES=${NOTES}" >> $GITHUB_ENV
+  #
+  #      - name: Update Release with Notes
+  #        run: |
+  #          gh release edit v${{ env.MOD_VERSION }} -n "${{ env.RELEASE_NOTES }}" -R ${{ github.repository }}
+  generate-release-notes:
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps:
+      - name: Generate Release Notes
+        id: generate-notes
+        run: |
+          # Generate release notes using GitHub's API
+          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -X POST \
+            -d '{"tag_name": "v${{ env.MOD_VERSION }}"}' \
+            "https://api.github.com/repos/${{ github.repository }}/releases/generate-notes")
+          
+          # Print the raw response for debugging
+          echo "API Response: $RESPONSE"
+          
+          # Extract the release notes from the response
+          NOTES=$(echo "$RESPONSE" | jq -r .body)
+          
+          # Print the extracted notes for debugging
+          echo "Release Notes: $NOTES"
+          
+          # Check if NOTES is null or empty
+          if [ "$NOTES" == "null" ] || [ -z "$NOTES" ]; then
+            echo "Failed to generate release notes. Please check the API response."
+            exit 1
+          fi
+          
+          # Set the generated notes as an environment variable
+          echo "RELEASE_NOTES=${NOTES}" >> $GITHUB_ENV
+  
