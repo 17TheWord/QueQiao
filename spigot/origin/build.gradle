@@ -1,0 +1,88 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = project.mod_group_id
+version = project.mod_version
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "spigotmc-repo"
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+    maven {
+        url = uri(maven_repository_url)
+//        credentials {
+//            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+//            password = project.findProperty("gpr.key") ?: System.getenv("PACKAGE_READ_ONLY_TOKEN")
+//        }
+    }
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:${project.spigot_version}"
+    compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
+
+    implementation "com.github.theword.queqiao:queqiao-tool:${project.queqiao_tool_version}"
+    implementation "org.slf4j:slf4j-api:${slf4j_version}"
+    implementation "org.slf4j:slf4j-simple:${slf4j_version}"
+}
+
+def targetJavaVersion = Integer.parseInt(java_version)
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    if (targetJavaVersion >= Integer.parseInt(java_version) || JavaVersion.current().isJava8Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [
+            version    : mod_version,
+            api_version: api_version,
+            description: mod_description
+    ]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+shadowJar {
+    // IF spigot-1.12.2
+//    archiveBaseName.set("${mod_name}-spigot+1.12.2")
+    // ELSE
+//    archiveBaseName.set("${mod_name}-spigot+1.13-latest")
+    // END IF
+    archiveClassifier.set("")
+    destinationDirectory.set(file("../../QueQiao-jar/${version}"))
+    dependencies {
+        include(dependency("com.github.theword.queqiao:queqiao-tool:${queqiao_tool_version}"))
+        include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
+        include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
+        include(dependency("org.slf4j:slf4j-api:${slf4j_version}"))
+        include(dependency("org.slf4j:slf4j-simple:${slf4j_version}"))
+    }
+
+    mergeServiceFiles()
+}
+
+tasks.build {
+    dependsOn shadowJar
+}
