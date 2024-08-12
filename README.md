@@ -5,6 +5,10 @@
 - 可以通过 [`nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft)
   连接至 [`nonebot2`](https://github.com/nonebot/nonebot2) 的 `Minecraft` 服务端 `plugin/mod`。
 
+## 使用帮助
+
+- 前往 [`Wiki`](https://github.com/17TheWord/QueQiao/wiki)
+
 ## 自行构建
 
 1. 克隆项目
