@@ -1,0 +1,52 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+jobs:
+
+  generate-matrix:
+    runs-on: windows-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Matrix
+        id: set-matrix
+        shell: pwsh
+        run: |
+          .\matrix.ps1 -path "fabric","forge","spigot"
+
+  build:
+    runs-on: windows-latest
+    needs: generate-matrix
+    strategy:
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Chose JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Read version.txt and save to variable
+        shell: pwsh
+        run: |
+          $mod_version = Get-Content version.txt
+          Write-Host "Version: $mod_version"
+          echo "MOD_VERSION=$mod_version" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+      - name: Init Files
+        shell: pwsh
+        run: |
+          ./init.ps1
+      - name: Build
+        run: |
+          cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
+          ./gradlew clean build
+          cd ../..
+      - uses: actions/upload-artifact@v4
+        with:
+          name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
+          path: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar

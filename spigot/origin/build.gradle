@@ -87,11 +87,7 @@ processResources {
 }
 
 shadowJar {
-    // IF spigot-1.12.2
-//    archiveBaseName.set("${mod_name}-spigot+1.12.2")
-    // ELSE
-//    archiveBaseName.set("${mod_name}-spigot+1.13-latest")
-    // END IF
+    archiveBaseName.set("${mod_name}-spigot+${api_version}")
     archiveClassifier.set("")
     destinationDirectory.set(file("../../QueQiao-jar/${version}"))
     dependencies {
