@@ -14,6 +14,7 @@ jobs:
   delete-release:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Read version.txt and save to variable
         shell: pwsh
         run: |
