@@ -13,12 +13,56 @@ jobs:
   delete-release:
     runs-on: ubuntu-latest
     steps:
-      - run: gh release delete v${{ env.MOD_VERSION }} -R ${{ github.repository }}
+      - name: Check if Release exists
+        id: check-release
+        run: |
+          # Check if the release exists
+          RELEASE_EXISTS=$(gh release view v${{ env.MOD_VERSION }} -R ${{ github.repository }} 2>&1 || true)
+          if [[ $RELEASE_EXISTS == *"Not Found"* ]]; then
+            echo "Release v${{ env.MOD_VERSION }} does not exist. Skipping deletion."
+            echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
+          else
+            echo "Release v${{ env.MOD_VERSION }} exists."
+            echo "RELEASE_EXISTS=true" >> $GITHUB_ENV
+          fi
+
+      - name: Delete Release if exists
+        if: env.RELEASE_EXISTS == 'true'
+        run: |
+          gh release delete v${{ env.MOD_VERSION }} -R ${{ github.repository }} --yes
+
   create-release:
     runs-on: ubuntu-latest
     steps:
       - run: echo -e "> ⚠️This is a release test.\r\n> ⚠️This is a test." > note
       - run: gh release create v${{ env.MOD_VERSION }} -F ./note -p -t "Release ${{ env.MOD_VERSION }}" -R ${{ github.repository }}
+
+  generate-release-notes:
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps:
+      - name: Generate Release Notes
+        id: generate-notes
+        run: |
+          # Generate release notes using GitHub's API
+          RELEASE_NOTES=$(curl -s -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -X POST \
+            -d '{"tag_name": "v${{ env.MOD_VERSION }}"}' \
+            "https://api.github.com/repos/${{ github.repository }}/releases/generate-notes")
+          
+          # Extract the release notes from the response
+          NOTES=$(echo "$RELEASE_NOTES" | jq -r .body)
+          
+          echo "RELEASE_NOTES=${NOTES}" >> $GITHUB_ENV
+
+  update-release:
+    runs-on: ubuntu-latest
+    needs: generate-release-notes
+    steps:
+      - name: Update Release with Notes
+        run: |
+          gh release edit v${{ env.MOD_VERSION }} -n "${{ env.RELEASE_NOTES }}" -R ${{ github.repository }}
 
   generate-matrix:
     runs-on: windows-latest
