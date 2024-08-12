@@ -11,6 +11,14 @@ env:
 
 jobs:
 
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: gh release delete v${{ env.MOD_VERSION }} -R ${{ github.repository }}
+      - run: echo -e "> ⚠️This is a release test.\r\n> ⚠️This is a test." > note
+      - run: gh release create v${{ env.MOD_VERSION }} -F ./note -p -t "Release ${{ env.MOD_VERSION }}" -R ${{ github.repository }}
+
   generate-matrix:
     runs-on: windows-latest
     outputs:
@@ -61,11 +69,6 @@ jobs:
         with:
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
           path: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
-
-      - name: Create Git Tag
-        run: |
-          git tag -a v${{ env.MOD_VERSION }} -m "Release version ${{ env.MOD_VERSION }}"
-          git push origin v${{ env.MOD_VERSION }}
 
       - name: Create GitHub Release
         run: |
