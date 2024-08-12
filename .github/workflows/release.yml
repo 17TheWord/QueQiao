@@ -7,7 +7,8 @@ permissions:
   contents: write
 
 env:
-  GH_TOKEN: ${{ github.token }}
+  #GH_TOKEN: ${{ github.token }}
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
   create-release:
@@ -66,10 +67,12 @@ jobs:
         id: generate-notes
         run: |
           # Generate release notes using GitHub's API
-          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
+          RESPONSE=$(curl -s -L \
             -X POST \
-            -d '{"tag_name": "v${{ env.MOD_VERSION }}"}' \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -d '{"tag_name": "v${MOD_VERSION}", "target_commitish": "main"}' \
             "https://api.github.com/repos/${{ github.repository }}/releases/generate-notes")
           
           # Print the raw response for debugging
@@ -89,4 +92,3 @@ jobs:
           
           # Set the generated notes as an environment variable
           echo "RELEASE_NOTES=${NOTES}" >> $GITHUB_ENV
-  
