@@ -25,7 +25,7 @@ jobs:
         id: check-release
         run: |
           # Check if the release exists
-          RELEASE_EXISTS=$(gh release view v${{ env.MOD_VERSION }} 2>&1 || true)
+          RELEASE_EXISTS=$(gh release view v${{ env.MOD_VERSION }} -R ${{ github.repository }} 2>&1 || true)
           if [[ $RELEASE_EXISTS == *"Not Found"* ]]; then
             echo "Release v${{ env.MOD_VERSION }} does not exist. Skipping deletion."
             echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
@@ -37,7 +37,7 @@ jobs:
       - name: Delete Release if exists
         if: env.RELEASE_EXISTS == 'true'
         run: |
-          gh release delete v${{ env.MOD_VERSION }} --yes
+          gh release delete v${{ env.MOD_VERSION }} -y --cleanup-tag 
 
       - name: Create Release with temp note
         run: gh release create v${{ env.MOD_VERSION }} --notes-from-tag
