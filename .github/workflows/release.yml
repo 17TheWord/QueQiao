@@ -47,4 +47,4 @@ jobs:
           fi
 
       - name: Create Release with temp note
-        run: gh release create v${{ env.MOD_VERSION }} --notes-from-tag
+        run: gh release create v${{ env.MOD_VERSION }} --generate-notes
