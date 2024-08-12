@@ -18,7 +18,7 @@ QueQiao-jar/
 *.zip
 *.tar.gz
 *.rar
-
+!tool/
 !gradle-wrapper.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
