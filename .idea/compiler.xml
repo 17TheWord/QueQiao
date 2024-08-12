@@ -10,8 +10,15 @@
       <module name="fabric-1.19.2.test" target="17" />
       <module name="fabric-1.20.1.main" target="17" />
       <module name="fabric-1.20.1.test" target="17" />
-      <module name="fabric-1.21.main" target="21" />
-      <module name="fabric-1.21.test" target="21" />
+      <module name="fabric-1.21.main" target="17" />
+      <module name="fabric-1.21.test" target="17" />
+      <module name="forge-1.16.5.main" target="1.8" />
+      <module name="forge-1.16.5.test" target="1.8" />
+      <module name="forge-1.18.2.main" target="17" />
+      <module name="forge-1.18.2.test" target="17" />
+      <module name="forge-1.20.1.main" target="17" />
+      <module name="forge-1.20.1.test" target="17" />
+      <module name="spigot-1-13" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

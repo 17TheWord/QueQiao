@@ -19,4 +19,8 @@
     <option name="platformVersion" value="51.0.17" />
     <option name="srgType" value="TSRG" />
   </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
 </module>

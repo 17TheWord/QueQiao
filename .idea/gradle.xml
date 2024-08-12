@@ -87,6 +87,22 @@
           </set>
         </option>
       </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/spigot/spigot-1.12.2" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/spigot/spigot-1.12.2" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/spigot/spigot-1.13" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/spigot/spigot-1.13" />
+          </set>
+        </option>
+      </GradleProjectSettings>
     </option>
   </component>
 </project>

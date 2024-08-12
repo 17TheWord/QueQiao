@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="LoadersPluginState">
+    <option name="loaders">
+      <list>
+        <option value="fabric" />
+        <option value="forge" />
+        <option value="neoforge" />
+        <option value="quilt" />
+        <option value="spigot" />
+      </list>
+    </option>
+  </component>
+</project>
