@@ -62,10 +62,6 @@ jobs:
   #      - name: Update Release with Notes
   #        run: |
   #          gh release edit v${{ env.MOD_VERSION }} -n "${{ env.RELEASE_NOTES }}" -R ${{ github.repository }}
-  generate-release-notes:
-    runs-on: ubuntu-latest
-    needs: create-release
-    steps:
       - name: Generate Release Notes
         id: generate-notes
         run: |
