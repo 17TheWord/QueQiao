@@ -3,7 +3,29 @@ plugins {
     id 'maven-publish'
 }
 
-version = project.mod_version
+def getVersionFromFile() {
+    def versionFile = file('../../version.txt')
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("Version file not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def mod_version = getVersionFromFile()
+
+def getToolVersionFromFile() {
+    def versionFile = file('../../tool_version.txt')
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("Tool Version file not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def tool_version = getToolVersionFromFile()
+
+version = mod_version
 group = project.maven_group
 
 base {
@@ -33,7 +55,7 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
     implementation "org.projectlombok:lombok:${project.lombok_version}"
 
-    include modImplementation("com.github.theword.queqiao:queqiao-tool:${project.queqiao_tool_version}")
+    include modImplementation("com.github.theword.queqiao:queqiao-tool:${tool_version}")
     include modImplementation("org.java-websocket:Java-WebSocket:${project.java_websocket_version}")
     include modImplementation("org.yaml:snakeyaml:${project.snakeyaml_version}")
     // IF <= fabric-1.16.5

@@ -3,8 +3,30 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
+def getVersionFromFile() {
+    def versionFile = file('../../version.txt')
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("Version file not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def mod_version = getVersionFromFile()
+
+def getToolVersionFromFile() {
+    def versionFile = file('../../tool_version.txt')
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("Version file not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def tool_version = getToolVersionFromFile()
+
 group = project.mod_group_id
-version = project.mod_version
+version = mod_version
 
 repositories {
     mavenCentral()
@@ -29,7 +51,7 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:${project.spigot_version}"
     compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 
-    implementation "com.github.theword.queqiao:queqiao-tool:${project.queqiao_tool_version}"
+    implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
     implementation "org.slf4j:slf4j-api:${slf4j_version}"
     implementation "org.slf4j:slf4j-simple:${slf4j_version}"
 }
@@ -73,7 +95,7 @@ shadowJar {
     archiveClassifier.set("")
     destinationDirectory.set(file("../../QueQiao-jar/${version}"))
     dependencies {
-        include(dependency("com.github.theword.queqiao:queqiao-tool:${queqiao_tool_version}"))
+        include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
         include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
         include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
         include(dependency("org.slf4j:slf4j-api:${slf4j_version}"))

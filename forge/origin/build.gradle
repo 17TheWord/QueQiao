@@ -4,6 +4,28 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
 }
 
+def getVersionFromFile() {
+    def versionFile = file('../../version.txt')
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("Version file not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def mod_version = getVersionFromFile()
+
+def getToolVersionFromFile() {
+    def versionFile = file('../../tool_version.txt')
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("Tool Version file not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def tool_version = getToolVersionFromFile()
+
 group = mod_group_id
 version = mod_version
 
@@ -73,11 +95,11 @@ tasks.named ('jarJar') {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    minecraftLibrary("com.github.theword.queqiao:queqiao-tool:${project.queqiao_tool_version}") {
+    minecraftLibrary("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
-    jarJar("com.github.theword.queqiao:queqiao-tool:${project.queqiao_tool_version}") {
-        jarJar.ranged(it, "[${project.queqiao_tool_version},)")
+    jarJar("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
+        jarJar.ranged(it, "[${tool_version},)")
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
