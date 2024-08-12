@@ -10,12 +10,13 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-
-  create-release:
+  delete-release:
     runs-on: ubuntu-latest
-
     steps:
       - run: gh release delete v${{ env.MOD_VERSION }} -R ${{ github.repository }}
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
       - run: echo -e "> ⚠️This is a release test.\r\n> ⚠️This is a test." > note
       - run: gh release create v${{ env.MOD_VERSION }} -F ./note -p -t "Release ${{ env.MOD_VERSION }}" -R ${{ github.repository }}
 
