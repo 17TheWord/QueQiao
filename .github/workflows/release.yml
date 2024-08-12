@@ -40,4 +40,4 @@ jobs:
           gh release delete v${{ env.MOD_VERSION }} --yes
 
       - name: Create Release with temp note
-        run: gh release create v${{ env.MOD_VERSION }} -F --notes-from-tag  -t "Release ${{ env.MOD_VERSION }}"
+        run: gh release create v${{ env.MOD_VERSION }} --notes-from-tag
