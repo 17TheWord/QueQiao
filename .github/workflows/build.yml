@@ -5,6 +5,10 @@ on:
 
 permissions:
   contents: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
 jobs:
 
   generate-matrix:
@@ -57,3 +61,12 @@ jobs:
         with:
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
           path: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
+
+      - name: Create Git Tag
+        run: |
+          git tag -a v${{ env.MOD_VERSION }} -m "Release version ${{ env.MOD_VERSION }}"
+          git push origin v${{ env.MOD_VERSION }}
+
+      - name: Create GitHub Release
+        run: |
+          gh release create v${{ env.MOD_VERSION }} -t "Release ${{ env.MOD_VERSION }}" -n "Release of version ${{ env.MOD_VERSION }}" -R ${{ github.repository }}
