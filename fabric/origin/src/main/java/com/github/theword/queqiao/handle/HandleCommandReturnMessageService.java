@@ -3,6 +3,7 @@ package com.github.theword.queqiao.handle;
 import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessage;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 public class HandleCommandReturnMessageService implements HandleCommandReturnMessage {
@@ -15,10 +16,11 @@ public class HandleCommandReturnMessageService implements HandleCommandReturnMes
     @SuppressWarnings("unchecked")
     public void handleCommandReturnMessage(Object object, String message) {
         CommandContext<ServerCommandSource> context = (CommandContext<ServerCommandSource>) object;
-        // IF >= fabric-1.20
-//        context.getSource().sendFeedback(() -> Text.of(message), false);
-        // ELSE
-//        context.getSource().sendFeedback(Text.of(message), false);
+        if (context.getSource().getEntity() instanceof ServerPlayerEntity)
+            // IF >= fabric-1.20
+//          context.getSource().sendFeedback(() -> Text.of(message), false);
+            // ELSE
+//            context.getSource().sendFeedback(Text.of(message), false);
         // END IF
     }
 }

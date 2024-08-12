@@ -7,6 +7,9 @@ import com.mojang.brigadier.context.CommandContext;
 // ELSE IF >= forge-1.19
 //import net.minecraft.network.chat.contents.LiteralContents;
 // END IF
+// IF >= forge-1.18
+//import net.minecraft.server.level.ServerPlayer;
+// END IF
 
 public class HandleCommandReturnMessageService implements HandleCommandReturnMessage {
 
@@ -15,11 +18,12 @@ public class HandleCommandReturnMessageService implements HandleCommandReturnMes
     public void handleCommandReturnMessage(Object object, String message) {
         // IF > forge-1.16.5
 //        CommandContext<net.minecraft.commands.CommandSourceStack> context = (CommandContext<net.minecraft.commands.CommandSourceStack>) object;
+//        if (context.getSource().getEntity() instanceof ServerPlayer)
         // END IF
         // IF >= forge-1.19
-//        context.getSource().sendSystemMessage(net.minecraft.network.chat.MutableComponent.create(new LiteralContents(message)));
-        // ELSE IF >= forge-1.18
-//        context.getSource().sendSuccess(new net.minecraft.network.chat.TextComponent(message), false);
+//            context.getSource().sendSystemMessage(net.minecraft.network.chat.MutableComponent.create(new LiteralContents(message)));
+            // ELSE IF >= forge-1.18
+//            context.getSource().sendSuccess(new net.minecraft.network.chat.TextComponent(message), false);
         // ELSE
 //        CommandContext<net.minecraft.command.CommandSource> context = (CommandContext<net.minecraft.command.CommandSource>) object;
 //        context.getSource().sendSuccess(new net.minecraft.util.text.StringTextComponent(message), false);
