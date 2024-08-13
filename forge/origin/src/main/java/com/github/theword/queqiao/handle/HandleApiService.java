@@ -30,6 +30,7 @@ import com.github.theword.queqiao.utils.ParseJsonToEvent;
 import org.java_websocket.WebSocket;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.github.theword.queqiao.QueQiao.minecraftServer;
 
@@ -105,6 +106,19 @@ public class HandleApiService implements HandleApi {
         // ELSE
 //        sendPacket(new SChatPacket(parseJsonToEvent.parseMessages(messageList), ChatType.GAME_INFO, UUID.randomUUID()));
         // END IF
+    }
+
+    /**
+     * 私聊消息
+     *
+     * @param webSocket websocket
+     * @param targetPlayerName 目标玩家名称
+     * @param targetPlayerUuid 目标玩家 UUID
+     * @param messageList 消息体
+     */
+    @Override
+    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
+        webSocket.send("Unsupported API now.");
     }
 
     // IF > forge-1.16.5

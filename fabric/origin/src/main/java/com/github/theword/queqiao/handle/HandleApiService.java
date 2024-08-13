@@ -25,6 +25,7 @@ import net.minecraft.text.MutableText;
 import org.java_websocket.WebSocket;
 
 import java.util.List;
+import java.util.UUID;
 // IF <= fabric-1.18.2
 //import java.util.UUID;
 //
@@ -86,6 +87,19 @@ public class HandleApiService implements HandleApi {
         // ELSE
 //        sendPacket(new GameMessageS2CPacket(parseJsonToEvent.parseMessages(messageList), MessageType.GAME_INFO, UUID.randomUUID()));
         // END IF
+    }
+
+    /**
+     * 私聊消息
+     *
+     * @param webSocket websocket
+     * @param targetPlayerName 目标玩家名称
+     * @param targetPlayerUuid 目标玩家 UUID
+     * @param messageList 消息体
+     */
+    @Override
+    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
+        webSocket.send("Unsupported API now.");
     }
 
     private void sendPacket(Packet<?> packet) {

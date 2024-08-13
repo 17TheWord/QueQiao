@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.java_websocket.WebSocket;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.github.theword.queqiao.QueQiao.instance;
 
@@ -41,6 +42,19 @@ public class HandleApiService implements HandleApi {
                     sendTitle.getFadeout()
             );
         }
+    }
+
+    /**
+     * 私聊消息
+     *
+     * @param webSocket websocket
+     * @param targetPlayerName 目标玩家名称
+     * @param targetPlayerUuid 目标玩家 UUID
+     * @param messageList 消息体
+     */
+    @Override
+    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
+        webSocket.send("Unsupported API now.");
     }
 
     @Override
