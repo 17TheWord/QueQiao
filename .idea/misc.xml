@@ -19,6 +19,7 @@
     <file type="web" url="file://$PROJECT_DIR$/forge/forge-1.21" />
     <file type="web" url="file://$PROJECT_DIR$/spigot/spigot-1.12.2" />
     <file type="web" url="file://$PROJECT_DIR$/spigot/spigot-1.13" />
+    <file type="web" url="file://$PROJECT_DIR$/velocity/velocity-3.3.0" />
   </component>
   <component name="GantSettings">
     <option name="SDK_HOME" value="E:/Build/Gant" />

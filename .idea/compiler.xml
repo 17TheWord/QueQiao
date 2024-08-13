@@ -4,15 +4,47 @@
     <annotationProcessing>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
-        <option name="defaultObfuscationEnv" value="named:intermediary" />
-        <option name="inMapFileNamedIntermediary" value="E:\Build\Gradle\caches\fabric-loom\1.18.2\net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2\mappings.tiny" />
-        <option name="outMapFileNamedIntermediary" value="I:\IDEA\QueQiao\fabric\fabric-1.18.2\build\loom-cache\mixin-map-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2.main.tiny" />
-        <option name="outRefMapFile" value="I:\IDEA\QueQiao\fabric\fabric-1.18.2\build\classes\java\main\QueQiao-refmap.json" />
-        <option name="quiet" value="true" />
         <processorPath useClasspath="false">
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.velocitypowered/velocity-api/3.3.0-SNAPSHOT/2eafa6ed07f1c637f763c988a8afbfbe897d3b94/velocity-api-3.3.0-SNAPSHOT.jar" />
           <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.moandjiezana.toml/toml4j/0.7.2/a03337911d0bd2c40932aca3946edb30d0e7d0c/toml4j-0.7.2.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.spongepowered/configurate-gson/4.1.2/3e5c7a0ea73e95ce6139fa72f1b6d36eb531ab81/configurate-gson-4.1.2.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/adventure-text-logger-slf4j/4.17.0/ebc3d59bdce591f1e1daed8b5b9ebd13f231c946/adventure-text-logger-slf4j-4.17.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/adventure-text-minimessage/4.17.0/696817a0f9700483bcd9dbd5cc62f33ac83b12f9/adventure-text-minimessage-4.17.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/adventure-text-serializer-ansi/4.17.0/9d16115f070690ffa730edc2d36f90267ae58013/adventure-text-serializer-ansi-4.17.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/adventure-text-serializer-legacy/4.17.0/1f5271e54a4feb6dada26873297337f4b9f2f99a/adventure-text-serializer-legacy-4.17.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/adventure-text-serializer-plain/4.17.0/ac19c1579081064f86025c5ada60dba0b61fca31/adventure-text-serializer-plain-4.17.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/adventure-text-serializer-json/4.17.0/4651a58fe70ecc8a3682ec7ddd8a516dd6d06a49/adventure-text-serializer-json-4.17.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/adventure-api/4.17.0/e90703097679e9ca0ee8a059bb933aa7d495bce3/adventure-api-4.17.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/adventure-key/4.17.0/799f1b5fedb920a7b71916e9b71123ff94d07acf/adventure-key-4.17.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/adventure-text-serializer-gson/4.17.0/1b2cf73c8794287db202b2ea288c40159deb19b4/adventure-text-serializer-gson-4.17.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10.1/b3add478d4382b78ea20b1671390a858002feb6c/gson-2.10.1.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.google.inject/guice/6.0.0/9b422c69c4fa1ea95b2615444a94fede9b02fc40/guice-6.0.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.0.1-jre/119ea2b2bc205b138974d351777b20f02b92704b/guava-31.0.1-jre.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.spongepowered/configurate-yaml/4.1.2/f726180c21ec387be5b8a2e04d916443c4046207/configurate-yaml-4.1.2.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.33/2cd0a87ff7df953f810c344bdf2fe3340b954c69/snakeyaml-1.33.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.12/48f109a2a6d8f446c794f3e3fa0d86df0cdfa312/slf4j-api-2.0.12.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.github.ben-manes.caffeine/caffeine/3.1.5/566c9b18953d9c7e916ab6823bf404899dccfefd/caffeine-3.1.5.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.42.0/638ec33f363a94d41a4f03c3e7d3dcfba64e402d/checker-qual-3.42.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.velocitypowered/velocity-brigadier/1.0.0-SNAPSHOT/719dd1bda540a9be7f70f23c68fbe1a0e2fc69ca/velocity-brigadier-1.0.0-SNAPSHOT.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.spongepowered/configurate-hocon/4.1.2/3953a4aef8ff62c72d34e405d6df333f3876592a/configurate-hocon-4.1.2.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.18.0/89b684257096f548fa39a7df9fdaa409d4d4df91/error_prone_annotations-2.18.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/jakarta.inject/jakarta.inject-api/2.0.1/4c28afe1991a941d7702fe1362c365f0a8641d1e/jakarta.inject-api-2.0.1.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/aopalliance/aopalliance/1.0/235ba8b489512805ac13a8f9ea77a1ca5ebe3e8/aopalliance-1.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.typesafe/config/1.4.1/19058a07624a87f90d129af7cd9c68bee94535a9/config-1.4.1.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/org.spongepowered/configurate-core/4.1.2/d6728b04738e73847f6a26349cf4368362feab97/configurate-core-4.1.2.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/examination-string/1.3.0/6f34afef5c54ccce4996bc321abf77518b55b4bd/examination-string-1.3.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/examination-api/1.3.0/8a2d185275307f1e2ef2adf7152b9a0d1d44c30b/examination-api-1.3.0.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/ansi/1.0.3/6f779bed836ddfa9d9719d2e08ad4524023343e6/ansi-1.0.3.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/io.leangen.geantyref/geantyref/1.3.11/bc9c03b53917314d21fe6276aceb08aa84bf80dd/geantyref-1.3.11.jar" />
+          <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/option/1.0.0/59c5ae54c47ae294322ad979eaf7cdcde7ad0646/option-1.0.0.jar" />
         </processorPath>
-        <module name="com.github.theword.queqiao.fabric-1.18.2.main" />
+        <module name="velocity-3.3.0_main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -33,6 +65,8 @@
       <module name="forge-1.20.1.main" target="17" />
       <module name="forge-1.20.1.test" target="17" />
       <module name="spigot-1-13" target="1.8" />
+      <module name="velocity-3.3.0.main" target="17" />
+      <module name="velocity-3.3.0.test" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>
