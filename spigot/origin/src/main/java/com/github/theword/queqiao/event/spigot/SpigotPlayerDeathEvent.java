@@ -1,6 +1,6 @@
 package com.github.theword.queqiao.event.spigot;
 
-import com.github.theword.queqiao.tool.event.BasePlayerDeathEvent;
+import com.github.theword.queqiao.tool.event.base.BasePlayerDeathEvent;
 
 public class SpigotPlayerDeathEvent extends BasePlayerDeathEvent {
 

@@ -1,6 +1,6 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.tool.event.spigot.*;
+import com.github.theword.queqiao.event.spigot.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -99,7 +99,7 @@ class EventProcessor implements Listener {
      */
     SpigotPlayer getSpigotPlayer(Player player) {
         SpigotPlayer spigotPlayer = new SpigotPlayer();
-        spigotPlayer.setUuid(player.getUniqueId().toString());
+        spigotPlayer.setUuid(player.getUniqueId());
         spigotPlayer.setNickname(player.getName());
         spigotPlayer.setDisplayName(player.getDisplayName());
         spigotPlayer.setPlayerListName(player.getDisplayName());

@@ -1,6 +1,6 @@
 package com.github.theword.queqiao.event.fabric;
 
-import com.github.theword.queqiao.tool.event.BasePlayer;
+import com.github.theword.queqiao.tool.event.base.BasePlayer;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class FabricServerPlayer extends BasePlayer {
+
     private String ip;
     @SerializedName("display_name")
     private String displayName;

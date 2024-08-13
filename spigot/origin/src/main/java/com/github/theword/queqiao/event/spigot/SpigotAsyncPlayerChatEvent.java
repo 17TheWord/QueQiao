@@ -1,6 +1,6 @@
 package com.github.theword.queqiao.event.spigot;
 
-import com.github.theword.queqiao.tool.event.BasePlayerChatEvent;
+import com.github.theword.queqiao.tool.event.base.BasePlayerChatEvent;
 
 public class SpigotAsyncPlayerChatEvent extends BasePlayerChatEvent {
 

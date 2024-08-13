@@ -1,8 +1,8 @@
 package com.github.theword.queqiao.mixin;
 
 import com.github.theword.queqiao.tool.constant.BaseConstant;
-import com.github.theword.queqiao.tool.event.fabric.FabricServerCommandMessageEvent;
-import com.github.theword.queqiao.tool.event.fabric.FabricServerMessageEvent;
+import com.github.theword.queqiao.event.fabric.FabricServerCommandMessageEvent;
+import com.github.theword.queqiao.event.fabric.FabricServerMessageEvent;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 // IF > fabric-1.18.2
 //import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
