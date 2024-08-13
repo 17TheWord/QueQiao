@@ -19,8 +19,26 @@ QueQiao-jar/
 *.tar.gz
 *.rar
 
-!gradle-wrapper.jar
-!ModMultiVersionTool*.jar
+forge/forge-*/
+fabric/fabric-*/
+spigot/spigot-*/
+velocity/velocity-*/
+
+!fabric/fabric-*/gradle/
+!forge/forge-*/gradle/
+!spigot/spigot-*/gradle/
+!velocity/velocity-*/gradle/
+
+!fabric/fabric-*/gradlew
+!fabric/fabric-*/gradlew.bat
+!forge/forge-*/gradlew
+!forge/forge-*/gradlew.bat
+!spigot/spigot-*/gradlew
+!spigot/spigot-*/gradlew.bat
+!velocity/velocity-*/gradlew
+!velocity/velocity-*/gradlew.bat
+
+!tool/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
