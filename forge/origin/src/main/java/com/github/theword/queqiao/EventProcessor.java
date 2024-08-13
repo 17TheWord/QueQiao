@@ -20,8 +20,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import static com.github.theword.queqiao.tool.utils.Tool.config;
-import static com.github.theword.queqiao.tool.utils.Tool.sendWebsocketMessage;
+import static com.github.theword.queqiao.tool.utils.Tool.*;
 import static com.github.theword.queqiao.utils.ForgeTool.getForgePlayer;
 
 public class EventProcessor {
@@ -82,10 +81,10 @@ public class EventProcessor {
 //        if (!(event.getParseResults().getContext().getSource().getEntity() instanceof ServerPlayerEntity)) return;
         // END IF
 
-        String command = event.getParseResults().getReader().getString();
+        String command = isRegisterOrLoginCommand(event.getParseResults().getReader().getString());
 
-        if (command.startsWith("l ") || command.startsWith("login ") || command.startsWith("register ") || command.startsWith("reg ") || command.startsWith(BaseConstant.COMMAND_HEADER + " "))
-            return;
+        if (command.isEmpty()) return;
+        
         ForgeServerPlayer player;
 
         try {
