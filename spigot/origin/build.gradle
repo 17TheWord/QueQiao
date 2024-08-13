@@ -51,6 +51,9 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:${project.spigot_version}"
     compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 
+    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+    implementation "org.projectlombok:lombok:${project.lombok_version}"
+
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
     implementation "org.slf4j:slf4j-api:${slf4j_version}"
     implementation "org.slf4j:slf4j-simple:${slf4j_version}"

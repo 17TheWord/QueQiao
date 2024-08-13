@@ -95,6 +95,9 @@ tasks.named ('jarJar') {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+    implementation "org.projectlombok:lombok:${project.lombok_version}"
+
     minecraftLibrary("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
