@@ -1,9 +1,9 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.event.VelocityDisconnectEvent;
-import com.github.theword.queqiao.event.VelocityLoginEvent;
-import com.github.theword.queqiao.event.VelocityPlayer;
-import com.github.theword.queqiao.event.VelocityPlayerChatEvent;
+import com.github.theword.queqiao.event.velocity.VelocityDisconnectEvent;
+import com.github.theword.queqiao.event.velocity.VelocityLoginEvent;
+import com.github.theword.queqiao.event.velocity.VelocityPlayer;
+import com.github.theword.queqiao.event.velocity.VelocityPlayerChatEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
