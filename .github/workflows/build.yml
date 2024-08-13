@@ -1,6 +1,9 @@
 name: Build Plugin and Mod
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -11,6 +14,7 @@ env:
 
 jobs:
   create-release:
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -98,10 +102,12 @@ jobs:
           cd ../..
 
       - uses: actions/upload-artifact@v4
+        if: ${{ github.event_name == 'push' }}
         with:
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
           path: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
       - name: Upload to Release
+        if: ${{ github.event_name == 'push' }}
         run: |
           gh release upload v${{ env.MOD_VERSION }} QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
