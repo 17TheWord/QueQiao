@@ -22,12 +22,12 @@ QueQiao-jar/
 forge/forge-*/
 fabric/fabric-*/
 spigot/spigot-*/
-velocity/velocity-*/
+#velocity/velocity-*/
 
 !fabric/fabric-*/gradle/
 !forge/forge-*/gradle/
 !spigot/spigot-*/gradle/
-!velocity/velocity-*/gradle/
+#!velocity/velocity-*/gradle/
 
 !fabric/fabric-*/gradlew
 !fabric/fabric-*/gradlew.bat
@@ -35,8 +35,8 @@ velocity/velocity-*/
 !forge/forge-*/gradlew.bat
 !spigot/spigot-*/gradlew
 !spigot/spigot-*/gradlew.bat
-!velocity/velocity-*/gradlew
-!velocity/velocity-*/gradlew.bat
+#!velocity/velocity-*/gradlew
+#!velocity/velocity-*/gradlew.bat
 
 !tool/
 
