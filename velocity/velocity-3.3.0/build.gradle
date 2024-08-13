@@ -1,0 +1,87 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.8'
+}
+
+def getVersionFromFile() {
+    def versionFile = file('../../version.txt')
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("Version file not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def mod_version = getVersionFromFile()
+
+def getToolVersionFromFile() {
+    def versionFile = file('../../tool_version.txt')
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("Version file not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def tool_version = getToolVersionFromFile()
+
+group = project.mod_group_id
+version = mod_version
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "papermc-repo"
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+    maven {
+        url = uri(maven_repository_url)
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("PACKAGE_READ_ONLY_TOKEN")
+        }
+    }
+}
+
+dependencies {
+    compileOnly "com.velocitypowered:velocity-api:${project.velocity_api_version}"
+    annotationProcessor "com.velocitypowered:velocity-api:${project.velocity_api_version}"
+
+    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
+
+    implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${project.junit_jupiter_version}"
+}
+
+def targetJavaVersion = Integer.parseInt(project.java_version)
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release.set(targetJavaVersion)
+}
+
+def templateSource = file('src/main/templates')
+def templateDest = layout.buildDirectory.dir('generated/sources/templates')
+def generateTemplates = tasks.register('generateTemplates', Copy) { task ->
+    def props = ['version': project.version]
+    task.inputs.properties props
+
+    task.from templateSource
+    task.into templateDest
+    task.expand props
+}
+
+sourceSets.main.java.srcDir(generateTemplates.map { it.outputs })
+
+project.idea.project.settings.taskTriggers.afterSync generateTemplates
+project.eclipse.synchronizationTasks(generateTemplates)
