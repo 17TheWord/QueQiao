@@ -103,6 +103,14 @@
           </set>
         </option>
       </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/velocity/velocity-3.3.0" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/velocity/velocity-3.3.0" />
+          </set>
+        </option>
+      </GradleProjectSettings>
     </option>
   </component>
 </project>

@@ -126,5 +126,10 @@
       <option name="name" value="LoomLocalRemappedMods" />
       <option name="url" value="file:/$PROJECT_DIR$/fabric/fabric-1.16.5/.gradle/loom-cache/remapped_mods/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="papermc-repo" />
+      <option name="name" value="papermc-repo" />
+      <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
+    </remote-repository>
   </component>
 </project>

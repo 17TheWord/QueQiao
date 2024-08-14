@@ -44,7 +44,7 @@
           <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/io.leangen.geantyref/geantyref/1.3.11/bc9c03b53917314d21fe6276aceb08aa84bf80dd/geantyref-1.3.11.jar" />
           <entry name="E:/Build/Gradle/caches/modules-2/files-2.1/net.kyori/option/1.0.0/59c5ae54c47ae294322ad979eaf7cdcde7ad0646/option-1.0.0.jar" />
         </processorPath>
-        <module name="velocity-3.3.0_main" />
+        <module name="velocity-3.3.0.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -65,8 +65,8 @@
       <module name="forge-1.20.1.main" target="17" />
       <module name="forge-1.20.1.test" target="17" />
       <module name="spigot-1-13" target="1.8" />
-      <module name="velocity-3.3.0.main" target="17" />
-      <module name="velocity-3.3.0.test" target="17" />
+      <module name="velocity-3.3.0_main" target="17" />
+      <module name="velocity-3.3.0_test" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -70,7 +70,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/forge-1.21.test.iml" filepath="$PROJECT_DIR$/.idea/modules/forge-1.21.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spigot-1.12.2.main.iml" filepath="$PROJECT_DIR$/.idea/modules/spigot-1.12.2.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spigot-1.13.main.iml" filepath="$PROJECT_DIR$/.idea/modules/spigot-1.13.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/velocity-3.3.0_main.iml" filepath="$PROJECT_DIR$/.idea/modules/velocity-3.3.0_main.iml" group="velocity-3.3.0" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/velocity-3.3.0.main.iml" filepath="$PROJECT_DIR$/.idea/modules/velocity-3.3.0.main.iml" />
     </modules>
   </component>
 </project>
