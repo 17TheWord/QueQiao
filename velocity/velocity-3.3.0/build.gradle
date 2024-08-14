@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.8'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 def getVersionFromFile() {
@@ -49,8 +50,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly "com.velocitypowered:velocity-api:${project.velocity_api_version}"
-    annotationProcessor "com.velocitypowered:velocity-api:${project.velocity_api_version}"
+    compileOnly "com.velocitypowered:velocity-api:${project.api_version}-SNAPSHOT"
+    annotationProcessor "com.velocitypowered:velocity-api:${project.api_version}-SNAPSHOT"
 
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
     compileOnly "org.projectlombok:lombok:${project.lombok_version}"
@@ -85,3 +86,20 @@ sourceSets.main.java.srcDir(generateTemplates.map { it.outputs })
 
 project.idea.project.settings.taskTriggers.afterSync generateTemplates
 project.eclipse.synchronizationTasks(generateTemplates)
+
+shadowJar {
+    archiveBaseName.set("${mod_name}-velocity+${api_version}")
+    archiveClassifier.set("")
+    destinationDirectory.set(file("../../QueQiao-jar/${version}"))
+    dependencies {
+        include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+        include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
+        include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
+    }
+
+    mergeServiceFiles()
+}
+
+tasks.build {
+    dependsOn shadowJar
+}
