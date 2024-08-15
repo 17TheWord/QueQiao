@@ -5,6 +5,22 @@
 - 可以通过 [`nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft)
   连接至 [`nonebot2`](https://github.com/nonebot/nonebot2) 的 `Minecraft` 服务端 `plugin/mod`。
 
+## 支持的服务端列表
+
+- [`Spigot`](https://www.spigotmc.org/)
+- [`Fabric`](https://fabricmc.net/)
+- [`Forge`](https://files.minecraftforge.net/)
+- [`Velocity`](https://papermc.io/software/velocity)（Demo）
+
+## 对接
+
+- [`@17TheWord/nonebot-plugin-mcqq`](https://github.com/17TheWord/nonebot-plugin-mcqq)：NoneBot2插件，与Minecraft互通聊天
+- [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin)：云崽插件，与Minecraft互通聊天
+
+## 兼容
+
+- [`@kitUIN/ChatImage`](https://github.com/kitUIN/ChatImage)：在Minecraft聊天栏中显示图片
+
 ## 使用帮助
 
 - 前往 [`Wiki`](https://github.com/17TheWord/QueQiao/wiki)
@@ -55,4 +71,4 @@
 
 ## 开源许可
 
-本项目使用 [MIT](./LICENSE) 作为开源许可证。
+本项目使用 [MIT](https://github.com/17TheWord/QueQiao/blob/main/LICENSE) 作为开源许可证。
