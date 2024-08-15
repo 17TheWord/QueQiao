@@ -14,6 +14,7 @@
 
 ## 对接
 
+- [`@17TheWord/nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft)：NoneBot2适配器，与本模组连接
 - [`@17TheWord/nonebot-plugin-mcqq`](https://github.com/17TheWord/nonebot-plugin-mcqq)：NoneBot2插件，与Minecraft互通聊天
 - [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin)：云崽插件，与Minecraft互通聊天
 
