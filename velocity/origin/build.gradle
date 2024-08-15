@@ -57,6 +57,7 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${project.lombok_version}"
 
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
+    implementation "commons-io:commons-io:${project.commons_io_version}"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${project.junit_jupiter_version}"
 }
@@ -97,6 +98,7 @@ shadowJar {
     destinationDirectory.set(file("../../QueQiao-jar/${version}"))
     dependencies {
         include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+        include(dependency("commons-io:commons-io:${commons_io_version}"))
         include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
         include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
     }
