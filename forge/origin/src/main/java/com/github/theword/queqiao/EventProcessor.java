@@ -1,7 +1,5 @@
 package com.github.theword.queqiao;
 
-
-import com.github.theword.queqiao.tool.constant.BaseConstant;
 import com.github.theword.queqiao.event.forge.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 // IF > forge-1.16.5
