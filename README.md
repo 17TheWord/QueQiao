@@ -2,8 +2,7 @@
 
 ## 介绍
 
-- 可以通过 [`nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft)
-  连接至 [`nonebot2`](https://github.com/nonebot/nonebot2) 的 `Minecraft` 服务端 `plugin/mod`。
+- 将 `Minecraft` 服务端玩家事件以 `Json` 格式通过 `Websocket` 分发的服务端 `plugin/mod`。
 
 ## 支持的服务端列表
 
