@@ -70,25 +70,25 @@ public class ParseJsonToEvent {
      * @return HoverEvent
      */
     private HoverEvent getHoverEvent(CommonTextComponent myTextComponent) {
-        HoverEvent.Action action = HoverEvent.Action.valueOf(myTextComponent.getHoverEvent().getAction());
+        HoverEvent.Action action = HoverEvent.Action.valueOf(myTextComponent.getHoverEvent().getAction().toUpperCase());
         // IF spigot-1.12.2
 //        TextComponent textComponent = parseMessageToTextComponent(myTextComponent.getHoverEvent().getBaseComponentList());
 //        return new HoverEvent(action, new TextComponent[]{textComponent});
         // ELSE
 //        HoverEvent hoverEvent = null;
-//        switch (myTextComponent.getHoverEvent().getAction()) {
-//            case "show_text":
+//        switch (action) {
+//            case SHOW_TEXT:
 //                TextComponent textComponent = parseMessageToTextComponent(myTextComponent.getHoverEvent().getBaseComponentList());
 //                BaseComponent[] baseComponent = new BaseComponent[]{textComponent};
 //                hoverEvent = new HoverEvent(action, new Text(baseComponent));
 //                break;
-//            case "show_item":
+//            case SHOW_ITEM:
 //                CommonHoverItem myHoverItem = myTextComponent.getHoverEvent().getItem();
 //                ItemTag itemTag = ItemTag.ofNbt(myHoverItem.getTag());
 //                Item item = new Item(String.valueOf(myHoverItem.getId()), myHoverItem.getCount(), itemTag);
 //                hoverEvent = new HoverEvent(action, item);
 //                break;
-//            case "show_entity":
+//            case SHOW_ENTITY:
 //                CommonHoverEntity myHoverEntity = myTextComponent.getHoverEvent().getEntity();
 //                TextComponent nameComponent = parseMessageToTextComponent(myHoverEntity.getName());
 //                Entity entity = new Entity(myHoverEntity.getType(), myHoverEntity.getId(), nameComponent);
@@ -108,7 +108,7 @@ public class ParseJsonToEvent {
      * @return ClickEvent
      */
     private ClickEvent getClickEvent(CommonTextComponent myTextComponent) {
-        ClickEvent.Action action = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction());
+        ClickEvent.Action action = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction().toUpperCase());
         return new ClickEvent(action, myTextComponent.getClickEvent().getValue());
     }
 
