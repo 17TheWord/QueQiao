@@ -6,27 +6,40 @@
   <img src="https://raw.githubusercontent.com/17TheWord/nonebot-adapter-minecraft/main/assets/logo.png" width="200" height="200" alt="ChatImage">
 </p>
 
+<div align="center">
+
+# QueQiao
+
+✨ A bridge for connecting to the `Minecraft` server ✨
+
+</div>
+
 <p align="center">
-  <a>
+  <a href="https://github.com/17TheWord/QueQiao/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license">
   </a>
-  <a>
-    <img src="https://img.shields.io/badge/SpigotMC-1.20-blue?logo=SpigotMC" alt="neoforge"/>
+  <a href="https://www.spigotmc.org">
+    <img src="https://img.shields.io/badge/SpigotMC-1.12.2--latest-blue?logo=SpigotMC" alt="spigotmc"/>
   </a>
-  <a >
+  <a href="https://files.minecraftforge.net">
     <img src="https://img.shields.io/badge/Forge-1.16.5--1.21-blue?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAA7VBMVEUdLUEcLEAbKz8aKj4sO04zQlQzQVM0QlQ2RFY2RVYlNEgqOUx0fouPl6GNlZ+Fjpl/iJO7wMbe4ePU19vLz9TEyM6dpK2Gjpk9S1weLkJZZXPS1dn////4+fni5Ofv8fL+/v7o6euDjJc1Q1UfL0MeLUEaKj+WnafX2t7j5ef19fb39/hyfIgbLEAbK0AvPlA3RVd3gY35+frX2t0rOk0nNkp8hZH4+Pnp6+1kb30oN0q3vMPg4uX3+Pjl5+nY296zub8+TF3JzdKTm6ReaXhTX25daXeLk57Hy9A8SlsgMEMrOkwkM0cjMkYgL0P3AqTmAAAAAWJLR0QcnARBBwAAAAd0SU1FB+AJFRIdHqqGUp8AAACMSURBVBjTY2AgFzBCAYjNxMzMzMjCysbKys7BycXAwM3Dy8cvICgkLCIqKCYuwcQgKSUtIysnLyOjoKikrKIK1KLGqa6hqSUjo62jqwcxUI9B38DQSMbYhAluB5OpmbmMhaUVI8xOFmsbOVs7ewcTqAiTo5Ozi6ubu4cnTJOXtw/QMb7cfgiHIpEEAQAlIg2L5ZmkuQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxNi0wOS0yMVQxODoyOTozMCswMjowMOts9rwAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTYtMDktMjFUMTg6Mjk6MzArMDI6MDCaMU4AAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAFd6VFh0UmF3IHByb2ZpbGUgdHlwZSBpcHRjAAB4nOPyDAhxVigoyk/LzEnlUgADIwsuYwsTIxNLkxQDEyBEgDTDZAMjs1Qgy9jUyMTMxBzEB8uASKBKLgDqFxF08kI1lQAAAABJRU5ErkJggg==" alt="forge">
   </a>
-  <a>
+  <a href="https://fabricmc.net">
     <img src="https://img.shields.io/badge/Fabric-1.16.5--1.21-blue?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAASCAYAAACEnoQPAAAAAXNSR0IArs4c6QAAAgVJREFUOE9jZCAALEy0/p84c40RmzKsgjCFII2L53QxxKaUMTD//St99PzNZ8iGENQ8d1obw4SpCxjuP3oc/fXT18vHz964DDOAoOa+jmoGURF+hrySFoZ3Hz4vOnnmajxBzchObqkrYpCRFmM4fuo8w8y5KxlgYYBhs7WhutRfZuanMBtBtoD8XF6YxiAhIcogIswP5oMMQNFsaaJZyi/A75WWGOagrqrE8P37TwZ+fm6Gy1dvMWzfdZhBTkaSwcnekqG4qp3hPyPDThTN5ibaC4UEeOMm9dSAvfX6zUewf0EA5Gd5ORmGkAAPhpqmPrAYXDPIj+nJ4Qw2lsYoUQoyAAS+f//BcP7iVYY1G3YweLg5M+zYtReiGRY4IPa/f/8Y3r77DLcRJPbw0QuwARcuXQNrBgGwn0Eay4qyGHS1FLDaCHI2SHNn/yyGT5+/okYVSHNBTgqDuoosAzsHGwMrCzPYkI8fvzJ8/wEJsKPHzzOs27jzwJcvX7YdP3O9Gx7PIM1JcSEMIiJiDDLSIgyC/DxwF8CcCwognMkTZgAvLx8DDzc3g4aaLNgAkGaQRoIZA2SAnbUpg5qqIoOQkAgDHw8HXo0oUWVppO0uJilSwsPN6eLiZMOwb/8xhtt3H+C0FUUziANKJNxc7HERIT4M8xatgUcJSjQgcXCmbVhc4tIIEgcAl83Xiz8XILwAAAAASUVORK5CYII=" alt="fabric">
   </a>
-  <a >
+  <a href="https://papermc.io/software/velocity">
+    <img src="https://img.shields.io/badge/Velocity-3.3.0-blue?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAACA0lEQVRoBe2avUoEMRSF8yaCnWAvaGFjYWkjFhY2NlYWgoVgY2VnY+cjCFY+wGKzyiqIIGKt7LpvIDaRb+Asl1HZTIbZmUgCl5vJJpPzc2dYyLjPL+9t3A6e/OHxqV9d3/Tzi8t+bmGp1QADWMAENouVvrMDTGob8LT9wWgxTwhs7+53HrzIgVUkCgIpKC/wynLCUVcaTC2D3aWovoQGu+MJ10BqGeyuC6/KWOHA7mIXd2VdJtC2E9mB7EDNP4u5hHIJ5RKqqQAltLK24c/OL4qgP8uyin6ID45OfP/uwau9vQ/95dW1JydBQMCVIUTQejf9gghkQiOWdJQDKG0bTgAAsGrWHY1RZls7ez+iTtlVJsBmtgEaUICzbTQa++eXVztUEIS8gjUQZ/3MHEBZQptr47IrIB9+jAsC/KYSsxngCDJTBwQeAvRxgD4gbAkN7h8n6ts1zP0rICdBQnPtEhJKQKGomtTXtc0QVRnZzD1CgWteZQIsZKNyAxQKkq365Xlcs96WksDE5CgClAtl8VuDAL+FBg7EANeaKAIsFgkAoyhR520iQFVzNIGqGzU1PxNoStnQ+2YHQpVqal52oCllQ++bHQhVqql52YGmlA29b/oHHMkfMSV/yJf8MSsn3im6AGaw/49PDfTdQQpOSHlhnjigAZ4JJvF26sIZ8rTPbb4BrNNEDGiTm7EAAAAASUVORK5CYII=" alt="velocity">
+  </a>
+  <a href="https://github.com/17TheWord/QueQiao/releases">
     <img  src="https://img.shields.io/github/v/release/17TheWord/QueQiao" alt="release">
   </a>
 </p>
 
-# QueQiao
-
-- Mean: A bridge for connecting to the `Minecraft` server.
+<p align="center">
+  <a href="https://github.com/17TheWord/QueQiao/wiki">📖Docs</a>
+  ·
+  <a href="https://github.com/17TheWord/QueQiao/issues">🐛Submit Suggestion/Bug</a>
+</p>
 
 ## Introduction
 
