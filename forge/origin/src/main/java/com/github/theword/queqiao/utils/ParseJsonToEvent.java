@@ -123,16 +123,13 @@ public class ParseJsonToEvent {
         // IF >= forge-1.21
 //        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
 //            style = style.withColor(TextColor.parseColor(myBaseComponent.getColor()).getOrThrow());
-//        else style = style.withColor(TextColor.parseColor("white").getOrThrow());
 //
         // ELSE IF > forge-1.16.5
 //        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
 //            style = style.withColor(TextColor.parseColor(myBaseComponent.getColor()));
-//        else style = style.withColor(TextColor.parseColor("white"));
         // ELSE
 //        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
 //            style.withColor(Color.fromLegacyFormat(TextFormatting.valueOf(myBaseComponent.getColor().toUpperCase())));
-//        else style.withColor(Color.fromLegacyFormat(TextFormatting.WHITE));
         // END IF
         return style;
     }
