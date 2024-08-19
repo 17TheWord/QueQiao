@@ -25,7 +25,7 @@ public class QueQiao {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        initTool(true, new HandleApiService(), new HandleCommandReturnMessageService());
+        initTool(false, new HandleApiService(), new HandleCommandReturnMessageService());
         websocketManager.startWebsocket(null);
         minecraftServer.getEventManager().register(this, new EventProcessor());
     }
