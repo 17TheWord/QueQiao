@@ -17,6 +17,7 @@ import net.md_5.bungee.api.chat.*;
 
 import java.util.List;
 
+import static com.github.theword.queqiao.tool.utils.Tool.debugLog;
 import static com.github.theword.queqiao.tool.utils.Tool.logger;
 
 
@@ -39,12 +40,12 @@ public class ParseJsonToEvent {
             // ELSE
 //            msgComponent.setColor(ChatColor.of(myBaseComponent.getColor().toUpperCase()));
             // END IF
-        else msgComponent.setColor(ChatColor.WHITE);
-        msgComponent.setBold(myBaseComponent.isBold());
-        msgComponent.setItalic(myBaseComponent.isItalic());
-        msgComponent.setUnderlined(myBaseComponent.isUnderlined());
-        msgComponent.setStrikethrough(myBaseComponent.isStrikethrough());
-        msgComponent.setObfuscated(myBaseComponent.isObfuscated());
+
+        if (myBaseComponent.isBold()) msgComponent.setBold(true);
+        if (myBaseComponent.isItalic()) msgComponent.setItalic(true);
+        if (myBaseComponent.isUnderlined()) msgComponent.setUnderlined(true);
+        if (myBaseComponent.isStrikethrough()) msgComponent.setStrikethrough(true);
+        if (myBaseComponent.isObfuscated()) msgComponent.setObfuscated(true);
 
         // 配置 TextComponent 额外属性
         if (myBaseComponent instanceof CommonTextComponent) {
@@ -127,36 +128,7 @@ public class ParseJsonToEvent {
             component.addExtra(msgComponent);
             msgLogText.append(myBaseComponent.getText());
         }
-        logger.info(msgLogText.toString());
+        debugLog(msgLogText.toString());
         return component;
-    }
-
-    /**
-     * 将 CommonBaseComponent 转换为带有游戏文本样式的 String
-     *
-     * @param myBaseComponentList 消息列表
-     * @return String
-     */
-    public String parseCommonBaseCommentToStringWithStyle(List<? extends CommonBaseComponent> myBaseComponentList) {
-        StringBuilder message = new StringBuilder();
-
-        for (CommonBaseComponent myBaseComponent : myBaseComponentList) {
-            String tempMessageSeg = "";
-            if (myBaseComponent.isBold()) tempMessageSeg += ChatColor.BOLD;
-            if (myBaseComponent.isItalic()) tempMessageSeg += ChatColor.ITALIC;
-            if (myBaseComponent.isUnderlined()) tempMessageSeg += ChatColor.UNDERLINE;
-            if (myBaseComponent.isStrikethrough()) tempMessageSeg += ChatColor.STRIKETHROUGH;
-            if (myBaseComponent.isObfuscated()) tempMessageSeg += ChatColor.MAGIC;
-            if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
-                // IF spigot-1.12.2
-//                tempMessageSeg += ChatColor.valueOf(myBaseComponent.getColor().toUpperCase());
-                // ELSE
-//                tempMessageSeg += ChatColor.of(myBaseComponent.getColor().toUpperCase());
-                // END IF
-            else tempMessageSeg += ChatColor.WHITE;
-            tempMessageSeg += myBaseComponent.getText();
-            message.append(tempMessageSeg);
-        }
-        return message.toString();
     }
 }
