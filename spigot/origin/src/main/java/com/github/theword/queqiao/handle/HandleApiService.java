@@ -31,12 +31,12 @@ public class HandleApiService implements HandleApi {
 
     @Override
     public void handleSendTitleMessage(WebSocket webSocket, CommonSendTitle sendTitle) {
-        String title = parseJsonToEvent.parseCommonBaseCommentToStringWithStyle(sendTitle.getTitle());
-        String subtitle = parseJsonToEvent.parseCommonBaseCommentToStringWithStyle(sendTitle.getSubtitle());
+        TextComponent title = parseJsonToEvent.parseMessageToTextComponent(sendTitle.getTitle());
+        TextComponent subtitle = parseJsonToEvent.parseMessageToTextComponent(sendTitle.getSubtitle());
         for (Player player : instance.getServer().getOnlinePlayers()) {
             player.sendTitle(
-                    title,
-                    subtitle,
+                    title.toLegacyText(),
+                    subtitle.toLegacyText(),
                     sendTitle.getFadein(),
                     sendTitle.getStay(),
                     sendTitle.getFadeout()
