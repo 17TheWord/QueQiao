@@ -18,6 +18,7 @@ import net.md_5.bungee.api.chat.*;
 import java.util.List;
 
 import static com.github.theword.queqiao.tool.utils.Tool.debugLog;
+import static com.github.theword.queqiao.tool.utils.Tool.logger;
 
 
 public class ParseJsonToEvent {
@@ -34,17 +35,17 @@ public class ParseJsonToEvent {
         // 配置 BaseComponent 基本属性
         msgComponent.setText(myBaseComponent.getText());
         if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
-            // IF spigot-1.12.2
+        // IF spigot-1.12.2
 //            msgComponent.setColor(ChatColor.valueOf(myBaseComponent.getColor()));
-            // ELSE
+        // ELSE
 //            msgComponent.setColor(ChatColor.of(myBaseComponent.getColor().toUpperCase()));
-            // END IF
-
-        if (myBaseComponent.isBold()) msgComponent.setBold(true);
-        if (myBaseComponent.isItalic()) msgComponent.setItalic(true);
-        if (myBaseComponent.isUnderlined()) msgComponent.setUnderlined(true);
-        if (myBaseComponent.isStrikethrough()) msgComponent.setStrikethrough(true);
-        if (myBaseComponent.isObfuscated()) msgComponent.setObfuscated(true);
+        // END IF
+        else msgComponent.setColor(ChatColor.WHITE);
+        msgComponent.setBold(myBaseComponent.isBold());
+        msgComponent.setItalic(myBaseComponent.isItalic());
+        msgComponent.setUnderlined(myBaseComponent.isUnderlined());
+        msgComponent.setStrikethrough(myBaseComponent.isStrikethrough());
+        msgComponent.setObfuscated(myBaseComponent.isObfuscated());
 
         // 配置 TextComponent 额外属性
         if (myBaseComponent instanceof CommonTextComponent) {
@@ -83,15 +84,15 @@ public class ParseJsonToEvent {
 //                hoverEvent = new HoverEvent(action, new Text(baseComponent));
 //                break;
 //            case SHOW_ITEM:
-//                CommonHoverItem commonHoverItem = myTextComponent.getHoverEvent().getItem();
-//                ItemTag itemTag = ItemTag.ofNbt(commonHoverItem.getTag());
-//                Item item = new Item(commonHoverItem.getId(), commonHoverItem.getCount(), itemTag);
+//                CommonHoverItem myHoverItem = myTextComponent.getHoverEvent().getItem();
+//                ItemTag itemTag = ItemTag.ofNbt(myHoverItem.getTag());
+//                Item item = new Item(String.valueOf(myHoverItem.getId()), myHoverItem.getCount(), itemTag);
 //                hoverEvent = new HoverEvent(action, item);
 //                break;
 //            case SHOW_ENTITY:
-//                CommonHoverEntity commonHoverEntity = myTextComponent.getHoverEvent().getEntity();
-//                TextComponent nameComponent = parseMessageToTextComponent(commonHoverEntity.getName());
-//                Entity entity = new Entity(commonHoverEntity.getType(), commonHoverEntity.getId(), nameComponent);
+//                CommonHoverEntity myHoverEntity = myTextComponent.getHoverEvent().getEntity();
+//                TextComponent nameComponent = parseMessageToTextComponent(myHoverEntity.getName());
+//                Entity entity = new Entity(myHoverEntity.getType(), myHoverEntity.getId(), nameComponent);
 //                hoverEvent = new HoverEvent(action, entity);
 //                break;
 //            default:

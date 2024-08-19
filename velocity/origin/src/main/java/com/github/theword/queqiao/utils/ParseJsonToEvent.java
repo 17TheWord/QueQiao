@@ -4,6 +4,7 @@ import com.github.theword.queqiao.tool.payload.modle.CommonBaseComponent;
 import com.github.theword.queqiao.tool.payload.modle.CommonTextComponent;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -26,8 +27,9 @@ public class ParseJsonToEvent {
     public Component parsePerMessageToMultiText(CommonBaseComponent commonBaseComponent) {
         Component component = Component.text(commonBaseComponent.getText());
 
-        if (commonBaseComponent.getColor() != null && !commonBaseComponent.getColor().isEmpty())
+        if (commonBaseComponent.getColor() != null)
             component = component.color(getNamedTextColor(commonBaseComponent.getColor()));
+        else component = component.color(NamedTextColor.WHITE);
 
         component = getTextStyle(commonBaseComponent, component);
 
@@ -38,7 +40,6 @@ public class ParseJsonToEvent {
             if (commonTextComponent.getHoverEvent() != null)
                 component = component.hoverEvent(getHoverEvent(commonTextComponent));
         }
-
 
         return component;
     }

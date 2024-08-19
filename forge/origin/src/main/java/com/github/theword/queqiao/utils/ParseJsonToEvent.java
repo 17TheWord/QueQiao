@@ -5,8 +5,10 @@ import com.github.theword.queqiao.tool.payload.modle.CommonHoverEntity;
 import com.github.theword.queqiao.tool.payload.modle.CommonHoverItem;
 import com.github.theword.queqiao.tool.payload.modle.CommonTextComponent;
 // IF >= forge-1.21
+//import net.minecraft.ChatFormatting;
 //import net.minecraft.network.chat.contents.PlainTextContents.LiteralContents;
 // ELSE IF >= forge-1.19
+//import net.minecraft.ChatFormatting;
 //import net.minecraft.network.chat.contents.LiteralContents;
 // ELSE >= forge-1.18
 // END IF
@@ -31,6 +33,7 @@ import com.github.theword.queqiao.tool.payload.modle.CommonTextComponent;
 // END IF
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class ParseJsonToEvent {
 
@@ -61,17 +64,17 @@ public class ParseJsonToEvent {
 
     // IF > forge-1.16.5
 //    public MutableComponent parsePerMessageToMultiText(CommonBaseComponent myBaseComponent) {
-        // ELSE
+// ELSE
 //    public StringTextComponent parsePerMessageToMultiText(CommonBaseComponent myBaseComponent) {
-        // END IF
+// END IF
 
-        // IF >= forge-1.19
+// IF >= forge-1.19
 //        LiteralContents tempMutableComponent = new LiteralContents(myBaseComponent.getText());
 // ELSE IF >= forge-1.18 && < forge-1.19
 //        TextComponent tempMutableComponent = new TextComponent(myBaseComponent.getText());
-        // ELSE
+// ELSE
 //        StringTextComponent tempMutableComponent = new StringTextComponent(myBaseComponent.getText());
-        // END IF
+// END IF
 
         Style style = getStyleFromBaseComponent(myBaseComponent);
 
@@ -122,13 +125,15 @@ public class ParseJsonToEvent {
         // IF >= forge-1.21
 //        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
 //            style = style.withColor(TextColor.parseColor(myBaseComponent.getColor()).getOrThrow());
-//
+//        else style = style.withColor(TextColor.fromLegacyFormat(ChatFormatting.WHITE));
         // ELSE IF > forge-1.16.5
 //        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
 //            style = style.withColor(TextColor.parseColor(myBaseComponent.getColor()));
+//        else style = style.withColor(TextColor.fromLegacyFormat(ChatFormatting.WHITE));
         // ELSE
 //        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
 //            style.withColor(Color.fromLegacyFormat(TextFormatting.valueOf(myBaseComponent.getColor().toUpperCase())));
+//        else style.withColor(Color.fromLegacyFormat(TextFormatting.WHITE));
         // END IF
         return style;
     }
@@ -147,7 +152,11 @@ public class ParseJsonToEvent {
 
     public HoverEvent getHoverEventFromBaseComponent(CommonTextComponent myTextComponent) {
         HoverEvent hoverEvent = null;
-        HoverEvent.Action<?> action = HoverEvent.Action.getByName(myTextComponent.getHoverEvent().getAction().toLowerCase());
+        // IF >= forge-1.21
+//        HoverEvent.Action<?> action = HoverEvent.Action.SHOW_TEXT;
+        // ELSE
+//        HoverEvent.Action<?> action = HoverEvent.Action.getByName(myTextComponent.getHoverEvent().getAction().toLowerCase());
+        // END IF
         assert action != null;
         if (action.equals(HoverEvent.Action.SHOW_TEXT)) {
             if (myTextComponent.getHoverEvent().getBaseComponentList() != null && !myTextComponent.getHoverEvent().getBaseComponentList().isEmpty()) {
@@ -173,7 +182,7 @@ public class ParseJsonToEvent {
             Optional<EntityType<?>> entityType = EntityType.byString(commonHoverEntity.getType());
             if (entityType.isPresent()) {
                 // IF > forge-1.16.5
-//                HoverEvent.EntityTooltipInfo entityTooltipInfo = new HoverEvent.EntityTooltipInfo(entityType.get(), commonHoverEntity.getUuid(), parseMessages(commonHoverEntity.getName()));
+//                HoverEvent.EntityTooltipInfo entityTooltipInfo = new HoverEvent.EntityTooltipInfo(entityType.get(), UUID.randomUUID(), parseMessages(commonHoverEntity.getName()));
                 // ELSE
 //                        HoverEvent.EntityHover entityTooltipInfo = new HoverEvent.EntityHover(entityType.get(), UUID.randomUUID(), parseMessages(commonHoverEntity.getName()));
                 // END IF

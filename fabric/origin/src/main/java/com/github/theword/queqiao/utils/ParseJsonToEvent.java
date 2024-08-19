@@ -8,10 +8,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class ParseJsonToEvent {
 
@@ -64,7 +66,7 @@ public class ParseJsonToEvent {
             // ELSE
 //            style.withColor(TextColor.parse(myBaseComponent.getColor()));
             // END IF
-        }
+        } else style.withColor(TextColor.fromFormatting(Formatting.WHITE));
 
         // 配置 TextComponent 额外属性
         // IF > fabric-1.16.5
@@ -75,9 +77,9 @@ public class ParseJsonToEvent {
             // END IF
             if (myTextComponent.getClickEvent() != null) {
                 // IF fabric-1.21
-//                ClickEvent.Action tempAction = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction().toLowerCase());
+//                ClickEvent.Action tempAction = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction());
                 // ELSE
-//                ClickEvent.Action tempAction = ClickEvent.Action.byName(myTextComponent.getClickEvent().getAction().toLowerCase());
+//                ClickEvent.Action tempAction = ClickEvent.Action.byName(myTextComponent.getClickEvent().getAction());
                 // END IF
                 ClickEvent clickEvent = new ClickEvent(tempAction, myTextComponent.getClickEvent().getValue());
                 style.withClickEvent(clickEvent);
@@ -103,7 +105,7 @@ public class ParseJsonToEvent {
                         CommonHoverEntity commonHoverEntity = myTextComponent.getHoverEvent().getEntity();
                         Optional<EntityType<?>> entityType = EntityType.get(commonHoverEntity.getType());
                         if (entityType.isPresent()) {
-                            HoverEvent.EntityContent entityTooltipInfo = new HoverEvent.EntityContent(entityType.get(), commonHoverEntity.getUuid(), parseMessages(commonHoverEntity.getName()));
+                            HoverEvent.EntityContent entityTooltipInfo = new HoverEvent.EntityContent(entityType.get(), UUID.randomUUID(), parseMessages(commonHoverEntity.getName()));
                             hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, entityTooltipInfo);
                         }
                         break;
