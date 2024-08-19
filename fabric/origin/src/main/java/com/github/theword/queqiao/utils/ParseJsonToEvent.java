@@ -66,12 +66,6 @@ public class ParseJsonToEvent {
             // ELSE
 //            style.withColor(TextColor.parse(myBaseComponent.getColor()));
             // END IF
-        } else {
-            // IF fabric-1.21
-//            style.withColor(TextColor.fromFormatting(Formatting.WHITE));
-            // ELSE
-//            style.withColor(TextColor.fromFormatting(Formatting.WHITE));
-            // END IF
         }
 
         // 配置 TextComponent 额外属性
