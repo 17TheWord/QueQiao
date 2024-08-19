@@ -14,6 +14,7 @@ import com.github.theword.queqiao.tool.payload.modle.CommonTextComponent;
 // END IF
 
 // IF > forge-1.16.5
+//import net.minecraft.ChatFormatting;
 //import net.minecraft.network.chat.*;
 //import net.minecraft.resources.ResourceLocation;
 //import net.minecraft.world.entity.EntityType;
