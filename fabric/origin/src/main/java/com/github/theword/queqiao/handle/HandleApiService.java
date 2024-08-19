@@ -92,14 +92,38 @@ public class HandleApiService implements HandleApi {
     /**
      * 私聊消息
      *
-     * @param webSocket websocket
+     * @param webSocket        websocket
      * @param targetPlayerName 目标玩家名称
      * @param targetPlayerUuid 目标玩家 UUID
-     * @param messageList 消息体
+     * @param messageList      消息体
      */
     @Override
     public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
-        webSocket.send("Unsupported API now.");
+        ServerPlayerEntity serverPlayerEntity;
+        if (targetPlayerUuid != null)
+            serverPlayerEntity = minecraftServer.getPlayerManager().getPlayer(targetPlayerUuid);
+        else if (targetPlayerName != null && !targetPlayerName.isEmpty())
+            serverPlayerEntity = minecraftServer.getPlayerManager().getPlayer(targetPlayerName);
+        else {
+            webSocket.send("{\"code\":400,\"message\":\"Target player not found.\"}");
+            return;
+        }
+
+        if (serverPlayerEntity == null) {
+            webSocket.send("{\"code\":400,\"message\":\"Target player is null.\"}");
+            return;
+        }
+
+        if (serverPlayerEntity.isDisconnected()) {
+            webSocket.send("{\"code\":400,\"message\":\"Target player is disconnected.\"}");
+            return;
+        }
+        // IF >= fabric-1.19
+//        serverPlayerEntity.sendMessage(parseJsonToEvent.parseMessages(messageList));
+        // ELSE
+//        serverPlayerEntity.sendMessage(parseJsonToEvent.parseMessages(messageList), false);
+        // END IF
+        webSocket.send("{\"code\":200,\"message\":\"Private message sent.\"}");
     }
 
     private void sendPacket(Packet<?> packet) {

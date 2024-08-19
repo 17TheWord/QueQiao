@@ -54,7 +54,30 @@ public class HandleApiService implements HandleApi {
      */
     @Override
     public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
-        webSocket.send("Unsupported API now.");
+        Player targetPlayer;
+        if (targetPlayerUuid != null)
+            targetPlayer = instance.getServer().getPlayer(targetPlayerUuid);
+        else if (targetPlayerName != null && !targetPlayerName.isEmpty())
+            targetPlayer = instance.getServer().getPlayer(targetPlayerName);
+        else {
+            webSocket.send("{\"code\":400,\"message\":\"Target player not found.\"}");
+            return;
+        }
+
+        if (targetPlayer == null) {
+            webSocket.send("{\"code\":400,\"message\":\"Target player is null.\"}");
+            return;
+        }
+
+        if (!targetPlayer.isOnline()) {
+            webSocket.send("{\"code\":400,\"message\":\"Target player is offline.\"}");
+            return;
+        }
+
+        TextComponent textComponent = parseJsonToEvent.parsePerMessageToTextComponent(Tool.getPrefixComponent());
+        textComponent.addExtra(parseJsonToEvent.parseMessageToTextComponent(messageList));
+        targetPlayer.sendMessage(textComponent.toLegacyText());
+        webSocket.send("{\"code\":200,\"message\":\"Private message sent.\"}");
     }
 
     @Override

@@ -67,7 +67,7 @@ public class HandleApiService implements HandleApi {
             // IF >= forge-1.19
 //            serverPlayer.sendSystemMessage(mutableComponent);
             // ELSE
-//            serverPlayer.sendMessage(mutableComponent,uuid);
+//            serverPlayer.sendMessage(mutableComponent, uuid);
             // END IF
         }
     }
@@ -111,14 +111,51 @@ public class HandleApiService implements HandleApi {
     /**
      * 私聊消息
      *
-     * @param webSocket websocket
+     * @param webSocket        websocket
      * @param targetPlayerName 目标玩家名称
      * @param targetPlayerUuid 目标玩家 UUID
-     * @param messageList 消息体
+     * @param messageList      消息体
      */
     @Override
     public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
-        webSocket.send("Unsupported API now.");
+        // IF > forge-1.16.5
+//        ServerPlayer targetPlayer;
+        // ELSE
+//        ServerPlayerEntity targetPlayer;
+        // END IF
+        if (targetPlayerUuid != null)
+            targetPlayer = minecraftServer.getPlayerList().getPlayer(targetPlayerUuid);
+        else if (targetPlayerName != null && !targetPlayerName.isEmpty())
+            targetPlayer = minecraftServer.getPlayerList().getPlayerByName(targetPlayerName);
+        else {
+            webSocket.send("{\"code\":400,\"message\":\"Target player not found.\"}");
+            return;
+        }
+
+        if (targetPlayer == null) {
+            webSocket.send("{\"code\":400,\"message\":\"Target player is null.\"}");
+            return;
+        }
+
+        if (targetPlayer.hasDisconnected()) {
+            webSocket.send("{\"code\":400,\"message\":\"Target player is disconnected.\"}");
+            return;
+        }
+        // IF > forge-1.16.5
+//        MutableComponent mutableComponent = parseJsonToEvent.parsePerMessageToMultiText(Tool.getPrefixComponent());
+//        mutableComponent.append(parseJsonToEvent.parseMessages(messageList));
+        // ELSE
+//        StringTextComponent mutableComponent = parseJsonToEvent.parsePerMessageToMultiText(Tool.getPrefixComponent());
+//        mutableComponent.append(parseJsonToEvent.parseMessages(messageList));
+        // END IF
+
+        // IF >= forge-1.19
+//            targetPlayer.sendSystemMessage(mutableComponent);
+        // ELSE
+//        targetPlayer.sendMessage(mutableComponent, UUID.randomUUID());
+        // END IF
+
+        webSocket.send("{\"code\":200,\"message\":\"Private message sent.\"}");
     }
 
     // IF > forge-1.16.5
