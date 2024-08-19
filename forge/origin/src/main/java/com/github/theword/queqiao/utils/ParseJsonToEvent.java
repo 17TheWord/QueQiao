@@ -140,7 +140,7 @@ public class ParseJsonToEvent {
     private ClickEvent getClickEventFromBaseComponent(CommonTextComponent myTextComponent) {
         if (myTextComponent.getClickEvent() != null) {
             // IF >= forge-1.21
-//            ClickEvent.Action tempAction = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction());
+//            ClickEvent.Action tempAction = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction().toLowerCase());
             // ELSE
 //            ClickEvent.Action tempAction = ClickEvent.Action.getByName(myTextComponent.getClickEvent().getAction().toLowerCase());
             // END IF
