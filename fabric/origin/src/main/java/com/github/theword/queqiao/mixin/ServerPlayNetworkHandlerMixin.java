@@ -1,8 +1,8 @@
 package com.github.theword.queqiao.mixin;
 
 import com.github.theword.queqiao.tool.constant.BaseConstant;
-import com.github.theword.queqiao.tool.event.fabric.FabricServerCommandMessageEvent;
-import com.github.theword.queqiao.tool.event.fabric.FabricServerMessageEvent;
+import com.github.theword.queqiao.event.fabric.FabricServerCommandMessageEvent;
+import com.github.theword.queqiao.event.fabric.FabricServerMessageEvent;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 // IF > fabric-1.18.2
 //import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
@@ -17,9 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 
+import static com.github.theword.queqiao.tool.utils.Tool.*;
 import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
-import static com.github.theword.queqiao.tool.utils.Tool.config;
-import static com.github.theword.queqiao.tool.utils.Tool.sendWebsocketMessage;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public class ServerPlayNetworkHandlerMixin {
@@ -27,7 +26,7 @@ public class ServerPlayNetworkHandlerMixin {
     public ServerPlayerEntity player;
 
     // IF > fabric-1.16.5
-// @Inject(method = "onChatMessage", at = @At("HEAD"))
+//    @Inject(method = "onChatMessage", at = @At("HEAD"))
     // ELSE
 //    @Inject(method = "onGameMessage", at = @At("HEAD"))
     // END IF
@@ -51,18 +50,20 @@ public class ServerPlayNetworkHandlerMixin {
 //    @Inject(method = "onCommandExecution", at = @At("HEAD"))
 //    private void onCommandExecution(CommandExecutionC2SPacket packet, CallbackInfo ci) {
 //        String input = packet.command();
-    // ELSE IF fabric-1.18.2
+        // ELSE IF fabric-1.18.2
 //    @Inject(method = "executeCommand", at = @At("HEAD"))
 //    private void executeCommand(String input, CallbackInfo ci) {
-    // ELSE
+        // ELSE
 //    @Inject(method = "executeCommand", at = @At("HEAD"))
 //    private void executeCommand(String input, CallbackInfo ci) {
         // END IF
         if (!config.getSubscribe_event().isPlayer_command()) return;
 
-        if (!(input.startsWith("/l ") || input.startsWith("/login ") || input.startsWith("/register ") || input.startsWith("/reg ") || input.startsWith("/" + BaseConstant.COMMAND_HEADER + " "))) {
-            FabricServerCommandMessageEvent event = new FabricServerCommandMessageEvent("", getFabricPlayer(Objects.requireNonNull(player)), input);
-            sendWebsocketMessage(event);
-        }
+        String registerOrLoginCommand = isRegisterOrLoginCommand(input);
+
+        if (registerOrLoginCommand.isEmpty()) return;
+
+        FabricServerCommandMessageEvent event = new FabricServerCommandMessageEvent("", getFabricPlayer(Objects.requireNonNull(player)), registerOrLoginCommand);
+        sendWebsocketMessage(event);
     }
 }

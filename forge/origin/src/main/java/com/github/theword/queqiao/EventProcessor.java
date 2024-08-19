@@ -1,8 +1,6 @@
 package com.github.theword.queqiao;
 
-
-import com.github.theword.queqiao.tool.constant.BaseConstant;
-import com.github.theword.queqiao.tool.event.forge.*;
+import com.github.theword.queqiao.event.forge.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 // IF > forge-1.16.5
 //import net.minecraft.server.level.ServerPlayer;
@@ -20,8 +18,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import static com.github.theword.queqiao.tool.utils.Tool.config;
-import static com.github.theword.queqiao.tool.utils.Tool.sendWebsocketMessage;
+import static com.github.theword.queqiao.tool.utils.Tool.*;
 import static com.github.theword.queqiao.utils.ForgeTool.getForgePlayer;
 
 public class EventProcessor {
@@ -82,10 +79,10 @@ public class EventProcessor {
 //        if (!(event.getParseResults().getContext().getSource().getEntity() instanceof ServerPlayerEntity)) return;
         // END IF
 
-        String command = event.getParseResults().getReader().getString();
+        String command = isRegisterOrLoginCommand(event.getParseResults().getReader().getString());
 
-        if (command.startsWith("l ") || command.startsWith("login ") || command.startsWith("register ") || command.startsWith("reg ") || command.startsWith(BaseConstant.COMMAND_HEADER + " "))
-            return;
+        if (command.isEmpty()) return;
+        
         ForgeServerPlayer player;
 
         try {

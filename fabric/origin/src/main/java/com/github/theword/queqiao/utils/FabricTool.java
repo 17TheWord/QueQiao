@@ -1,6 +1,6 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.tool.event.fabric.FabricServerPlayer;
+import com.github.theword.queqiao.event.fabric.FabricServerPlayer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class FabricTool {
@@ -9,7 +9,7 @@ public class FabricTool {
         FabricServerPlayer fabricServerPlayer = new FabricServerPlayer();
 
         fabricServerPlayer.setNickname(player.getName().getString());
-        fabricServerPlayer.setUuid(player.getUuidAsString());
+        fabricServerPlayer.setUuid(player.getUuid());
         fabricServerPlayer.setIp(player.getIp());
         fabricServerPlayer.setDisplayName(player.getDisplayName().getString());
         fabricServerPlayer.setMovementSpeed(player.getMovementSpeed());

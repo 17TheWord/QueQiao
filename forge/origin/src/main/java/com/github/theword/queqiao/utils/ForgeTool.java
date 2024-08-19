@@ -1,6 +1,6 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.tool.event.forge.ForgeServerPlayer;
+import com.github.theword.queqiao.event.forge.ForgeServerPlayer;
 // IF > forge-1.16.5
 //import net.minecraft.server.level.ServerPlayer;
 // ELSE
@@ -17,7 +17,7 @@ public class ForgeTool {
         forgeServerPlayer.setNickname(player.getName().getString());
         forgeServerPlayer.setDisplayName(player.getDisplayName().getString());
 
-        forgeServerPlayer.setUuid(player.getUUID().toString());
+        forgeServerPlayer.setUuid(player.getUUID());
         forgeServerPlayer.setIpAddress(player.getIpAddress());
 
         forgeServerPlayer.setSpeed(player.getSpeed());

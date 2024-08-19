@@ -1,6 +1,6 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.tool.event.spigot.*;
+import com.github.theword.queqiao.event.spigot.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,8 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Objects;
 
-import static com.github.theword.queqiao.tool.utils.Tool.config;
-import static com.github.theword.queqiao.tool.utils.Tool.sendWebsocketMessage;
+import static com.github.theword.queqiao.tool.utils.Tool.*;
 
 
 class EventProcessor implements Listener {
@@ -67,7 +66,6 @@ class EventProcessor implements Listener {
 
         SpigotPlayerQuitEvent spigotPlayerQuitEvent = new SpigotPlayerQuitEvent(getSpigotPlayer(event.getPlayer()));
         sendWebsocketMessage(spigotPlayerQuitEvent);
-
     }
 
     /**
@@ -79,16 +77,12 @@ class EventProcessor implements Listener {
     void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         if (!config.getSubscribe_event().isPlayer_command()) return;
 
-        String command = event.getMessage();
+        String command = isRegisterOrLoginCommand(event.getMessage());
 
-        if (command.startsWith("/l ") || command.startsWith("/login ") || command.startsWith("/register ") || command.startsWith("/reg ") || command.startsWith("mcqq "))
-            return;
-
-        command = command.replaceFirst("/", "");
+        if (command.isEmpty()) return;
+        
         SpigotPlayerCommandPreprocessEvent spigotPlayerCommandPreprocessEvent = new SpigotPlayerCommandPreprocessEvent(getSpigotPlayer(event.getPlayer()), command);
         sendWebsocketMessage(spigotPlayerCommandPreprocessEvent);
-
-
     }
 
     /**
@@ -99,7 +93,7 @@ class EventProcessor implements Listener {
      */
     SpigotPlayer getSpigotPlayer(Player player) {
         SpigotPlayer spigotPlayer = new SpigotPlayer();
-        spigotPlayer.setUuid(player.getUniqueId().toString());
+        spigotPlayer.setUuid(player.getUniqueId());
         spigotPlayer.setNickname(player.getName());
         spigotPlayer.setDisplayName(player.getDisplayName());
         spigotPlayer.setPlayerListName(player.getDisplayName());

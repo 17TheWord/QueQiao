@@ -1,0 +1,51 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version.txt and save to variable
+        shell: pwsh
+        run: |
+          $mod_version = Get-Content version.txt
+          Write-Host "Version: $mod_version"
+          echo "MOD_VERSION=$mod_version" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+
+      - name: Check if Release exists
+        id: check-release
+        run: |
+          # Check if the release exists
+          RESPONSE=$(gh release view v${{ env.MOD_VERSION }} -R ${{ github.repository }} 2>&1 || true)
+          if echo "$RESPONSE" | grep -q "Not Found"; then
+            echo "Release v${{ env.MOD_VERSION }} does not exist. Skipping deletion."
+            echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
+          else
+            echo "Release v${{ env.MOD_VERSION }} exists."
+            echo "RELEASE_EXISTS=true" >> $GITHUB_ENV
+          fi
+
+      - name: Delete Release if exists
+        run: |
+          # Try to delete the release and handle errors gracefully
+          set +e
+          gh release delete v${{ env.MOD_VERSION }} -R ${{ github.repository }} -y --cleanup-tag
+          if [ $? -eq 0 ]; then
+            echo "Release v${{ env.MOD_VERSION }} deleted successfully."
+          else
+            echo "Failed to delete release v${{ env.MOD_VERSION }}. It might not exist or there might be another issue."
+          fi
+
+      - name: Create Release with temp note
+        run: gh release create v${{ env.MOD_VERSION }} --generate-notes

@@ -1,6 +1,6 @@
 package com.github.theword.queqiao.mixin;
 
-import com.github.theword.queqiao.tool.event.fabric.FabricServerPlayConnectionJoinEvent;
+import com.github.theword.queqiao.event.fabric.FabricServerPlayConnectionJoinEvent;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
 // IF fabric-1.21

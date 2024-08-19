@@ -17,6 +17,7 @@ import net.md_5.bungee.api.chat.*;
 
 import java.util.List;
 
+import static com.github.theword.queqiao.tool.utils.Tool.debugLog;
 import static com.github.theword.queqiao.tool.utils.Tool.logger;
 
 
@@ -34,11 +35,11 @@ public class ParseJsonToEvent {
         // 配置 BaseComponent 基本属性
         msgComponent.setText(myBaseComponent.getText());
         if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
-            // IF spigot-1.12.2
+        // IF spigot-1.12.2
 //            msgComponent.setColor(ChatColor.valueOf(myBaseComponent.getColor()));
-            // ELSE
+        // ELSE
 //            msgComponent.setColor(ChatColor.of(myBaseComponent.getColor().toUpperCase()));
-            // END IF
+        // END IF
         else msgComponent.setColor(ChatColor.WHITE);
         msgComponent.setBold(myBaseComponent.isBold());
         msgComponent.setItalic(myBaseComponent.isItalic());
@@ -70,25 +71,25 @@ public class ParseJsonToEvent {
      * @return HoverEvent
      */
     private HoverEvent getHoverEvent(CommonTextComponent myTextComponent) {
-        HoverEvent.Action action = HoverEvent.Action.valueOf(myTextComponent.getHoverEvent().getAction());
+        HoverEvent.Action action = HoverEvent.Action.valueOf(myTextComponent.getHoverEvent().getAction().toUpperCase());
         // IF spigot-1.12.2
 //        TextComponent textComponent = parseMessageToTextComponent(myTextComponent.getHoverEvent().getBaseComponentList());
 //        return new HoverEvent(action, new TextComponent[]{textComponent});
         // ELSE
 //        HoverEvent hoverEvent = null;
-//        switch (myTextComponent.getHoverEvent().getAction()) {
-//            case "show_text":
+//        switch (action) {
+//            case SHOW_TEXT:
 //                TextComponent textComponent = parseMessageToTextComponent(myTextComponent.getHoverEvent().getBaseComponentList());
 //                BaseComponent[] baseComponent = new BaseComponent[]{textComponent};
 //                hoverEvent = new HoverEvent(action, new Text(baseComponent));
 //                break;
-//            case "show_item":
+//            case SHOW_ITEM:
 //                CommonHoverItem myHoverItem = myTextComponent.getHoverEvent().getItem();
 //                ItemTag itemTag = ItemTag.ofNbt(myHoverItem.getTag());
 //                Item item = new Item(String.valueOf(myHoverItem.getId()), myHoverItem.getCount(), itemTag);
 //                hoverEvent = new HoverEvent(action, item);
 //                break;
-//            case "show_entity":
+//            case SHOW_ENTITY:
 //                CommonHoverEntity myHoverEntity = myTextComponent.getHoverEvent().getEntity();
 //                TextComponent nameComponent = parseMessageToTextComponent(myHoverEntity.getName());
 //                Entity entity = new Entity(myHoverEntity.getType(), myHoverEntity.getId(), nameComponent);
@@ -108,7 +109,7 @@ public class ParseJsonToEvent {
      * @return ClickEvent
      */
     private ClickEvent getClickEvent(CommonTextComponent myTextComponent) {
-        ClickEvent.Action action = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction());
+        ClickEvent.Action action = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction().toUpperCase());
         return new ClickEvent(action, myTextComponent.getClickEvent().getValue());
     }
 
@@ -127,36 +128,7 @@ public class ParseJsonToEvent {
             component.addExtra(msgComponent);
             msgLogText.append(myBaseComponent.getText());
         }
-        logger.info(msgLogText.toString());
+        debugLog(msgLogText.toString());
         return component;
-    }
-
-    /**
-     * 将 CommonBaseComponent 转换为带有游戏文本样式的 String
-     *
-     * @param myBaseComponentList 消息列表
-     * @return String
-     */
-    public String parseCommonBaseCommentToStringWithStyle(List<? extends CommonBaseComponent> myBaseComponentList) {
-        StringBuilder message = new StringBuilder();
-
-        for (CommonBaseComponent myBaseComponent : myBaseComponentList) {
-            String tempMessageSeg = "";
-            if (myBaseComponent.isBold()) tempMessageSeg += ChatColor.BOLD;
-            if (myBaseComponent.isItalic()) tempMessageSeg += ChatColor.ITALIC;
-            if (myBaseComponent.isUnderlined()) tempMessageSeg += ChatColor.UNDERLINE;
-            if (myBaseComponent.isStrikethrough()) tempMessageSeg += ChatColor.STRIKETHROUGH;
-            if (myBaseComponent.isObfuscated()) tempMessageSeg += ChatColor.MAGIC;
-            if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
-                // IF spigot-1.12.2
-//                tempMessageSeg += ChatColor.valueOf(myBaseComponent.getColor().toUpperCase());
-                // ELSE
-//                tempMessageSeg += ChatColor.of(myBaseComponent.getColor().toUpperCase());
-                // END IF
-            else tempMessageSeg += ChatColor.WHITE;
-            tempMessageSeg += myBaseComponent.getText();
-            message.append(tempMessageSeg);
-        }
-        return message.toString();
     }
 }

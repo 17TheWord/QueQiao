@@ -1,7 +1,7 @@
 package com.github.theword.queqiao.mixin;
 
-import com.github.theword.queqiao.tool.event.fabric.FabricServerLivingEntityAfterDeathEvent;
-import com.github.theword.queqiao.tool.event.fabric.FabricServerPlayConnectionDisconnectEvent;
+import com.github.theword.queqiao.event.fabric.FabricServerLivingEntityAfterDeathEvent;
+import com.github.theword.queqiao.event.fabric.FabricServerPlayConnectionDisconnectEvent;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
