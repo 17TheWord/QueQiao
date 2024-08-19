@@ -1,7 +1,6 @@
 package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.tool.payload.modle.CommonBaseComponent;
-import com.github.theword.queqiao.tool.payload.modle.CommonClickEvent;
 import com.github.theword.queqiao.tool.payload.modle.CommonTextComponent;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -50,18 +49,26 @@ public class ParseJsonToEvent {
     }
 
     private HoverEvent<?> getHoverEvent(CommonTextComponent commonTextComponent) {
-        HoverEvent<?> hoverEvent;
-        switch (commonTextComponent.getClickEvent().getAction()) {
+        String action = commonTextComponent.getClickEvent().getAction();
+        switch (action) {
             case "show_text" -> {
-                hoverEvent = HoverEvent.showText(parseMessage(commonTextComponent.getHoverEvent().getBaseComponentList()));
+                return HoverEvent.showText(parseMessage(commonTextComponent.getHoverEvent().getBaseComponentList()));
             }
             case "show_item" -> {
-                hoverEvent = HoverEvent.showItem();
+                return HoverEvent.showItem(
+                        Key.key(commonTextComponent.getHoverEvent().getItem().getKey()),
+                        commonTextComponent.getHoverEvent().getItem().getCount()
+                );
             }
             case "show_entity" -> {
+                return HoverEvent.showEntity(
+                        Key.key(commonTextComponent.getHoverEvent().getEntity().getKey()),
+                        commonTextComponent.getHoverEvent().getEntity().getUuid(),
+                        parseMessage(commonTextComponent.getHoverEvent().getEntity().getName())
+                );
             }
         }
-
+        return null;
     }
 
 

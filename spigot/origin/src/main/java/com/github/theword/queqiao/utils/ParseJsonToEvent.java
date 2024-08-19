@@ -18,7 +18,6 @@ import net.md_5.bungee.api.chat.*;
 import java.util.List;
 
 import static com.github.theword.queqiao.tool.utils.Tool.debugLog;
-import static com.github.theword.queqiao.tool.utils.Tool.logger;
 
 
 public class ParseJsonToEvent {
@@ -84,15 +83,15 @@ public class ParseJsonToEvent {
 //                hoverEvent = new HoverEvent(action, new Text(baseComponent));
 //                break;
 //            case SHOW_ITEM:
-//                CommonHoverItem myHoverItem = myTextComponent.getHoverEvent().getItem();
-//                ItemTag itemTag = ItemTag.ofNbt(myHoverItem.getTag());
-//                Item item = new Item(String.valueOf(myHoverItem.getId()), myHoverItem.getCount(), itemTag);
+//                CommonHoverItem commonHoverItem = myTextComponent.getHoverEvent().getItem();
+//                ItemTag itemTag = ItemTag.ofNbt(commonHoverItem.getTag());
+//                Item item = new Item(commonHoverItem.getId(), commonHoverItem.getCount(), itemTag);
 //                hoverEvent = new HoverEvent(action, item);
 //                break;
 //            case SHOW_ENTITY:
-//                CommonHoverEntity myHoverEntity = myTextComponent.getHoverEvent().getEntity();
-//                TextComponent nameComponent = parseMessageToTextComponent(myHoverEntity.getName());
-//                Entity entity = new Entity(myHoverEntity.getType(), myHoverEntity.getId(), nameComponent);
+//                CommonHoverEntity commonHoverEntity = myTextComponent.getHoverEvent().getEntity();
+//                TextComponent nameComponent = parseMessageToTextComponent(commonHoverEntity.getName());
+//                Entity entity = new Entity(commonHoverEntity.getType(), commonHoverEntity.getId(), nameComponent);
 //                hoverEvent = new HoverEvent(action, entity);
 //                break;
 //            default:
