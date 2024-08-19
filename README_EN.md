@@ -55,7 +55,7 @@
         - [`Broadcast`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
         - [`Title & SubTitle`](https://github.com/17TheWord/QueQiao/wiki/5.-API#title--subtitle)
         - [`ActionBar`](https://github.com/17TheWord/QueQiao/wiki/5.-API#actionbar)
-        - [`Private`](https://github.com/17TheWord/QueQiao/wiki/5.-API#private) (Demo)
+        - [`Private`](https://github.com/17TheWord/QueQiao/wiki/5.-API#private)
 
 ## Quick Start
 
