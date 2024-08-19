@@ -86,7 +86,7 @@ repositories {
     }
 }
 
-// IF > forge-1.12.2
+// IF > forge-1.16.5
 //jarJar.enable()
 //tasks.named('jarJar') {
 //    archiveClassifier.set('')
