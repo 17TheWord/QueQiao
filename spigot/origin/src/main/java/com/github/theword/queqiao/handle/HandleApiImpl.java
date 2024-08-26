@@ -1,12 +1,12 @@
 package com.github.theword.queqiao.handle;
 
 
-import com.github.theword.queqiao.tool.handle.HandleApi;
-import com.github.theword.queqiao.tool.payload.modle.CommonBaseComponent;
-import com.github.theword.queqiao.tool.payload.modle.CommonSendTitle;
-import com.github.theword.queqiao.tool.payload.modle.CommonTextComponent;
+import com.github.theword.queqiao.tool.handle.HandleApiService;
+import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
+import com.github.theword.queqiao.tool.payload.TitlePayload;
+import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import com.github.theword.queqiao.tool.utils.Tool;
-import com.github.theword.queqiao.utils.ParseJsonToEvent;
+import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
@@ -18,28 +18,28 @@ import java.util.UUID;
 import static com.github.theword.queqiao.QueQiao.instance;
 
 
-public class HandleApiService implements HandleApi {
+public class HandleApiImpl implements HandleApiService {
 
-    private final ParseJsonToEvent parseJsonToEvent = new ParseJsonToEvent();
+    private final ParseJsonToEventImpl parseJsonToEventService = new ParseJsonToEventImpl();
 
     @Override
     public void handleBroadcastMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
-        TextComponent textComponent = parseJsonToEvent.parsePerMessageToTextComponent(Tool.getPrefixComponent());
-        textComponent.addExtra(parseJsonToEvent.parseMessageToTextComponent(messageList));
+        TextComponent textComponent = parseJsonToEventService.parsePerMessageToComponent(Tool.getPrefixComponent());
+        textComponent.addExtra(parseJsonToEventService.parseMessageListToComponent(messageList));
         instance.getServer().spigot().broadcast(textComponent);
     }
 
     @Override
-    public void handleSendTitleMessage(WebSocket webSocket, CommonSendTitle sendTitle) {
-        TextComponent title = parseJsonToEvent.parseMessageToTextComponent(sendTitle.getTitle());
-        TextComponent subtitle = parseJsonToEvent.parseMessageToTextComponent(sendTitle.getSubtitle());
+    public void handleSendTitleMessage(WebSocket webSocket, TitlePayload titlePayload) {
+        TextComponent title = parseJsonToEventService.parseMessageListToComponent(titlePayload.getTitle());
+        TextComponent subtitle = parseJsonToEventService.parseMessageListToComponent(titlePayload.getSubtitle());
         for (Player player : instance.getServer().getOnlinePlayers()) {
             player.sendTitle(
                     title.toLegacyText(),
                     subtitle.toLegacyText(),
-                    sendTitle.getFadein(),
-                    sendTitle.getStay(),
-                    sendTitle.getFadeout()
+                    titlePayload.getFadein(),
+                    titlePayload.getStay(),
+                    titlePayload.getFadeout()
             );
         }
     }
@@ -74,15 +74,15 @@ public class HandleApiService implements HandleApi {
             return;
         }
 
-        TextComponent textComponent = parseJsonToEvent.parsePerMessageToTextComponent(Tool.getPrefixComponent());
-        textComponent.addExtra(parseJsonToEvent.parseMessageToTextComponent(messageList));
+        TextComponent textComponent = parseJsonToEventService.parsePerMessageToComponent(Tool.getPrefixComponent());
+        textComponent.addExtra(parseJsonToEventService.parseMessageListToComponent(messageList));
         targetPlayer.sendMessage(textComponent.toLegacyText());
         webSocket.send("{\"code\":200,\"message\":\"Private message sent.\"}");
     }
 
     @Override
-    public void handleActionBarMessage(WebSocket webSocket, List<CommonBaseComponent> messageList) {
-        TextComponent actionTextComponent = parseJsonToEvent.parseMessageToTextComponent(messageList);
+    public void handleActionBarMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+        TextComponent actionTextComponent = parseJsonToEventService.parseMessageListToComponent(messageList);
         for (Player player : instance.getServer().getOnlinePlayers()) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, actionTextComponent);
         }
