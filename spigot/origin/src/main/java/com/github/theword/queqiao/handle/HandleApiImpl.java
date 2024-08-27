@@ -31,11 +31,14 @@ public class HandleApiImpl implements HandleApiService {
     @Override
     public void handleSendTitleMessage(WebSocket webSocket, TitlePayload titlePayload) {
         TextComponent title = parseJsonToEventService.parseMessageListToComponent(titlePayload.getTitle());
-        TextComponent subtitle = parseJsonToEventService.parseMessageListToComponent(titlePayload.getSubtitle());
+        String subtitleText = "";
+        if (titlePayload.getSubtitle() != null) {
+            subtitleText = parseJsonToEventService.parseMessageListToComponent(titlePayload.getSubtitle()).toLegacyText();
+        }
         for (Player player : instance.getServer().getOnlinePlayers()) {
             player.sendTitle(
                     title.toLegacyText(),
-                    subtitle.toLegacyText(),
+                    subtitleText,
                     titlePayload.getFadein(),
                     titlePayload.getStay(),
                     titlePayload.getFadeout()
@@ -46,10 +49,10 @@ public class HandleApiImpl implements HandleApiService {
     /**
      * 私聊消息
      *
-     * @param webSocket websocket
+     * @param webSocket        websocket
      * @param targetPlayerName 目标玩家名称
      * @param targetPlayerUuid 目标玩家 UUID
-     * @param messageList 消息体
+     * @param messageList      消息体
      */
     @Override
     public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<MessageSegment> messageList) {
