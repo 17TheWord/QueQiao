@@ -6,7 +6,7 @@ import com.github.theword.queqiao.tool.command.subCommand.HelpCommandAbstract;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 
-import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessage;
+import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
 
 
 public class HelpCommand extends HelpCommandAbstract implements ForgeSubCommand {
@@ -17,11 +17,11 @@ public class HelpCommand extends HelpCommandAbstract implements ForgeSubCommand 
     // ELSE
 //    public int onCommand(CommandContext<net.minecraft.command.CommandSource> context) {
         // END IF
-        handleCommandReturnMessage.handleCommandReturnMessage(context, "-------------------");
+        handleCommandReturnMessageService.handleCommandReturnMessage(context, "-------------------");
         for (ForgeSubCommand forgeSubCommand : new CommandManager().getSubCommandList()) {
-            handleCommandReturnMessage.handleCommandReturnMessage(context, forgeSubCommand.getUsage() + "---" + forgeSubCommand.getDescription());
+            handleCommandReturnMessageService.handleCommandReturnMessage(context, forgeSubCommand.getUsage() + "---" + forgeSubCommand.getDescription());
         }
-        handleCommandReturnMessage.handleCommandReturnMessage(context, "-------------------");
+        handleCommandReturnMessageService.handleCommandReturnMessage(context, "-------------------");
         return Command.SINGLE_SUCCESS;
 
     }
