@@ -1,6 +1,7 @@
 package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
+import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import com.github.theword.queqiao.tool.payload.modle.hover.CommonHoverEntity;
 import com.github.theword.queqiao.tool.payload.modle.hover.CommonHoverItem;
@@ -37,9 +38,9 @@ import java.util.UUID;
 public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
     // IF > forge-1.16.5
-//    public MutableComponent parseMessageListToComponent(List<CommonTextComponent> myBaseComponentList) {
+//    public MutableComponent parseMessageListToComponent(List<MessageSegment> myBaseComponentList) {
         // ELSE
-//    public StringTextComponent parseMessageListToComponent(List<CommonTextComponent> myBaseComponentList) {
+//    public StringTextComponent parseMessageListToComponent(List<MessageSegment> myBaseComponentList) {
         // END IF
 
         // IF >= forge-1.19
@@ -49,11 +50,11 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         // ELSE
 //        StringTextComponent mutableComponent = new StringTextComponent("");
         // END IF
-        for (CommonTextComponent myBaseComponent : myBaseComponentList) {
+        for (MessageSegment messageSegment : myBaseComponentList) {
             // IF > forge-1.16.5
-//            MutableComponent tempMutableComponent = parsePerMessageToComponent(myBaseComponent);
+//            MutableComponent tempMutableComponent = parsePerMessageToComponent(messageSegment.getData());
             // ELSE
-//            StringTextComponent tempMutableComponent = parsePerMessageToComponent(myBaseComponent);
+//            StringTextComponent tempMutableComponent = parsePerMessageToComponent(messageSegment.getData());
             // END IF
             mutableComponent.append(tempMutableComponent);
         }

@@ -1,6 +1,7 @@
 package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
+import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import com.github.theword.queqiao.tool.payload.modle.hover.CommonHoverEntity;
 import com.github.theword.queqiao.tool.payload.modle.hover.CommonHoverItem;
@@ -18,14 +19,14 @@ import java.util.UUID;
 public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
     @Override
-    public Text parseMessageListToComponent(List<CommonTextComponent> myBaseComponentList) {
+    public Text parseMessageListToComponent(List<MessageSegment> myBaseComponentList) {
         // IF > fabric-1.18.2
 //        MutableText mutableText = Text.empty();
         // ELSE
 //        MutableText mutableText = LiteralText.EMPTY.copy();
         // END IF
-        for (CommonTextComponent commonTextComponent : myBaseComponentList) {
-            mutableText.append(parsePerMessageToComponent(commonTextComponent));
+        for (MessageSegment messageSegment : myBaseComponentList) {
+            mutableText.append(parsePerMessageToComponent(messageSegment.getData()));
         }
         return mutableText;
     }

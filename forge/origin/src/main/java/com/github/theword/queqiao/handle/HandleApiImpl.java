@@ -1,8 +1,8 @@
 package com.github.theword.queqiao.handle;
 
 import com.github.theword.queqiao.tool.handle.HandleApiService;
+import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.TitlePayload;
-import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 // IF > forge-1.16.5
@@ -44,7 +44,7 @@ public class HandleApiImpl implements HandleApiService {
      * @param messageList 消息体
      */
     @Override
-    public void handleBroadcastMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleBroadcastMessage(WebSocket webSocket, List<MessageSegment> messageList) {
         // IF > forge-1.16.5
 //        MutableComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
         // ELSE
@@ -99,7 +99,7 @@ public class HandleApiImpl implements HandleApiService {
      * @param messageList Action Bar 消息体
      */
     @Override
-    public void handleActionBarMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleActionBarMessage(WebSocket webSocket, List<MessageSegment> messageList) {
         // IF > forge-1.16.5
 //        sendPacket(new ClientboundSetActionBarTextPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList)));
         // ELSE
@@ -116,7 +116,7 @@ public class HandleApiImpl implements HandleApiService {
      * @param messageList      消息体
      */
     @Override
-    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
+    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<MessageSegment> messageList) {
         // IF > forge-1.16.5
 //        ServerPlayer targetPlayer;
         // ELSE

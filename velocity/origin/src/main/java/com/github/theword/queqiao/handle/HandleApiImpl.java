@@ -1,8 +1,8 @@
 package com.github.theword.queqiao.handle;
 
 import com.github.theword.queqiao.tool.handle.HandleApiService;
+import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.TitlePayload;
-import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 import com.velocitypowered.api.proxy.Player;
@@ -20,7 +20,7 @@ public class HandleApiImpl implements HandleApiService {
     private final ParseJsonToEventImpl parseJsonToEvent = new ParseJsonToEventImpl();
 
     @Override
-    public void handleBroadcastMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleBroadcastMessage(WebSocket webSocket, List<MessageSegment> messageList) {
         Component component = parseJsonToEvent.parsePerMessageToComponent(Tool.getPrefixComponent());
         Component append = component.append(parseJsonToEvent.parseMessageListToComponent(messageList));
         minecraftServer.sendMessage(append);
@@ -37,13 +37,13 @@ public class HandleApiImpl implements HandleApiService {
     }
 
     @Override
-    public void handleActionBarMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleActionBarMessage(WebSocket webSocket, List<MessageSegment> messageList) {
         Component component = parseJsonToEvent.parsePerMessageToComponent(Tool.getPrefixComponent());
         minecraftServer.sendActionBar(component);
     }
 
     @Override
-    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
+    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<MessageSegment> messageList) {
         for (Player player : minecraftServer.getAllPlayers()) {
             if ((targetPlayerUuid != null && targetPlayerUuid.equals(player.getUniqueId())) || (targetPlayerName != null && targetPlayerName.equals(player.getUsername()))) {
                 Component component = parseJsonToEvent.parsePerMessageToComponent(Tool.getPrefixComponent());

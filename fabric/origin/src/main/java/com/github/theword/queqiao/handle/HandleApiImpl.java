@@ -1,6 +1,7 @@
 package com.github.theword.queqiao.handle;
 
 import com.github.theword.queqiao.tool.handle.HandleApiService;
+import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.TitlePayload;
 import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
@@ -42,7 +43,7 @@ public class HandleApiImpl implements HandleApiService {
      * @param messageList 消息体
      */
     @Override
-    public void handleBroadcastMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleBroadcastMessage(WebSocket webSocket, List<MessageSegment> messageList) {
         MutableText mutableText = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
         mutableText.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
         // IF >= fabric-1.19.2
@@ -79,7 +80,7 @@ public class HandleApiImpl implements HandleApiService {
      * @param messageList Action Bar 消息体
      */
     @Override
-    public void handleActionBarMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleActionBarMessage(WebSocket webSocket, List<MessageSegment> messageList) {
         // IF >= fabric-1.19
 //        sendPacket(new GameMessageS2CPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList), true));
         // ELSE
@@ -96,7 +97,7 @@ public class HandleApiImpl implements HandleApiService {
      * @param messageList      消息体
      */
     @Override
-    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
+    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<MessageSegment> messageList) {
         ServerPlayerEntity serverPlayerEntity;
         if (targetPlayerUuid != null)
             serverPlayerEntity = minecraftServer.getPlayerManager().getPlayer(targetPlayerUuid);
