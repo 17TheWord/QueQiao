@@ -11,17 +11,21 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.intellij.lang.annotations.Subst;
 
-
 import java.util.List;
+
+import static com.github.theword.queqiao.tool.utils.Tool.logger;
 
 public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
     @Override
     public Component parseMessageListToComponent(List<MessageSegment> commonBaseComponentList) {
         Component component = Component.empty();
+        StringBuilder msgLogText = new StringBuilder();
         for (MessageSegment messageSegment : commonBaseComponentList) {
             component = component.append(parsePerMessageToComponent(messageSegment.getData()));
+            msgLogText.append(messageSegment.getData().getText());
         }
+        logger.info(msgLogText.toString());
         return component;
     }
 
