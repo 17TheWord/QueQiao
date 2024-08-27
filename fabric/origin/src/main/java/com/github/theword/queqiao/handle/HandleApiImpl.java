@@ -104,17 +104,17 @@ public class HandleApiImpl implements HandleApiService {
         else if (targetPlayerName != null && !targetPlayerName.isEmpty())
             serverPlayerEntity = minecraftServer.getPlayerManager().getPlayer(targetPlayerName);
         else {
-            webSocket.send("{\"code\":400,\"message\":\"Target player not found.\"}");
+//            webSocket.send("{\"code\":400,\"message\":\"Target player not found.\"}");
             return;
         }
 
         if (serverPlayerEntity == null) {
-            webSocket.send("{\"code\":400,\"message\":\"Target player is null.\"}");
+//            webSocket.send("{\"code\":400,\"message\":\"Target player is null.\"}");
             return;
         }
 
         if (serverPlayerEntity.isDisconnected()) {
-            webSocket.send("{\"code\":400,\"message\":\"Target player is disconnected.\"}");
+//            webSocket.send("{\"code\":400,\"message\":\"Target player is disconnected.\"}");
             return;
         }
         // IF >= fabric-1.19
@@ -122,7 +122,7 @@ public class HandleApiImpl implements HandleApiService {
         // ELSE
 //        serverPlayerEntity.sendMessage(parseJsonToEventImpl.parseMessageListToComponent(messageList), false);
         // END IF
-        webSocket.send("{\"code\":200,\"message\":\"Private message sent.\"}");
+//        webSocket.send("{\"code\":200,\"message\":\"Private message sent.\"}");
     }
 
     private void sendPacket(Packet<?> packet) {

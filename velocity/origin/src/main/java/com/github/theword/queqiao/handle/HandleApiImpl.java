@@ -48,10 +48,10 @@ public class HandleApiImpl implements HandleApiService {
             if ((targetPlayerUuid != null && targetPlayerUuid.equals(player.getUniqueId())) || (targetPlayerName != null && targetPlayerName.equals(player.getUsername()))) {
                 Component component = parseJsonToEvent.parsePerMessageToComponent(Tool.getPrefixComponent());
                 minecraftServer.sendMessage(component);
-                webSocket.send("{ \"result\": 200, \"message\": \"Message sent\" }");
+//                webSocket.send("{ \"result\": 200, \"message\": \"Message sent\" }");
                 break;
             }
         }
-        webSocket.send("{ \"result\": 404, \"message\": \"Player not found\" }");
+//        webSocket.send("{ \"result\": 404, \"message\": \"Player not found\" }");
     }
 }
