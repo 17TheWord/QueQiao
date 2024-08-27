@@ -23,16 +23,32 @@ jobs:
         run: |
           $matrix = .\matrix.ps1 -path "fabric","forge","spigot","velocity"
           $matrixJson = $matrix | ConvertTo-Json
-          echo "MATRIX_OUTPUT=$matrixJson" >> $env:GITHUB_ENV
+          echo $matrixJson > matrix_output.json
+        # 将矩阵数据保存到工件中
+      - name: Upload matrix data
+        uses: actions/upload-artifact@v4
+        with:
+          name: matrix
+          path: matrix_output.json
 
   build:
     runs-on: windows-latest
     needs:
       - generate-matrix
-    strategy:
-      matrix: ${{ fromJson(env.MATRIX_OUTPUT) }}
     steps:
       - uses: actions/checkout@v4
+      # 下载矩阵数据工件
+      - name: Download matrix data
+        uses: actions/download-artifact@v4
+        with:
+          name: matrix
+          path: .
+      - name: Load matrix
+        id: load-matrix
+        shell: pwsh
+        run: |
+          $matrix = Get-Content matrix_output.json
+          echo "MATRIX=$matrix" >> $env:GITHUB_ENV
       - name: Choose JDK 21
         uses: actions/setup-java@v4
         with:
@@ -56,9 +72,12 @@ jobs:
           USERNAME: ${{ github.actor }}
           PACKAGE_READ_ONLY_TOKEN: ${{ secrets.PACKAGE_READ_ONLY_TOKEN }}
         run: |
-          cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
-          ./gradlew clean build
-          cd ../..
+          $matrix = $env:MATRIX | ConvertFrom-Json
+          $matrix | ForEach-Object {
+            cd "$($_.mc-loader)/$($_.mc-loader)-$($_.mc-version)"
+            ./gradlew clean build
+            cd ../..
+          }
 
       - uses: actions/upload-artifact@v4
         with:
