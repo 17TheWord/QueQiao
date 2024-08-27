@@ -2,9 +2,8 @@ package com.github.theword.queqiao.handle;
 
 
 import com.github.theword.queqiao.tool.handle.HandleApiService;
-import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
+import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.TitlePayload;
-import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 import net.md_5.bungee.api.ChatMessageType;
@@ -23,7 +22,7 @@ public class HandleApiImpl implements HandleApiService {
     private final ParseJsonToEventImpl parseJsonToEventService = new ParseJsonToEventImpl();
 
     @Override
-    public void handleBroadcastMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleBroadcastMessage(WebSocket webSocket, List<MessageSegment> messageList) {
         TextComponent textComponent = parseJsonToEventService.parsePerMessageToComponent(Tool.getPrefixComponent());
         textComponent.addExtra(parseJsonToEventService.parseMessageListToComponent(messageList));
         instance.getServer().spigot().broadcast(textComponent);
@@ -53,7 +52,7 @@ public class HandleApiImpl implements HandleApiService {
      * @param messageList 消息体
      */
     @Override
-    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
+    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<MessageSegment> messageList) {
         Player targetPlayer;
         if (targetPlayerUuid != null)
             targetPlayer = instance.getServer().getPlayer(targetPlayerUuid);
@@ -81,7 +80,7 @@ public class HandleApiImpl implements HandleApiService {
     }
 
     @Override
-    public void handleActionBarMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleActionBarMessage(WebSocket webSocket, List<MessageSegment> messageList) {
         TextComponent actionTextComponent = parseJsonToEventService.parseMessageListToComponent(messageList);
         for (Player player : instance.getServer().getOnlinePlayers()) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, actionTextComponent);
