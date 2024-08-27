@@ -1,11 +1,10 @@
 package com.github.theword.queqiao.handle;
 
-import com.github.theword.queqiao.tool.handle.HandleApi;
-import com.github.theword.queqiao.tool.payload.modle.CommonBaseComponent;
-import com.github.theword.queqiao.tool.payload.modle.CommonSendTitle;
-import com.github.theword.queqiao.tool.payload.modle.CommonTextComponent;
+import com.github.theword.queqiao.tool.handle.HandleApiService;
+import com.github.theword.queqiao.tool.payload.TitlePayload;
+import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import com.github.theword.queqiao.tool.utils.Tool;
-import com.github.theword.queqiao.utils.ParseJsonToEvent;
+import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 // IF > forge-1.16.5
 //import net.minecraft.network.chat.MutableComponent;
 //import net.minecraft.network.protocol.Packet;
@@ -35,8 +34,8 @@ import java.util.UUID;
 import static com.github.theword.queqiao.QueQiao.minecraftServer;
 
 
-public class HandleApiService implements HandleApi {
-    private final ParseJsonToEvent parseJsonToEvent = new ParseJsonToEvent();
+public class HandleApiImpl implements HandleApiService {
+    private final ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
 
     /**
      * 广播消息
@@ -47,12 +46,12 @@ public class HandleApiService implements HandleApi {
     @Override
     public void handleBroadcastMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
         // IF > forge-1.16.5
-//        MutableComponent mutableComponent = parseJsonToEvent.parsePerMessageToMultiText(Tool.getPrefixComponent());
+//        MutableComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
         // ELSE
-//        StringTextComponent mutableComponent = parseJsonToEvent.parsePerMessageToMultiText(Tool.getPrefixComponent());
+//        StringTextComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
         // END IF
 
-        mutableComponent.append(parseJsonToEvent.parseMessages(messageList));
+        mutableComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
 
         // IF < forge-1.19
 //        UUID uuid = UUID.randomUUID();
@@ -60,8 +59,8 @@ public class HandleApiService implements HandleApi {
 
         // IF > forge-1.16.5
 //        for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-            // ELSE
-//            for (ServerPlayerEntity serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
+        // ELSE
+//        for (ServerPlayerEntity serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
             // END IF
 
             // IF >= forge-1.19
@@ -75,21 +74,21 @@ public class HandleApiService implements HandleApi {
     /**
      * 广播 Send Title 消息
      *
-     * @param webSocket websocket
-     * @param sendTitle Send Title 消息体
+     * @param webSocket    websocket
+     * @param titlePayload Send Title 消息体
      */
     @Override
-    public void handleSendTitleMessage(WebSocket webSocket, CommonSendTitle sendTitle) {
+    public void handleSendTitleMessage(WebSocket webSocket, TitlePayload titlePayload) {
         // IF > forge-1.16.5
-//        sendPacket(new ClientboundSetTitleTextPacket(parseJsonToEvent.parseMessages(sendTitle.getTitle())));
-//        if (sendTitle.getSubtitle() != null)
-//            sendPacket(new ClientboundSetSubtitleTextPacket(parseJsonToEvent.parseMessages(sendTitle.getSubtitle())));
-//        sendPacket(new ClientboundSetTitlesAnimationPacket(sendTitle.getFadein(), sendTitle.getStay(), sendTitle.getFadeout()));
+//        sendPacket(new ClientboundSetTitleTextPacket(parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle())));
+//        if (titlePayload.getSubtitle() != null)
+//            sendPacket(new ClientboundSetSubtitleTextPacket(parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle())));
+//        sendPacket(new ClientboundSetTitlesAnimationPacket(titlePayload.getFadein(), titlePayload.getStay(), titlePayload.getFadeout()));
         // ELSE
-//        sendPacket(new STitlePacket(STitlePacket.Type.TITLE, parseJsonToEvent.parseMessages(sendTitle.getTitle())));
-//        if (sendTitle.getSubtitle() != null)
-//            sendPacket(new STitlePacket(STitlePacket.Type.SUBTITLE, parseJsonToEvent.parseMessages(sendTitle.getSubtitle())));
-//        sendPacket(new STitlePacket(sendTitle.getFadein(), sendTitle.getStay(), sendTitle.getFadeout()));
+//        sendPacket(new STitlePacket(STitlePacket.Type.TITLE, parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle())));
+//        if (titlePayload.getSubtitle() != null)
+//            sendPacket(new STitlePacket(STitlePacket.Type.SUBTITLE, parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle())));
+//        sendPacket(new STitlePacket(titlePayload.getFadein(), titlePayload.getStay(), titlePayload.getFadeout()));
         // END IF
     }
 
@@ -100,11 +99,11 @@ public class HandleApiService implements HandleApi {
      * @param messageList Action Bar 消息体
      */
     @Override
-    public void handleActionBarMessage(WebSocket webSocket, List<CommonBaseComponent> messageList) {
+    public void handleActionBarMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
         // IF > forge-1.16.5
-//        sendPacket(new ClientboundSetActionBarTextPacket(parseJsonToEvent.parseMessages(messageList)));
+//        sendPacket(new ClientboundSetActionBarTextPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList)));
         // ELSE
-//        sendPacket(new SChatPacket(parseJsonToEvent.parseMessages(messageList), ChatType.GAME_INFO, UUID.randomUUID()));
+//        sendPacket(new SChatPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList), ChatType.GAME_INFO, UUID.randomUUID()));
         // END IF
     }
 
@@ -142,11 +141,11 @@ public class HandleApiService implements HandleApi {
             return;
         }
         // IF > forge-1.16.5
-//        MutableComponent mutableComponent = parseJsonToEvent.parsePerMessageToMultiText(Tool.getPrefixComponent());
-//        mutableComponent.append(parseJsonToEvent.parseMessages(messageList));
+//        MutableComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
+//        mutableComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
         // ELSE
-//        StringTextComponent mutableComponent = parseJsonToEvent.parsePerMessageToMultiText(Tool.getPrefixComponent());
-//        mutableComponent.append(parseJsonToEvent.parseMessages(messageList));
+//        StringTextComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
+//        mutableComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
         // END IF
 
         // IF >= forge-1.19

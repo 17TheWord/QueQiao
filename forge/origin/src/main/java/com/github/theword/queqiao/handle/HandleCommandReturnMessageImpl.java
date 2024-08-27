@@ -1,6 +1,6 @@
 package com.github.theword.queqiao.handle;
 
-import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessage;
+import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
 import com.mojang.brigadier.context.CommandContext;
 // IF >= forge-1.21
 //import net.minecraft.network.chat.contents.PlainTextContents.LiteralContents;
@@ -10,7 +10,7 @@ import com.mojang.brigadier.context.CommandContext;
 // IF >= forge-1.18
 // END IF
 
-public class HandleCommandReturnMessageService implements HandleCommandReturnMessage {
+public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessageService {
 
     @Override
     @SuppressWarnings("unchecked")

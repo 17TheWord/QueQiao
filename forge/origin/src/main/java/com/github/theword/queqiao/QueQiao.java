@@ -1,7 +1,7 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.handle.HandleApiService;
-import com.github.theword.queqiao.handle.HandleCommandReturnMessageService;
+import com.github.theword.queqiao.handle.HandleApiImpl;
+import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,7 +19,7 @@ public class QueQiao {
     public static MinecraftServer minecraftServer;
 
     public QueQiao() {
-        initTool(true, new HandleApiService(), new HandleCommandReturnMessageService());
+        initTool(true, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new EventProcessor());
     }
