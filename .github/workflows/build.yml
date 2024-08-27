@@ -15,25 +15,25 @@ env:
 jobs:
   generate-matrix:
     runs-on: windows-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
       - name: Generate Matrix
         id: set-matrix
         shell: pwsh
         run: |
-          .\matrix.ps1 -path "fabric","forge","spigot","velocity"
+          $matrix = .\matrix.ps1 -path "fabric","forge","spigot","velocity"
+          $matrixJson = $matrix | ConvertTo-Json
+          echo "MATRIX_OUTPUT=$matrixJson" >> $env:GITHUB_ENV
 
   build:
     runs-on: windows-latest
     needs:
       - generate-matrix
     strategy:
-      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+      matrix: ${{ fromJson(env.MATRIX_OUTPUT) }}
     steps:
       - uses: actions/checkout@v4
-      - name: Chose JDK 21
+      - name: Choose JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
@@ -44,7 +44,7 @@ jobs:
         run: |
           $mod_version = Get-Content version.txt
           Write-Host "Version: $mod_version"
-          echo "MOD_VERSION=$mod_version" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          echo "MOD_VERSION=$mod_version" >> $env:GITHUB_ENV
 
       - name: Init Files
         shell: pwsh
