@@ -1,11 +1,11 @@
 package com.github.theword.queqiao.handle;
 
-import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessage;
+import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
 import com.mojang.brigadier.context.CommandContext;
 import com.velocitypowered.api.command.CommandSource;
 import net.kyori.adventure.text.Component;
 
-public class HandleCommandReturnMessageService implements HandleCommandReturnMessage {
+public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessageService {
     @Override
     @SuppressWarnings("unchecked")
     public void handleCommandReturnMessage(Object o, String s) {

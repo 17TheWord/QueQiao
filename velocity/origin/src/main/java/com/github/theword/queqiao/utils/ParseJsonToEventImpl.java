@@ -1,10 +1,9 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.tool.payload.modle.CommonBaseComponent;
-import com.github.theword.queqiao.tool.payload.modle.CommonTextComponent;
+import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
+import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -14,32 +13,32 @@ import org.intellij.lang.annotations.Subst;
 
 import java.util.List;
 
-public class ParseJsonToEvent {
+public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
-    public Component parseMessage(List<? extends CommonBaseComponent> commonBaseComponentList) {
+    @Override
+    public Component parseMessageListToComponent(List<CommonTextComponent> commonBaseComponentList) {
         Component component = Component.empty();
-        for (CommonBaseComponent commonBaseComponent : commonBaseComponentList) {
+        for (CommonTextComponent commonBaseComponent : commonBaseComponentList) {
             component = component.append(Component.text(commonBaseComponent.getText()));
         }
         return component;
     }
 
-    public Component parsePerMessageToMultiText(CommonBaseComponent commonBaseComponent) {
-        Component component = Component.text(commonBaseComponent.getText());
+    @Override
+    public Component parsePerMessageToComponent(CommonTextComponent commonTextComponent) {
+        Component component = Component.text(commonTextComponent.getText());
 
-        if (commonBaseComponent.getColor() != null)
-            component = component.color(getNamedTextColor(commonBaseComponent.getColor()));
+        if (commonTextComponent.getColor() != null)
+            component = component.color(getNamedTextColor(commonTextComponent.getColor()));
         else component = component.color(NamedTextColor.WHITE);
 
-        component = getTextStyle(commonBaseComponent, component);
+        component = getTextStyle(commonTextComponent, component);
 
-        if (commonBaseComponent instanceof CommonTextComponent commonTextComponent) {
-            if (commonTextComponent.getClickEvent() != null)
-                component = component.clickEvent(getClickEvent(commonTextComponent));
+        if (commonTextComponent.getClickEvent() != null)
+            component = component.clickEvent(getClickEvent(commonTextComponent));
 
-            if (commonTextComponent.getHoverEvent() != null)
-                component = component.hoverEvent(getHoverEvent(commonTextComponent));
-        }
+        if (commonTextComponent.getHoverEvent() != null)
+            component = component.hoverEvent(getHoverEvent(commonTextComponent));
 
         return component;
     }
@@ -53,7 +52,7 @@ public class ParseJsonToEvent {
         String action = commonTextComponent.getClickEvent().getAction();
         switch (action) {
             case "show_text" -> {
-                return HoverEvent.showText(parseMessage(commonTextComponent.getHoverEvent().getBaseComponentList()));
+                return HoverEvent.showText(parseMessageListToComponent(commonTextComponent.getHoverEvent().getText()));
             }
             case "show_item" -> {
                 return HoverEvent.showItem(
@@ -65,7 +64,7 @@ public class ParseJsonToEvent {
                 return HoverEvent.showEntity(
                         Key.key(commonTextComponent.getHoverEvent().getEntity().getKey()),
                         commonTextComponent.getHoverEvent().getEntity().getUuid(),
-                        parseMessage(commonTextComponent.getHoverEvent().getEntity().getName())
+                        parseMessageListToComponent(commonTextComponent.getHoverEvent().getEntity().getName())
                 );
             }
         }
@@ -73,7 +72,7 @@ public class ParseJsonToEvent {
     }
 
 
-    private Component getTextStyle(CommonBaseComponent commonBaseComponent, Component component) {
+    private Component getTextStyle(CommonTextComponent commonBaseComponent, Component component) {
         if (commonBaseComponent.isBold())
             component = component.decorate(TextDecoration.BOLD);
 
