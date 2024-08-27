@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.github.theword.queqiao.tool.utils.Tool.logger;
+
 public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
     @Override
@@ -25,9 +27,12 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         // ELSE
 //        MutableText mutableText = LiteralText.EMPTY.copy();
         // END IF
+        StringBuilder msgLogText = new StringBuilder();
         for (MessageSegment messageSegment : myBaseComponentList) {
             mutableText.append(parsePerMessageToComponent(messageSegment.getData()));
+            msgLogText.append(messageSegment.getData().getText());
         }
+        logger.info(msgLogText.toString());
         return mutableText;
     }
 
@@ -72,17 +77,34 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         } else style.withColor(TextColor.fromFormatting(Formatting.WHITE));
 
         // 配置 TextComponent 额外属性
-        if (commonTextComponent.getClickEvent() != null) {
-            // IF fabric-1.21
+        if (commonTextComponent.getClickEvent() != null)
+            style.withClickEvent(getClickEvent(commonTextComponent));
+
+        if (commonTextComponent.getHoverEvent() != null)
+            style.withHoverEvent(getHoverEvent(commonTextComponent));
+
+
+        // IF < fabric-1.21 && >= fabric-1.19
+//        MutableText mutableText = MutableText.of(tempTextContent);
+//        mutableText.setStyle(style);
+//        return mutableText;
+        // ELSE
+//        tempTextContent.setStyle(style);
+//        return tempTextContent;
+        // END IF
+    }
+
+    public ClickEvent getClickEvent(CommonTextComponent commonTextComponent) {
+        // IF fabric-1.21
 //                ClickEvent.Action tempAction = ClickEvent.Action.valueOf(commonTextComponent.getClickEvent().getAction());
-            // ELSE
-//            ClickEvent.Action tempAction = ClickEvent.Action.byName(commonTextComponent.getClickEvent().getAction());
-            // END IF
-            ClickEvent clickEvent = new ClickEvent(tempAction, commonTextComponent.getClickEvent().getValue());
-            style.withClickEvent(clickEvent);
-        }
+        // ELSE
+//        ClickEvent.Action tempAction = ClickEvent.Action.byName(commonTextComponent.getClickEvent().getAction());
+        // END IF
+        return new ClickEvent(tempAction, commonTextComponent.getClickEvent().getValue());
+    }
+
+    public HoverEvent getHoverEvent(CommonTextComponent commonTextComponent) {
         HoverEvent hoverEvent = null;
-        // 语言级别 '8' 不支持 增强的 'switch' 块
         switch (commonTextComponent.getHoverEvent().getAction().toLowerCase()) {
             case "show_text":
                 if (commonTextComponent.getHoverEvent().getText() != null && !commonTextComponent.getHoverEvent().getText().isEmpty()) {
@@ -108,16 +130,6 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
             default:
                 break;
         }
-        style.withHoverEvent(hoverEvent);
-
-
-        // IF < fabric-1.21 && >= fabric-1.19
-//        MutableText mutableText = MutableText.of(tempTextContent);
-//        mutableText.setStyle(style);
-//        return mutableText;
-        // ELSE
-//        tempTextContent.setStyle(style);
-//        return tempTextContent;
-        // END IF
+        return hoverEvent;
     }
 }
