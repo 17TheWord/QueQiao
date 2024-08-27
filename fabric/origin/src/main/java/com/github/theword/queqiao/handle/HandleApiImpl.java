@@ -1,10 +1,9 @@
 package com.github.theword.queqiao.handle;
 
-import com.github.theword.queqiao.tool.handle.HandleApi;
-import com.github.theword.queqiao.tool.payload.modle.CommonBaseComponent;
-import com.github.theword.queqiao.tool.payload.modle.CommonSendTitle;
-import com.github.theword.queqiao.tool.payload.modle.CommonTextComponent;
-import com.github.theword.queqiao.utils.ParseJsonToEvent;
+import com.github.theword.queqiao.tool.handle.HandleApiService;
+import com.github.theword.queqiao.tool.payload.TitlePayload;
+import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
+import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 import com.github.theword.queqiao.tool.utils.Tool;
 // IF >= fabric-1.20
 //import net.minecraft.network.packet.Packet;
@@ -28,14 +27,13 @@ import java.util.List;
 import java.util.UUID;
 // IF <= fabric-1.18.2
 //import java.util.UUID;
-//
 //import net.minecraft.network.MessageType;
 // END IF
 
 import static com.github.theword.queqiao.QueQiao.minecraftServer;
 
-public class HandleApiService implements HandleApi {
-    private final ParseJsonToEvent parseJsonToEvent = new ParseJsonToEvent();
+public class HandleApiImpl implements HandleApiService {
+    private final ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
 
     /**
      * 广播消息
@@ -45,8 +43,8 @@ public class HandleApiService implements HandleApi {
      */
     @Override
     public void handleBroadcastMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
-        MutableText mutableText = parseJsonToEvent.parsePerMessageToMultiText(Tool.getPrefixComponent());
-        mutableText.append(parseJsonToEvent.parseMessages(messageList));
+        MutableText mutableText = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
+        mutableText.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
         // IF >= fabric-1.19.2
 //        sendPacket(new GameMessageS2CPacket(mutableText, false));
         // ELSE IF  fabric-1.18.2
@@ -57,20 +55,20 @@ public class HandleApiService implements HandleApi {
     /**
      * 广播 Send Title 消息
      *
-     * @param webSocket       websocket
-     * @param commonSendTitle Send Title 消息体
+     * @param webSocket    websocket
+     * @param titlePayload Title 消息体
      */
     @Override
-    public void handleSendTitleMessage(WebSocket webSocket, CommonSendTitle commonSendTitle) {
+    public void handleSendTitleMessage(WebSocket webSocket, TitlePayload titlePayload) {
         // IF > fabric-1.16.5
-//        sendPacket(new TitleS2CPacket(parseJsonToEvent.parseMessages(commonSendTitle.getTitle())));
-//        if (commonSendTitle.getSubtitle() != null)
-//            sendPacket(new SubtitleS2CPacket(parseJsonToEvent.parseMessages(commonSendTitle.getSubtitle())));
-//        sendPacket(new TitleFadeS2CPacket(commonSendTitle.getFadein(), commonSendTitle.getStay(), commonSendTitle.getFadeout()));
+//        sendPacket(new TitleS2CPacket(parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle())));
+//        if (titlePayload.getSubtitle() != null)
+//            sendPacket(new SubtitleS2CPacket(parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle())));
+//        sendPacket(new TitleFadeS2CPacket(titlePayload.getFadein(), titlePayload.getStay(), titlePayload.getFadeout()));
         // ELSE
-//        sendPacket(new TitleS2CPacket(TitleS2CPacket.Action.TITLE, parseJsonToEvent.parseMessages(commonSendTitle.getTitle()), commonSendTitle.getFadein(), commonSendTitle.getStay(), commonSendTitle.getFadeout()));
-//        if (commonSendTitle.getSubtitle() != null)
-//            sendPacket(new TitleS2CPacket(TitleS2CPacket.Action.SUBTITLE, parseJsonToEvent.parseMessages(commonSendTitle.getSubtitle()), commonSendTitle.getFadein(), commonSendTitle.getStay(), commonSendTitle.getFadeout()));
+//        sendPacket(new TitleS2CPacket(TitleS2CPacket.Action.TITLE, parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle()), titlePayload.getFadein(), titlePayload.getStay(), titlePayload.getFadeout()));
+//        if (titlePayload.getSubtitle() != null)
+//            sendPacket(new TitleS2CPacket(TitleS2CPacket.Action.SUBTITLE, parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle()), titlePayload.getFadein(), titlePayload.getStay(), titlePayload.getFadeout()));
         // END IF
     }
 
@@ -81,11 +79,11 @@ public class HandleApiService implements HandleApi {
      * @param messageList Action Bar 消息体
      */
     @Override
-    public void handleActionBarMessage(WebSocket webSocket, List<CommonBaseComponent> messageList) {
+    public void handleActionBarMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
         // IF >= fabric-1.19
-//        sendPacket(new GameMessageS2CPacket(parseJsonToEvent.parseMessages(messageList), true));
+//        sendPacket(new GameMessageS2CPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList), true));
         // ELSE
-//        sendPacket(new GameMessageS2CPacket(parseJsonToEvent.parseMessages(messageList), MessageType.GAME_INFO, UUID.randomUUID()));
+//        sendPacket(new GameMessageS2CPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList), MessageType.GAME_INFO, UUID.randomUUID()));
         // END IF
     }
 
@@ -119,9 +117,9 @@ public class HandleApiService implements HandleApi {
             return;
         }
         // IF >= fabric-1.19
-//        serverPlayerEntity.sendMessage(parseJsonToEvent.parseMessages(messageList));
+//        serverPlayerEntity.sendMessage(parseJsonToEventImpl.parseMessageListToComponent(messageList));
         // ELSE
-//        serverPlayerEntity.sendMessage(parseJsonToEvent.parseMessages(messageList), false);
+//        serverPlayerEntity.sendMessage(parseJsonToEventImpl.parseMessageListToComponent(messageList), false);
         // END IF
         webSocket.send("{\"code\":200,\"message\":\"Private message sent.\"}");
     }

@@ -1,12 +1,12 @@
 package com.github.theword.queqiao.handle;
 
-import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessage;
+import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-public class HandleCommandReturnMessageService implements HandleCommandReturnMessage {
+public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessageService {
 
     /**
      * @param object  命令返回者
