@@ -23,7 +23,7 @@ class EventProcessor implements Listener {
      */
     @EventHandler
     void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (event.isCancelled() || !config.getSubscribe_event().isPlayer_chat()) return;
+        if (event.isCancelled() || !config.getSubscribeEvent().isPlayerChat()) return;
 
         SpigotAsyncPlayerChatEvent spigotAsyncPlayerChatEvent = new SpigotAsyncPlayerChatEvent(getSpigotPlayer(event.getPlayer()), event.getMessage());
         sendWebsocketMessage(spigotAsyncPlayerChatEvent);
@@ -36,7 +36,7 @@ class EventProcessor implements Listener {
      */
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event) {
-        if (!config.getSubscribe_event().isPlayer_death()) return;
+        if (!config.getSubscribeEvent().isPlayerDeath()) return;
 
         SpigotPlayerDeathEvent spigotPlayerDeathEvent = new SpigotPlayerDeathEvent(getSpigotPlayer(event.getEntity()), event.getDeathMessage());
         sendWebsocketMessage(spigotPlayerDeathEvent);
@@ -49,7 +49,7 @@ class EventProcessor implements Listener {
      */
     @EventHandler
     void onPlayerJoin(PlayerJoinEvent event) {
-        if (!config.getSubscribe_event().isPlayer_join()) return;
+        if (!config.getSubscribeEvent().isPlayerJoin()) return;
 
         SpigotPlayerJoinEvent spigotPlayerJoinEvent = new SpigotPlayerJoinEvent(getSpigotPlayer(event.getPlayer()));
         sendWebsocketMessage(spigotPlayerJoinEvent);
@@ -62,7 +62,7 @@ class EventProcessor implements Listener {
      */
     @EventHandler
     void onPlayerQuit(PlayerQuitEvent event) {
-        if (!config.getSubscribe_event().isPlayer_quit()) return;
+        if (!config.getSubscribeEvent().isPlayerQuit()) return;
 
         SpigotPlayerQuitEvent spigotPlayerQuitEvent = new SpigotPlayerQuitEvent(getSpigotPlayer(event.getPlayer()));
         sendWebsocketMessage(spigotPlayerQuitEvent);
@@ -75,7 +75,7 @@ class EventProcessor implements Listener {
      */
     @EventHandler
     void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        if (!config.getSubscribe_event().isPlayer_command()) return;
+        if (!config.getSubscribeEvent().isPlayerCommand()) return;
 
         String command = isRegisterOrLoginCommand(event.getMessage());
 

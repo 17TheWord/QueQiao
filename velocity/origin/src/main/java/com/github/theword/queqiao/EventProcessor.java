@@ -1,9 +1,6 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.event.velocity.VelocityDisconnectEvent;
-import com.github.theword.queqiao.event.velocity.VelocityLoginEvent;
-import com.github.theword.queqiao.event.velocity.VelocityPlayer;
-import com.github.theword.queqiao.event.velocity.VelocityPlayerChatEvent;
+import com.github.theword.queqiao.event.velocity.*;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -20,7 +17,7 @@ public class EventProcessor {
 
     @Subscribe
     public void onPlayerChat(PlayerChatEvent event) {
-        if (!config.getSubscribe_event().isPlayer_chat()) return;
+        if (!config.getSubscribeEvent().isPlayerChat()) return;
 
         VelocityPlayer player = getVelocityPlayer(event.getPlayer());
         String message = event.getMessage();
@@ -30,7 +27,7 @@ public class EventProcessor {
 
     @Subscribe
     public void onPlayerLogin(LoginEvent event) {
-        if (!config.getSubscribe_event().isPlayer_join()) return;
+        if (!config.getSubscribeEvent().isPlayerJoin()) return;
 
         VelocityPlayer player = getVelocityPlayer(event.getPlayer());
         VelocityLoginEvent velocityLoginEvent = new VelocityLoginEvent(player);
@@ -39,7 +36,7 @@ public class EventProcessor {
 
     @Subscribe
     public void onDisconnect(DisconnectEvent event) {
-        if (!config.getSubscribe_event().isPlayer_quit()) return;
+        if (!config.getSubscribeEvent().isPlayerQuit()) return;
 
         VelocityPlayer player = getVelocityPlayer(event.getPlayer());
         VelocityDisconnectEvent velocityDisconnectEvent = new VelocityDisconnectEvent(player);
@@ -48,10 +45,11 @@ public class EventProcessor {
 
     @Subscribe
     public void onCommandExecute(CommandExecuteEvent event) {
-        if (!(event.getCommandSource() instanceof Player) || !config.getSubscribe_event().isPlayer_command()) return;
+        if (!(event.getCommandSource() instanceof Player player) || !config.getSubscribeEvent().isPlayerCommand()) return;
 
-        Player player = (Player) event.getCommandSource();
         String command = event.getCommand();
 
+        VelocityCommandExecuteEvent velocityCommandExecuteEvent = new VelocityCommandExecuteEvent(getVelocityPlayer(player), command);
+        sendWebsocketMessage(velocityCommandExecuteEvent);
     }
 }

@@ -25,7 +25,7 @@ public class PlayerManagerMixin {
     // ELSE
 //    private void onPlayerJoin(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
 // END IF
-        if (!config.getSubscribe_event().isPlayer_join()) return;
+        if (!config.getSubscribeEvent().isPlayerJoin()) return;
 
         FabricServerPlayConnectionJoinEvent event = new FabricServerPlayConnectionJoinEvent(getFabricPlayer(player));
         sendWebsocketMessage(event);
