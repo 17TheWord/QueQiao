@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.github.theword.queqiao.tool.utils.Tool.logger;
+
 public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
     // IF > forge-1.16.5
@@ -50,6 +52,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         // ELSE
 //        StringTextComponent mutableComponent = new StringTextComponent("");
         // END IF
+        StringBuilder msgLogText = new StringBuilder();
         for (MessageSegment messageSegment : myBaseComponentList) {
             // IF > forge-1.16.5
 //            MutableComponent tempMutableComponent = parsePerMessageToComponent(messageSegment.getData());
@@ -57,7 +60,9 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
 //            StringTextComponent tempMutableComponent = parsePerMessageToComponent(messageSegment.getData());
             // END IF
             mutableComponent.append(tempMutableComponent);
+            msgLogText.append(messageSegment.getData().getText());
         }
+        logger.info(msgLogText.toString());
         return mutableComponent;
     }
 
