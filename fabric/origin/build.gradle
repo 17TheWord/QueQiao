@@ -34,6 +34,7 @@ base {
 
 
 repositories {
+    mavenLocal()
     maven {
         url = uri(maven_repository_url)
         credentials {
