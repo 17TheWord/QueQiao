@@ -29,6 +29,7 @@ group = project.mod_group_id
 version = mod_version
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         name = "spigotmc-repo"

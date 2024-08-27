@@ -1,7 +1,7 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.handle.HandleApiService;
-import com.github.theword.queqiao.handle.HandleCommandReturnMessageService;
+import com.github.theword.queqiao.handle.HandleApiImpl;
+import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -25,7 +25,7 @@ public class QueQiao {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        initTool(false, new HandleApiService(), new HandleCommandReturnMessageService());
+        initTool(false, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
         websocketManager.startWebsocket(null);
         minecraftServer.getEventManager().register(this, new EventProcessor());
     }

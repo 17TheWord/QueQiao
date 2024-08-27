@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.ConfigCommand;
 
-import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessage;
+import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
 
 
 @Mod.EventBusSubscriber(modid = BaseConstant.MOD_ID)
@@ -43,7 +43,7 @@ public class CommandExecutor {
                         ).then(Commands.literal("server")
                                 .executes(context -> {
                                     // TODO Websocket Server Command
-                                    handleCommandReturnMessage.handleCommandReturnMessage(context, "Server command is not supported");
+                                    handleCommandReturnMessageService.handleCommandReturnMessage(context, "Server command is not supported");
                                     return Command.SINGLE_SUCCESS;
                                 })
                         )

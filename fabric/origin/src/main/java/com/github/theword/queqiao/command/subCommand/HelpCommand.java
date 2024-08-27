@@ -9,7 +9,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
-import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessage;
+import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
 
 
 public class HelpCommand extends HelpCommandAbstract implements FabricSubCommand {
@@ -17,11 +17,11 @@ public class HelpCommand extends HelpCommandAbstract implements FabricSubCommand
 
     @Override
     public int onCommand(CommandContext<ServerCommandSource> context) {
-        handleCommandReturnMessage.handleCommandReturnMessage(context, "-------------------");
+        handleCommandReturnMessageService.handleCommandReturnMessage(context, "-------------------");
         for (SubCommand subCommand : new CommandManager().getSubCommandList()) {
-            handleCommandReturnMessage.handleCommandReturnMessage(context, subCommand.getUsage() + "---" + subCommand.getDescription());
+            handleCommandReturnMessageService.handleCommandReturnMessage(context, subCommand.getUsage() + "---" + subCommand.getDescription());
         }
-        handleCommandReturnMessage.handleCommandReturnMessage(context, "-------------------");
+        handleCommandReturnMessageService.handleCommandReturnMessage(context, "-------------------");
         return Command.SINGLE_SUCCESS;
     }
 }

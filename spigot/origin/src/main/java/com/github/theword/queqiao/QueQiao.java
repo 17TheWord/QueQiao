@@ -1,8 +1,8 @@
 package com.github.theword.queqiao;
 
 import com.github.theword.queqiao.command.CommandExecutor;
-import com.github.theword.queqiao.handle.HandleApiService;
-import com.github.theword.queqiao.handle.HandleCommandReturnMessageService;
+import com.github.theword.queqiao.handle.HandleApiImpl;
+import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -18,7 +18,7 @@ public final class QueQiao extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        initTool(false, new HandleApiService(), new HandleCommandReturnMessageService());
+        initTool(false, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
         websocketManager.startWebsocket(null);
         Bukkit.getPluginManager().registerEvents(new EventProcessor(), this);
 

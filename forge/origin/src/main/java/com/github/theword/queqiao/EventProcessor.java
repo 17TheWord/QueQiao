@@ -25,7 +25,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
-        if (event.isCanceled() || !config.getSubscribe_event().isPlayer_chat()) return;
+        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerChat()) return;
 
         ForgeServerPlayer player = getForgePlayer(event.getPlayer());
 
@@ -41,7 +41,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerLoggedInEvent event) {
-        if (event.isCanceled() || !config.getSubscribe_event().isPlayer_join()) return;
+        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerJoin()) return;
 
         // IF > forge-1.16.5
 //        ForgeServerPlayer player = getForgePlayer((ServerPlayer) event.getEntity());
@@ -55,7 +55,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerQuit(PlayerLoggedOutEvent event) {
-        if (event.isCanceled() || !config.getSubscribe_event().isPlayer_quit()) return;
+        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerQuit()) return;
 
         // IF > forge-1.16.5
 //        ForgeServerPlayer player = getForgePlayer((ServerPlayer) event.getEntity());
@@ -69,7 +69,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
-        if (event.isCanceled() || !config.getSubscribe_event().isPlayer_command()) return;
+        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerCommand()) return;
 
         // IF >= forge-1.19
 //        if (!event.getParseResults().getContext().getSource().isPlayer()) return;
@@ -97,7 +97,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
-        if (event.isCanceled() || !config.getSubscribe_event().isPlayer_death()) return;
+        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerDeath()) return;
 
         // IF > forge-1.16.5
 //        if (!(event.getEntity() instanceof ServerPlayer)) return;

@@ -18,7 +18,7 @@ public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void onDeath(DamageSource source, CallbackInfo ci) {
-        if (!config.getSubscribe_event().isPlayer_death()) return;
+        if (!config.getSubscribeEvent().isPlayerDeath()) return;
 
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         String message = player.getDamageTracker().getDeathMessage().getString();
@@ -28,10 +28,9 @@ public abstract class ServerPlayerEntityMixin {
 
     @Inject(method = "onDisconnect", at = @At("HEAD"))
     public void onDisconnected(CallbackInfo ci) {
-        if (!config.getSubscribe_event().isPlayer_quit()) return;
+        if (!config.getSubscribeEvent().isPlayerQuit()) return;
 
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        String message = player.getDisplayName().getString();
         FabricServerPlayConnectionDisconnectEvent event = new FabricServerPlayConnectionDisconnectEvent(getFabricPlayer(player));
         sendWebsocketMessage(event);
     }

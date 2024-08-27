@@ -40,7 +40,7 @@ public class ServerPlayNetworkHandlerMixin {
         // END IF
 
         if (message.startsWith("/")) return;
-        if (!config.getSubscribe_event().isPlayer_chat()) return;
+        if (!config.getSubscribeEvent().isPlayerChat()) return;
 
         FabricServerMessageEvent event = new FabricServerMessageEvent("", getFabricPlayer(player), message);
         sendWebsocketMessage(event);
@@ -57,7 +57,7 @@ public class ServerPlayNetworkHandlerMixin {
 //    @Inject(method = "executeCommand", at = @At("HEAD"))
 //    private void executeCommand(String input, CallbackInfo ci) {
         // END IF
-        if (!config.getSubscribe_event().isPlayer_command()) return;
+        if (!config.getSubscribeEvent().isPlayerCommand()) return;
 
         String registerOrLoginCommand = isRegisterOrLoginCommand(input);
 
