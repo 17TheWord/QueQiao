@@ -1,8 +1,9 @@
 package com.github.theword.queqiao.handle;
 
 import com.github.theword.queqiao.tool.handle.HandleApiService;
+import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.TitlePayload;
-import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
+import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
 import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 import com.github.theword.queqiao.tool.utils.Tool;
 // IF >= fabric-1.20
@@ -21,7 +22,6 @@ import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
-import org.java_websocket.WebSocket;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +31,7 @@ import java.util.UUID;
 // END IF
 
 import static com.github.theword.queqiao.QueQiao.minecraftServer;
+import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
 
 public class HandleApiImpl implements HandleApiService {
     private final ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
@@ -38,11 +39,10 @@ public class HandleApiImpl implements HandleApiService {
     /**
      * 广播消息
      *
-     * @param webSocket   websocket
      * @param messageList 消息体
      */
     @Override
-    public void handleBroadcastMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleBroadcastMessage(List<MessageSegment> messageList) {
         MutableText mutableText = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
         mutableText.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
         // IF >= fabric-1.19.2
@@ -55,11 +55,10 @@ public class HandleApiImpl implements HandleApiService {
     /**
      * 广播 Send Title 消息
      *
-     * @param webSocket    websocket
      * @param titlePayload Title 消息体
      */
     @Override
-    public void handleSendTitleMessage(WebSocket webSocket, TitlePayload titlePayload) {
+    public void handleSendTitleMessage(TitlePayload titlePayload) {
         // IF > fabric-1.16.5
 //        sendPacket(new TitleS2CPacket(parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle())));
 //        if (titlePayload.getSubtitle() != null)
@@ -75,11 +74,10 @@ public class HandleApiImpl implements HandleApiService {
     /**
      * 广播 Action Bar 消息
      *
-     * @param webSocket   websocket
      * @param messageList Action Bar 消息体
      */
     @Override
-    public void handleActionBarMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleSendActionBarMessage(List<MessageSegment> messageList) {
         // IF >= fabric-1.19
 //        sendPacket(new GameMessageS2CPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList), true));
         // ELSE
@@ -90,38 +88,34 @@ public class HandleApiImpl implements HandleApiService {
     /**
      * 私聊消息
      *
-     * @param webSocket        websocket
-     * @param targetPlayerName 目标玩家名称
-     * @param targetPlayerUuid 目标玩家 UUID
-     * @param messageList      消息体
+     * @param nickname    目标玩家名称
+     * @param uuid        目标玩家 UUID
+     * @param messageList 消息体
      */
     @Override
-    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
+    public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, List<MessageSegment> messageList) {
         ServerPlayerEntity serverPlayerEntity;
-        if (targetPlayerUuid != null)
-            serverPlayerEntity = minecraftServer.getPlayerManager().getPlayer(targetPlayerUuid);
-        else if (targetPlayerName != null && !targetPlayerName.isEmpty())
-            serverPlayerEntity = minecraftServer.getPlayerManager().getPlayer(targetPlayerName);
+        if (uuid != null)
+            serverPlayerEntity = minecraftServer.getPlayerManager().getPlayer(uuid);
+        else if (nickname != null && !nickname.isEmpty())
+            serverPlayerEntity = minecraftServer.getPlayerManager().getPlayer(nickname);
         else {
-            webSocket.send("{\"code\":400,\"message\":\"Target player not found.\"}");
-            return;
+            return PrivateMessageResponse.playerNotFound();
         }
 
         if (serverPlayerEntity == null) {
-            webSocket.send("{\"code\":400,\"message\":\"Target player is null.\"}");
-            return;
+            return PrivateMessageResponse.playerIsNull();
         }
 
         if (serverPlayerEntity.isDisconnected()) {
-            webSocket.send("{\"code\":400,\"message\":\"Target player is disconnected.\"}");
-            return;
+            return PrivateMessageResponse.playerNotOnline();
         }
         // IF >= fabric-1.19
 //        serverPlayerEntity.sendMessage(parseJsonToEventImpl.parseMessageListToComponent(messageList));
         // ELSE
 //        serverPlayerEntity.sendMessage(parseJsonToEventImpl.parseMessageListToComponent(messageList), false);
         // END IF
-        webSocket.send("{\"code\":200,\"message\":\"Private message sent.\"}");
+        return PrivateMessageResponse.sendSuccess(getFabricPlayer(serverPlayerEntity));
     }
 
     private void sendPacket(Packet<?> packet) {

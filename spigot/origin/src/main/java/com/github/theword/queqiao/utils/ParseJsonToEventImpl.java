@@ -2,6 +2,7 @@ package com.github.theword.queqiao.utils;
 
 
 import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
+import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
@@ -16,7 +17,7 @@ import net.md_5.bungee.api.chat.*;
 
 import java.util.List;
 
-import static com.github.theword.queqiao.tool.utils.Tool.debugLog;
+import static com.github.theword.queqiao.tool.utils.Tool.logger;
 
 
 public class ParseJsonToEventImpl implements ParseJsonToEventService {
@@ -114,16 +115,16 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
      * @return TextComponent
      */
     @Override
-    public TextComponent parseMessageListToComponent(List<CommonTextComponent> commonTextComponentList) {
+    public TextComponent parseMessageListToComponent(List<MessageSegment> commonTextComponentList) {
         TextComponent component = new TextComponent();
         StringBuilder msgLogText = new StringBuilder();
 
-        for (CommonTextComponent commonTextComponent : commonTextComponentList) {
-            TextComponent msgComponent = parsePerMessageToComponent(commonTextComponent);
+        for (MessageSegment messageSegment : commonTextComponentList) {
+            TextComponent msgComponent = parsePerMessageToComponent(messageSegment.getData());
             component.addExtra(msgComponent);
-            msgLogText.append(commonTextComponent.getText());
+            msgLogText.append(messageSegment.getData().getText());
         }
-        debugLog(msgLogText.toString());
+        logger.info(msgLogText.toString());
         return component;
     }
 }

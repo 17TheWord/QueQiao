@@ -1,8 +1,9 @@
 package com.github.theword.queqiao.handle;
 
 import com.github.theword.queqiao.tool.handle.HandleApiService;
+import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.TitlePayload;
-import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
+import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
 import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 // IF > forge-1.16.5
@@ -26,12 +27,11 @@ import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 //import java.util.UUID;
 // END IF
 
-import org.java_websocket.WebSocket;
-
 import java.util.List;
 import java.util.UUID;
 
 import static com.github.theword.queqiao.QueQiao.minecraftServer;
+import static com.github.theword.queqiao.utils.ForgeTool.getForgePlayer;
 
 
 public class HandleApiImpl implements HandleApiService {
@@ -40,11 +40,10 @@ public class HandleApiImpl implements HandleApiService {
     /**
      * 广播消息
      *
-     * @param webSocket   websocket
      * @param messageList 消息体
      */
     @Override
-    public void handleBroadcastMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleBroadcastMessage(List<MessageSegment> messageList) {
         // IF > forge-1.16.5
 //        MutableComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
         // ELSE
@@ -59,7 +58,7 @@ public class HandleApiImpl implements HandleApiService {
 
         // IF > forge-1.16.5
 //        for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-        // ELSE
+            // ELSE
 //        for (ServerPlayerEntity serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
             // END IF
 
@@ -74,11 +73,10 @@ public class HandleApiImpl implements HandleApiService {
     /**
      * 广播 Send Title 消息
      *
-     * @param webSocket    websocket
      * @param titlePayload Send Title 消息体
      */
     @Override
-    public void handleSendTitleMessage(WebSocket webSocket, TitlePayload titlePayload) {
+    public void handleSendTitleMessage(TitlePayload titlePayload) {
         // IF > forge-1.16.5
 //        sendPacket(new ClientboundSetTitleTextPacket(parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle())));
 //        if (titlePayload.getSubtitle() != null)
@@ -95,11 +93,10 @@ public class HandleApiImpl implements HandleApiService {
     /**
      * 广播 Action Bar 消息
      *
-     * @param webSocket   websocket
      * @param messageList Action Bar 消息体
      */
     @Override
-    public void handleActionBarMessage(WebSocket webSocket, List<CommonTextComponent> messageList) {
+    public void handleSendActionBarMessage(List<MessageSegment> messageList) {
         // IF > forge-1.16.5
 //        sendPacket(new ClientboundSetActionBarTextPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList)));
         // ELSE
@@ -110,35 +107,31 @@ public class HandleApiImpl implements HandleApiService {
     /**
      * 私聊消息
      *
-     * @param webSocket        websocket
-     * @param targetPlayerName 目标玩家名称
-     * @param targetPlayerUuid 目标玩家 UUID
-     * @param messageList      消息体
+     * @param nickname    目标玩家名称
+     * @param uuid        目标玩家 UUID
+     * @param messageList 消息体
      */
     @Override
-    public void handlePrivateMessage(WebSocket webSocket, String targetPlayerName, UUID targetPlayerUuid, List<CommonTextComponent> messageList) {
+    public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, List<MessageSegment> messageList) {
         // IF > forge-1.16.5
 //        ServerPlayer targetPlayer;
         // ELSE
 //        ServerPlayerEntity targetPlayer;
         // END IF
-        if (targetPlayerUuid != null)
-            targetPlayer = minecraftServer.getPlayerList().getPlayer(targetPlayerUuid);
-        else if (targetPlayerName != null && !targetPlayerName.isEmpty())
-            targetPlayer = minecraftServer.getPlayerList().getPlayerByName(targetPlayerName);
+        if (uuid != null)
+            targetPlayer = minecraftServer.getPlayerList().getPlayer(uuid);
+        else if (nickname != null && !nickname.isEmpty())
+            targetPlayer = minecraftServer.getPlayerList().getPlayerByName(nickname);
         else {
-            webSocket.send("{\"code\":400,\"message\":\"Target player not found.\"}");
-            return;
+            return PrivateMessageResponse.playerNotFound();
         }
 
         if (targetPlayer == null) {
-            webSocket.send("{\"code\":400,\"message\":\"Target player is null.\"}");
-            return;
+            return PrivateMessageResponse.playerIsNull();
         }
 
         if (targetPlayer.hasDisconnected()) {
-            webSocket.send("{\"code\":400,\"message\":\"Target player is disconnected.\"}");
-            return;
+            return PrivateMessageResponse.playerNotOnline();
         }
         // IF > forge-1.16.5
 //        MutableComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
@@ -149,12 +142,12 @@ public class HandleApiImpl implements HandleApiService {
         // END IF
 
         // IF >= forge-1.19
-//            targetPlayer.sendSystemMessage(mutableComponent);
+//        targetPlayer.sendSystemMessage(mutableComponent);
         // ELSE
 //        targetPlayer.sendMessage(mutableComponent, UUID.randomUUID());
         // END IF
 
-        webSocket.send("{\"code\":200,\"message\":\"Private message sent.\"}");
+        return PrivateMessageResponse.sendSuccess(getForgePlayer(targetPlayer));
     }
 
     // IF > forge-1.16.5

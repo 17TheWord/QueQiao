@@ -1,6 +1,7 @@
 package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
+import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -10,17 +11,21 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.intellij.lang.annotations.Subst;
 
-
 import java.util.List;
+
+import static com.github.theword.queqiao.tool.utils.Tool.logger;
 
 public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
     @Override
-    public Component parseMessageListToComponent(List<CommonTextComponent> commonBaseComponentList) {
+    public Component parseMessageListToComponent(List<MessageSegment> commonBaseComponentList) {
         Component component = Component.empty();
-        for (CommonTextComponent commonBaseComponent : commonBaseComponentList) {
-            component = component.append(Component.text(commonBaseComponent.getText()));
+        StringBuilder msgLogText = new StringBuilder();
+        for (MessageSegment messageSegment : commonBaseComponentList) {
+            component = component.append(parsePerMessageToComponent(messageSegment.getData()));
+            msgLogText.append(messageSegment.getData().getText());
         }
+        logger.info(msgLogText.toString());
         return component;
     }
 
