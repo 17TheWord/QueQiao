@@ -2,6 +2,7 @@ package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
 import com.github.theword.queqiao.tool.payload.MessageSegment;
+import com.github.theword.queqiao.tool.payload.modle.component.CommonBaseComponent;
 import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import com.github.theword.queqiao.tool.payload.modle.hover.CommonHoverEntity;
 import com.github.theword.queqiao.tool.payload.modle.hover.CommonHoverItem;
@@ -37,51 +38,66 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
     }
 
     @Override
-    public MutableText parsePerMessageToComponent(CommonTextComponent commonTextComponent) {
-        // IF >= fabric-1.21
-//        MutableText tempTextContent = Text.literal(commonTextComponent.getText());
-        // ELSE IF >= fabric-1.19
-//        LiteralTextContent tempTextContent = new LiteralTextContent(commonTextComponent.getText());
+    public Text parseCommonBaseComponentListToComponent(List<CommonBaseComponent> list) {
+        // IF > fabric-1.18.2
+//        MutableText mutableText = Text.empty();
         // ELSE
-//        LiteralText tempTextContent = new LiteralText(commonTextComponent.getText());
+//        MutableText mutableText = LiteralText.EMPTY.copy();
+        // END IF
+        for (CommonBaseComponent commonBaseComponent : list) {
+            mutableText.append(parsePerMessageToComponent(commonBaseComponent));
+        }
+        return mutableText;
+    }
+
+    @Override
+    public MutableText parsePerMessageToComponent(CommonBaseComponent commonBaseComponent) {
+        // IF >= fabric-1.21
+//        MutableText tempTextContent = Text.literal(commonBaseComponent.getText());
+        // ELSE IF >= fabric-1.19
+//        LiteralTextContent tempTextContent = new LiteralTextContent(commonBaseComponent.getText());
+        // ELSE
+//        LiteralText tempTextContent = new LiteralText(commonBaseComponent.getText());
         // END IF
         Identifier identifier = null;
-        if (commonTextComponent.getFont() != null) {
+        if (commonBaseComponent.getFont() != null) {
             // IF >= fabric-1.21
-//            identifier = Identifier.of(Identifier.DEFAULT_NAMESPACE, commonTextComponent.getFont());
+//            identifier = Identifier.of(Identifier.DEFAULT_NAMESPACE, commonBaseComponent.getFont());
             // ELSE IF >= fabric-1.18
-//            identifier = new Identifier(Identifier.DEFAULT_NAMESPACE, commonTextComponent.getFont());
+//            identifier = new Identifier(Identifier.DEFAULT_NAMESPACE, commonBaseComponent.getFont());
             // ELSE
-//            identifier = new Identifier(commonTextComponent.getFont());
+//            identifier = new Identifier(commonBaseComponent.getFont());
             // END IF
         }
 
         Style style = Style.EMPTY
-                .withBold(commonTextComponent.isBold())
-                .withItalic(commonTextComponent.isItalic())
-                .withUnderline(commonTextComponent.isUnderlined())
-                .withInsertion(commonTextComponent.getInsertion())
+                .withBold(commonBaseComponent.isBold())
+                .withItalic(commonBaseComponent.isItalic())
+                .withUnderline(commonBaseComponent.isUnderlined())
+                .withInsertion(commonBaseComponent.getInsertion())
                 .withFont(identifier)
                 // IF > fabric-1.16.5
-//                .withObfuscated(commonTextComponent.isObfuscated())
-//                .withStrikethrough(commonTextComponent.isStrikethrough())
+//                .withObfuscated(commonBaseComponent.isObfuscated())
+//                .withStrikethrough(commonBaseComponent.isStrikethrough())
                 // END IF
                 ;
 
-        if (commonTextComponent.getColor() != null && !commonTextComponent.getColor().isEmpty()) {
+        if (commonBaseComponent.getColor() != null && !commonBaseComponent.getColor().isEmpty()) {
             // IF fabric-1.21
-//            style.withColor(TextColor.parse(commonTextComponent.getColor()).getOrThrow());
+//            style.withColor(TextColor.parse(commonBaseComponent.getColor()).getOrThrow());
             // ELSE
-//            style.withColor(TextColor.parse(commonTextComponent.getColor()));
+//            style.withColor(TextColor.parse(commonBaseComponent.getColor()));
             // END IF
         } else style.withColor(TextColor.fromFormatting(Formatting.WHITE));
 
-        // 配置 TextComponent 额外属性
-        if (commonTextComponent.getClickEvent() != null)
-            style.withClickEvent(getClickEvent(commonTextComponent));
+        if (commonBaseComponent instanceof CommonTextComponent) {
+            CommonTextComponent commonTextComponent = (CommonTextComponent) commonBaseComponent;
+            if (commonTextComponent.getClickEvent() != null)
+                style.withClickEvent(getClickEvent(commonTextComponent));
 
-        if (commonTextComponent.getHoverEvent() != null)
-            style.withHoverEvent(getHoverEvent(commonTextComponent));
+            if (commonTextComponent.getHoverEvent() != null)
+                style.withHoverEvent(getHoverEvent(commonTextComponent));
+        }
 
 
         // IF < fabric-1.21 && >= fabric-1.19
@@ -108,7 +124,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         switch (commonTextComponent.getHoverEvent().getAction().toLowerCase()) {
             case "show_text":
                 if (commonTextComponent.getHoverEvent().getText() != null && !commonTextComponent.getHoverEvent().getText().isEmpty()) {
-                    Text textComponent = parseMessageListToComponent(commonTextComponent.getHoverEvent().getText());
+                    Text textComponent = parseCommonBaseComponentListToComponent(commonTextComponent.getHoverEvent().getText());
                     hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, textComponent);
                 }
                 break;
@@ -123,7 +139,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
                 CommonHoverEntity commonHoverEntity = commonTextComponent.getHoverEvent().getEntity();
                 Optional<EntityType<?>> entityType = EntityType.get(commonHoverEntity.getType());
                 if (entityType.isPresent()) {
-                    HoverEvent.EntityContent entityTooltipInfo = new HoverEvent.EntityContent(entityType.get(), UUID.randomUUID(), parseMessageListToComponent(commonHoverEntity.getName()));
+                    HoverEvent.EntityContent entityTooltipInfo = new HoverEvent.EntityContent(entityType.get(), UUID.randomUUID(), parseCommonBaseComponentListToComponent(commonHoverEntity.getName()));
                     hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, entityTooltipInfo);
                 }
                 break;

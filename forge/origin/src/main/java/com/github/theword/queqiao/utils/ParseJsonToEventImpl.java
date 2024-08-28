@@ -2,6 +2,7 @@ package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
 import com.github.theword.queqiao.tool.payload.MessageSegment;
+import com.github.theword.queqiao.tool.payload.modle.component.CommonBaseComponent;
 import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import com.github.theword.queqiao.tool.payload.modle.hover.CommonHoverEntity;
 import com.github.theword.queqiao.tool.payload.modle.hover.CommonHoverItem;
@@ -39,6 +40,7 @@ import static com.github.theword.queqiao.tool.utils.Tool.logger;
 
 public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
+    @Override
     // IF > forge-1.16.5
 //    public MutableComponent parseMessageListToComponent(List<MessageSegment> myBaseComponentList) {
         // ELSE
@@ -66,11 +68,37 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         return mutableComponent;
     }
 
-
+    @Override
     // IF > forge-1.16.5
-//    public MutableComponent parsePerMessageToComponent(CommonTextComponent myBaseComponent) {
+//    public MutableComponent parseCommonBaseComponentListToComponent(List<CommonBaseComponent> myBaseComponentList) {
+        // ELSE
+//    public StringTextComponent parseCommonBaseComponentListToComponent(List<CommonBaseComponent> myBaseComponentList) {
+        // END IF
+
+        // IF >= forge-1.19
+//        MutableComponent mutableComponent = MutableComponent.create(new LiteralContents(""));
+        // ELSE IF >= forge-1.18 && < forge-1.19
+//        MutableComponent mutableComponent = new TextComponent("");
+        // ELSE
+//        StringTextComponent mutableComponent = new StringTextComponent("");
+        // END IF
+        for (CommonBaseComponent commonBaseComponent : myBaseComponentList) {
+            // IF > forge-1.16.5
+//            MutableComponent tempMutableComponent = parsePerMessageToComponent(commonBaseComponent);
+            // ELSE
+//            StringTextComponent tempMutableComponent = parsePerMessageToComponent(commonBaseComponent);
+            // END IF
+            mutableComponent.append(tempMutableComponent);
+        }
+        return mutableComponent;
+    }
+
+
+    @Override
+    // IF > forge-1.16.5
+//    public MutableComponent parsePerMessageToComponent(CommonBaseComponent myBaseComponent) {
 // ELSE
-//    public StringTextComponent parsePerMessageToComponent(CommonTextComponent myBaseComponent) {
+//    public StringTextComponent parsePerMessageToComponent(CommonBaseComponent myBaseComponent) {
 // END IF
 
 // IF >= forge-1.19
@@ -83,10 +111,13 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
         Style style = getStyleFromBaseComponent(myBaseComponent);
 
-        if (myBaseComponent.getClickEvent() != null)
-            style = style.withClickEvent(getClickEventFromBaseComponent(myBaseComponent));
-        if (myBaseComponent.getHoverEvent() != null)
-            style = style.withHoverEvent(getHoverEventFromBaseComponent(myBaseComponent));
+        if (myBaseComponent instanceof CommonTextComponent) {
+            CommonTextComponent commonTextComponent = (CommonTextComponent) myBaseComponent;
+            if (commonTextComponent.getClickEvent() != null)
+                style = style.withClickEvent(getClickEventFromBaseComponent(commonTextComponent));
+            if (commonTextComponent.getHoverEvent() != null)
+                style = style.withHoverEvent(getHoverEventFromBaseComponent(commonTextComponent));
+        }
 
 
         // IF >= forge-1.19
@@ -100,7 +131,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
     }
 
 
-    private Style getStyleFromBaseComponent(CommonTextComponent myBaseComponent) {
+    private Style getStyleFromBaseComponent(CommonBaseComponent myBaseComponent) {
         ResourceLocation font = null;
         if (myBaseComponent.getFont() != null) {
             // IF >= forge-1.21
@@ -163,7 +194,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         if (action.equals(HoverEvent.Action.SHOW_TEXT)) {
             if (myTextComponent.getHoverEvent().getText() != null && !myTextComponent.getHoverEvent().getText().isEmpty()) {
                 // IF > forge-1.16.5
-//                MutableComponent textComponent = parseMessageListToComponent(myTextComponent.getHoverEvent().getText());
+//                MutableComponent textComponent = parseCommonBaseComponentListToComponent(myTextComponent.getHoverEvent().getText());
                 // ELSE
 //                        StringTextComponent textComponent = parseMessageListToComponent(myTextComponent.getHoverEvent().getText());
                 // END IF
@@ -184,7 +215,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
             Optional<EntityType<?>> entityType = EntityType.byString(commonHoverEntity.getType());
             if (entityType.isPresent()) {
                 // IF > forge-1.16.5
-//                HoverEvent.EntityTooltipInfo entityTooltipInfo = new HoverEvent.EntityTooltipInfo(entityType.get(), UUID.randomUUID(), parseMessageListToComponent(commonHoverEntity.getName()));
+//                HoverEvent.EntityTooltipInfo entityTooltipInfo = new HoverEvent.EntityTooltipInfo(entityType.get(), UUID.randomUUID(), parseCommonBaseComponentListToComponent(commonHoverEntity.getName()));
                 // ELSE
 //                        HoverEvent.EntityHover entityTooltipInfo = new HoverEvent.EntityHover(entityType.get(), UUID.randomUUID(), parseMessageListToComponent(commonHoverEntity.getName()));
                 // END IF

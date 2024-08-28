@@ -2,6 +2,7 @@ package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
 import com.github.theword.queqiao.tool.payload.MessageSegment;
+import com.github.theword.queqiao.tool.payload.modle.component.CommonBaseComponent;
 import com.github.theword.queqiao.tool.payload.modle.component.CommonTextComponent;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -30,20 +31,32 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
     }
 
     @Override
-    public Component parsePerMessageToComponent(CommonTextComponent commonTextComponent) {
-        Component component = Component.text(commonTextComponent.getText());
+    public Component parseCommonBaseComponentListToComponent(List<CommonBaseComponent> list) {
+        Component component = Component.empty();
+        for (CommonBaseComponent commonBaseComponent : list) {
+            component = component.append(parsePerMessageToComponent(commonBaseComponent));
+        }
+        return component;
+    }
 
-        if (commonTextComponent.getColor() != null)
-            component = component.color(getNamedTextColor(commonTextComponent.getColor()));
+    @Override
+    public Component parsePerMessageToComponent(CommonBaseComponent commonBaseComponent) {
+        Component component = Component.text(commonBaseComponent.getText());
+
+        if (commonBaseComponent.getColor() != null)
+            component = component.color(getNamedTextColor(commonBaseComponent.getColor()));
         else component = component.color(NamedTextColor.WHITE);
 
-        component = getTextStyle(commonTextComponent, component);
+        component = getTextStyle(commonBaseComponent, component);
 
-        if (commonTextComponent.getClickEvent() != null)
-            component = component.clickEvent(getClickEvent(commonTextComponent));
+        if (commonBaseComponent instanceof CommonTextComponent) {
+            CommonTextComponent commonTextComponent = (CommonTextComponent) commonBaseComponent;
+            if (commonTextComponent.getClickEvent() != null)
+                component = component.clickEvent(getClickEvent(commonTextComponent));
 
-        if (commonTextComponent.getHoverEvent() != null)
-            component = component.hoverEvent(getHoverEvent(commonTextComponent));
+            if (commonTextComponent.getHoverEvent() != null)
+                component = component.hoverEvent(getHoverEvent(commonTextComponent));
+        }
 
         return component;
     }
@@ -57,7 +70,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         String action = commonTextComponent.getClickEvent().getAction();
         switch (action) {
             case "show_text" -> {
-                return HoverEvent.showText(parseMessageListToComponent(commonTextComponent.getHoverEvent().getText()));
+                return HoverEvent.showText(parseCommonBaseComponentListToComponent(commonTextComponent.getHoverEvent().getText()));
             }
             case "show_item" -> {
                 return HoverEvent.showItem(
@@ -69,7 +82,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
                 return HoverEvent.showEntity(
                         Key.key(commonTextComponent.getHoverEvent().getEntity().getKey()),
                         commonTextComponent.getHoverEvent().getEntity().getUuid(),
-                        parseMessageListToComponent(commonTextComponent.getHoverEvent().getEntity().getName())
+                        parseCommonBaseComponentListToComponent(commonTextComponent.getHoverEvent().getEntity().getName())
                 );
             }
         }
@@ -77,7 +90,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
     }
 
 
-    private Component getTextStyle(CommonTextComponent commonBaseComponent, Component component) {
+    private Component getTextStyle(CommonBaseComponent commonBaseComponent, Component component) {
         if (commonBaseComponent.isBold())
             component = component.decorate(TextDecoration.BOLD);
 
