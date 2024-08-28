@@ -55,7 +55,7 @@ public class HandleApiImpl implements HandleApiService {
      * @param messageList 消息体
      */
     @Override
-    public PrivateMessageResponse handlePrivateMessage(String nickname, UUID uuid, List<MessageSegment> messageList) {
+    public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, List<MessageSegment> messageList) {
         Player targetPlayer;
         if (uuid != null)
             targetPlayer = instance.getServer().getPlayer(uuid);
@@ -80,7 +80,7 @@ public class HandleApiImpl implements HandleApiService {
     }
 
     @Override
-    public void handleActionBarMessage(List<MessageSegment> messageList) {
+    public void handleSendActionBarMessage(List<MessageSegment> messageList) {
         TextComponent actionTextComponent = parseJsonToEventService.parseMessageListToComponent(messageList);
         for (Player player : instance.getServer().getOnlinePlayers()) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, actionTextComponent);
