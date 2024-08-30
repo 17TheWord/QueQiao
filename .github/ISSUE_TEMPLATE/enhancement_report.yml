@@ -1,10 +1,8 @@
 name: 功能建议
 description: 改进现有功能或提出新功能
-title: [ Enhancement ]（在此简单描述新的功能或建议）
-assignees:
-  - 17TheWord
-labels:
-  - "enhancement"
+title: "[Enhancement]（在此简单描述新的功能或建议）"
+assignees: 17TheWord
+labels: [ "enhancement" ]
 body:
   - type: markdown
     attributes:

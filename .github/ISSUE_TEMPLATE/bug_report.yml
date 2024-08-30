@@ -1,10 +1,8 @@
 name: 错误反馈
 description: 在使用过程中遇到问题时，请选择该模板提交反馈
-title: [Bug]（在此简述碰到的问题）
-assignees:
-  - 17TheWord
-labels:
-  - "bug"
+title: "[Bug]（在此简述碰到的问题）"
+assignees: 17TheWord
+labels: [ "bug" ]
 body:
   - type: markdown
     attributes:
