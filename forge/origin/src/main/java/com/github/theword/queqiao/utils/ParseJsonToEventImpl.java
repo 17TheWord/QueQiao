@@ -196,7 +196,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
                 // IF > forge-1.16.5
 //                MutableComponent textComponent = parseCommonBaseComponentListToComponent(myTextComponent.getHoverEvent().getText());
                 // ELSE
-//                        StringTextComponent textComponent = parseMessageListToComponent(myTextComponent.getHoverEvent().getText());
+//                        StringTextComponent textComponent = parseCommonBaseComponentListToComponent(myTextComponent.getHoverEvent().getText());
                 // END IF
                 hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, textComponent);
             }
@@ -217,7 +217,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
                 // IF > forge-1.16.5
 //                HoverEvent.EntityTooltipInfo entityTooltipInfo = new HoverEvent.EntityTooltipInfo(entityType.get(), UUID.randomUUID(), parseCommonBaseComponentListToComponent(commonHoverEntity.getName()));
                 // ELSE
-//                        HoverEvent.EntityHover entityTooltipInfo = new HoverEvent.EntityHover(entityType.get(), UUID.randomUUID(), parseMessageListToComponent(commonHoverEntity.getName()));
+//                        HoverEvent.EntityHover entityTooltipInfo = new HoverEvent.EntityHover(entityType.get(), UUID.randomUUID(), parseCommonBaseComponentListToComponent(commonHoverEntity.getName()));
                 // END IF
                 hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, entityTooltipInfo);
             }
