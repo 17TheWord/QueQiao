@@ -53,10 +53,10 @@
         - [`玩家登出`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
 - 通过 `Websocket` 接收 `Json` 消息，并转发至游戏玩家。
     - 已实现的接口
-        - [`Broadcast`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`Title & SubTitle`](https://github.com/17TheWord/QueQiao/wiki/5.-API#title--subtitle)
+        - [`Broadcast`](https://github.com/17TheWord/QueQiao/wiki/5.-API#broadcast--send-message)
+        - [`PrivateMessage`](https://github.com/17TheWord/QueQiao/wiki/5.-API#privatemessage)
+        - [`Title & SubTitle`](https://github.com/17TheWord/QueQiao/wiki/5.-API#title)
         - [`ActionBar`](https://github.com/17TheWord/QueQiao/wiki/5.-API#actionbar)
-        - [`Private`](https://github.com/17TheWord/QueQiao/wiki/5.-API#private)
 
 ## 快速开始
 
