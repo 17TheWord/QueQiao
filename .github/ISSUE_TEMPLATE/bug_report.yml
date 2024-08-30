@@ -9,7 +9,7 @@ body:
       value: |
         ##请补全标题并填写下方内容
 
-  - type: textarea
+  - type: input
     id: run-env
     attributes:
       label: 运行环境
