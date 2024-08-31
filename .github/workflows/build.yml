@@ -75,7 +75,7 @@ jobs:
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}
           version: ${{ env.MOD_VERSION }}
           version-type: release
-          loaders: ${{ matrix.config.loaders }}
+          loaders: ${{ matrix.config.mc-loader }}
           game-versions: ${{ matrix.config.mc-version }}
           files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
