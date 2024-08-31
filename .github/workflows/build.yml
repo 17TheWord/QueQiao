@@ -65,8 +65,13 @@ jobs:
 
       - name: Set Version Type
         id: set-version-type
-        run: echo "VERSION_TYPE=$([[ '${{ github.ref }}' == 'refs/heads/main' ]] && echo 'release' || echo 'beta')" >> $GITHUB_ENV
-
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -eq 'refs/heads/main') {
+            echo "VERSION_TYPE=release" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          } else {
+            echo "VERSION_TYPE=beta" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          }
 
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
