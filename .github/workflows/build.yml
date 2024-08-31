@@ -63,6 +63,21 @@ jobs:
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
           path: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
+      - uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: AANobbMI
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          curseforge-id: 394468
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}
+          version: ${{ env.MOD_VERSION }}
+          version-type: release
+          loaders: ${{ matrix.config.loaders }}
+          game-versions: ${{ matrix.config.mc-version }}
+          files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
+
       - name: Upload to Release
         if: ${{ github.event_name == 'push' }}
         run: gh release upload v${{ env.MOD_VERSION }} QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
