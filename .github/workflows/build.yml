@@ -64,6 +64,7 @@ jobs:
           path: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
       - uses: Kir-Antipov/mc-publish@v3.3
+        if: ${{ matrix.config.mc-loader }} == 'forge' || ${{ matrix.config.mc-loader }} == 'fabric'
         with:
           modrinth-id: AANobbMI
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
