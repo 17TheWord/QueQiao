@@ -63,6 +63,11 @@ jobs:
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
           path: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
+      - name: Set Version Type
+        id: set-version-type
+        run: echo "VERSION_TYPE=$([[ '${{ github.ref }}' == 'refs/heads/main' ]] && echo 'release' || echo 'beta')" >> $GITHUB_ENV
+
+
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: rVJvtYoX
@@ -73,7 +78,7 @@ jobs:
 
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}
           version: ${{ env.MOD_VERSION }}
-          version-type: release
+          version-type: ${{ env.VERSION_TYPE }}
           loaders: ${{ matrix.config.mc-loader }}
           game-versions: ${{ matrix.config.mc-version }}
           files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
