@@ -73,23 +73,21 @@ jobs:
             echo "VERSION_TYPE=beta" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
           }
 
-      - name: Publish to Modrinth
+      - name: Set Game Version
+        id: set-game-version
+        shell: pwsh
+        run: |
+          if (${{ matrix.config.mc-loader }} -eq 'velocity') {
+            echo "game_version=1.20.1" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          } else {
+            echo "game_version=${{ matrix.config.mc-version }}" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          }
+
+      - name: Publish to Modrinth and CurseForge
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: rVJvtYoX
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-
-          name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}
-          version: ${{ env.MOD_VERSION }}
-          version-type: ${{ env.VERSION_TYPE }}
-          loaders: ${{ matrix.config.mc-loader }}
-          game-versions: ${{ matrix.config.mc-version }}
-          files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
-
-      - name: Publish to CurseForge
-        if: ${{ matrix.config.mc-loader != 'velocity' }}
-        uses: Kir-Antipov/mc-publish@v3.3
-        with:
           curseforge-id: 1084495
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
@@ -97,8 +95,22 @@ jobs:
           version: ${{ env.MOD_VERSION }}
           version-type: ${{ env.VERSION_TYPE }}
           loaders: ${{ matrix.config.mc-loader }}
-          game-versions: ${{ matrix.config.mc-version }}
+          game-versions: ${{ env.game_version }}
           files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
+
+#      - name: Publish to CurseForge
+#        if: ${{ matrix.config.mc-loader != 'velocity' }}
+#        uses: Kir-Antipov/mc-publish@v3.3
+#        with:
+#          curseforge-id: 1084495
+#          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+#
+#          name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}
+#          version: ${{ env.MOD_VERSION }}
+#          version-type: ${{ env.VERSION_TYPE }}
+#          loaders: ${{ matrix.config.mc-loader }}
+#          game-versions: ${{ matrix.config.mc-version }}
+#          files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
       - name: Upload to Release
         if: ${{ github.event_name == 'push' }}
