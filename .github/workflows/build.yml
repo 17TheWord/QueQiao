@@ -64,13 +64,13 @@ jobs:
           path: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
       - uses: Kir-Antipov/mc-publish@v3.3
-        if: ${{ matrix.config.mc-loader == 'forge' }} || ${{ matrix.config.mc-loader == 'fabric' }}
+        if: ${{ matrix.config.mc-loader == 'fabric' || matrix.config.mc-loader == 'forge' }}
         with:
-          modrinth-id: AANobbMI
+          modrinth-id: rVJvtYoX
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
-          curseforge-id: 394468
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+#          curseforge-id: 1084495
+#          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}
           version: ${{ env.MOD_VERSION }}
