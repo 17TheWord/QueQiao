@@ -11,9 +11,9 @@ import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMess
 
 public class HelpCommand extends HelpCommandAbstract implements VelocitySubCommand {
 
-
     @Override
     public int onCommand(CommandContext<CommandSource> context) {
+        if (!handleCommandReturnMessageService.hasPermission(context, getPermissionNode())) return 0;
         handleCommandReturnMessageService.handleCommandReturnMessage(context, "-------------------");
         for (VelocitySubCommand forgeSubCommand : new CommandManager().getSubCommandList()) {
             handleCommandReturnMessageService.handleCommandReturnMessage(context, forgeSubCommand.getUsage() + "---" + forgeSubCommand.getDescription());

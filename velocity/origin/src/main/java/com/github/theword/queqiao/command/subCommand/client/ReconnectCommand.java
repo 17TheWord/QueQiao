@@ -6,12 +6,14 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.velocitypowered.api.command.CommandSource;
 
+import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
 import static com.github.theword.queqiao.tool.utils.Tool.websocketManager;
 
 public class ReconnectCommand extends ReconnectCommandAbstract implements VelocitySubCommand {
     @Override
     public int onCommand(CommandContext<CommandSource> context) {
-        websocketManager.reconnectWebsocketClients(false, context);
+        if (!handleCommandReturnMessageService.hasPermission(context, getPermissionNode())) return 0;
+        execute(context, false);
         return Command.SINGLE_SUCCESS;
     }
 }
