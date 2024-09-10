@@ -13,28 +13,24 @@ body:
     id: server-type
     attributes:
       label: 服务端类型
-      description: |
-        请输入服务端类型，如：
-        - Spigot
-        - Forge
-        - Fabric
-        - Velocity
       placeholder: Spigot
+    validations:
+      required: true
 
   - type: input
     id: server-version
     attributes:
       label: 服务端版本
-      description: |
-        请输入服务端版本，如：
-        - 1.20.1
-        - 1.20.5
+      placeholder: 1.20.1
+    validations:
+      required: true
+
   - type: textarea
     id: other-description
     attributes:
       label: 其他补充
-      render: plain text
-      description: |
+      description: 其他补充（如果有）
+      placeholder: |
         如果有其他补充，请填写在这里。
         
         例如：

@@ -40,7 +40,6 @@ body:
     id: reproduce-step
     attributes:
       label: 复现问题的步骤
-      render: plain text
       description: 请提供复现问题的步骤，如果不能，请写明原因
       placeholder: |
         干净清晰的复现步骤有助于开发者更快定位问题所在，你所遇到的问题也会获得更高的优先级.
@@ -57,7 +56,6 @@ body:
     id: logs
     attributes:
       label: 错误日志
-      render: plain text
       description: 请提供完整的错误日志，以便开发者更快定位问题所在
     validations:
       required: true
