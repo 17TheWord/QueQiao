@@ -7,13 +7,14 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.theword.queqiao.tool.utils.Tool.websocketManager;
+import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
 
 
 public class ReloadCommand extends ReloadCommandAbstract implements SpigotSubCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, String[] args) {
-        websocketManager.reloadWebsocket(false, commandSender);
+        if (!handleCommandReturnMessageService.hasPermission(commandSender, getPermissionNode())) return false;
+        execute(commandSender, false);
         return true;
     }
 

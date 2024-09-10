@@ -10,9 +10,12 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
+
 public class HelpCommand extends HelpCommandAbstract implements SpigotSubCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, String[] args) {
+        if (!handleCommandReturnMessageService.hasPermission(commandSender, getPermissionNode())) return false;
         commandSender.sendMessage("-------------------");
         for (SubCommand subCommand : new CommandManager().getSubCommandList()) {
             commandSender.sendMessage(subCommand.getUsage() + "---" + subCommand.getDescription());
