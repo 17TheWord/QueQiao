@@ -19,15 +19,15 @@ QueQiao-jar/
 *.tar.gz
 *.rar
 
-forge/forge-*/
-fabric/fabric-*/
-spigot/spigot-*/
-velocity/velocity-*/
+forge/forge-*/*
+fabric/fabric-*/*
+spigot/spigot-*/*
+velocity/velocity-*/*
 
-!fabric/fabric-*/gradle/
-!forge/forge-*/gradle/
-!spigot/spigot-*/gradle/
-!velocity/velocity-*/gradle/
+!fabric/fabric-*/gradle/*
+!forge/forge-*/gradle/*
+!spigot/spigot-*/gradle/*
+!velocity/velocity-*/gradle/*
 
 !fabric/fabric-*/gradlew
 !fabric/fabric-*/gradlew.bat
