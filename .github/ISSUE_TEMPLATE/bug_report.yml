@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ##请补全标题并填写下方内容
+        ## 请补全标题并填写下方内容
 
   - type: input
     id: run-env
