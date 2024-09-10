@@ -58,11 +58,45 @@ jobs:
           ./gradlew clean build
           cd ../..
 
+      - name: Set Version Type
+        id: set-version-type
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -eq 'refs/heads/main') {
+            echo "VERSION_TYPE=release" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          } else {
+            echo "VERSION_TYPE=beta" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          }
+
+      - name: Set Game Version
+        id: set-game-version
+        shell: pwsh
+        run: |
+          if ("${{ matrix.config.mc-loader }}" -eq 'velocity') {
+          echo "game_version=1.20.1" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          } else {
+          echo "game_version=${{ matrix.config.mc-version }}" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          }
+
+      - uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: rVJvtYoX
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: 1084495
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}
+          version: ${{ env.MOD_VERSION }}
+          version-type: ${{ env.VERSION_TYPE }}
+          loaders: ${{ matrix.config.mc-loader }}
+          game-versions: ${{ env.game_version }}
+          files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
+
       - uses: actions/upload-artifact@v4
         with:
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
           path: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
-      - name: Upload to Release
-        if: ${{ github.event_name == 'push' }}
-        run: gh release upload v${{ env.MOD_VERSION }} QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
+#      - name: Upload to Release
+#        if: ${{ github.event_name == 'push' }}
+#        run: gh release upload v${{ env.MOD_VERSION }} QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar

@@ -38,6 +38,10 @@
 <p align="center">
   <a href="https://github.com/17TheWord/QueQiao/wiki">📖Docs</a>
   ·
+  <a href="https://modrinth.com/plugin/queqiao">⬇️Modrinth</a>
+  ·
+  <a href="https://www.curseforge.com/minecraft/mc-mods/queqiao">⬇️CurseForge</a>
+  ·
   <a href="https://github.com/17TheWord/QueQiao/issues">🐛Submit Suggestion/Bug</a>
 </p>
 
@@ -81,6 +85,12 @@
       }
       ```
 5. Start the game and join the server.
+
+## Help and Download
+
+- Go [`Docs`](https://github.com/17TheWord/QueQiao/wiki) for help
+- GO [`Modrinth`](https://modrinth.com/plugin/queqiao/versions) for download
+- Go [`CurseForge`](https://www.curseforge.com/minecraft/mc-mods/queqiao/files) for download
 
 ## Integration
 

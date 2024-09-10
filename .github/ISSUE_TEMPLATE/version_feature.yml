@@ -1,0 +1,43 @@
+name: 新增版本支持
+description: 希望支持某个版本
+title: "[Version Support]添加对 XXX 服务端，XXX 版本的支持"
+assignees: 17TheWord
+labels: [ "version support" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 请补全标题
+
+  - type: input
+    id: server-type
+    attributes:
+      label: 服务端类型
+      description: |
+        请输入服务端类型，如：
+        - Spigot
+        - Forge
+        - Fabric
+        - Velocity
+      placeholder: Spigot
+
+  - type: input
+    id: server-version
+    attributes:
+      label: 服务端版本
+      description: |
+        请输入服务端版本，如：
+        - 1.20.1
+        - 1.20.5
+  - type: textarea
+    id: other-description
+    attributes:
+      label: 其他补充
+      render: plain text
+      description: |
+        如果有其他补充，请填写在这里。
+        
+        例如：
+        - 是否需要修改配置文件？
+        - 是否有服务端官方文档链接？
+        - ...
