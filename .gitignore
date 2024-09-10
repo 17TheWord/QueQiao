@@ -24,10 +24,10 @@ fabric/fabric-*/*
 spigot/spigot-*/*
 velocity/velocity-*/*
 
-!fabric/fabric-*/gradle/*
-!forge/forge-*/gradle/*
-!spigot/spigot-*/gradle/*
-!velocity/velocity-*/gradle/*
+!fabric/fabric-*/gradle/wrapper/*
+!forge/forge-*/gradle/wrapper/*
+!spigot/spigot-*/gradle/wrapper/*
+!velocity/velocity-*/gradle/wrapper/*
 
 !fabric/fabric-*/gradlew
 !fabric/fabric-*/gradlew.bat
