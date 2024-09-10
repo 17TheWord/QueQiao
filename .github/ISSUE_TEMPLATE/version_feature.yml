@@ -29,6 +29,7 @@ body:
     id: other-description
     attributes:
       label: 其他补充
+      render: markdown
       description: 其他补充（如果有）
       placeholder: |
         如果有其他补充，请填写在这里。
