@@ -52,7 +52,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
     @Override
     public MutableText parsePerMessageToComponent(CommonBaseComponent commonBaseComponent) {
-        // IF >= fabric-1.21
+        // IF >= fabric-1.20.4
 //        MutableText tempTextContent = Text.literal(commonBaseComponent.getText());
         // ELSE IF >= fabric-1.19
 //        LiteralTextContent tempTextContent = new LiteralTextContent(commonBaseComponent.getText());
@@ -83,8 +83,10 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
                 ;
 
         if (commonBaseComponent.getColor() != null && !commonBaseComponent.getColor().isEmpty()) {
-            // IF fabric-1.21
+            // IF >= fabric-1.21
 //            style.withColor(TextColor.parse(commonBaseComponent.getColor()).getOrThrow());
+            // ELSE IF >= fabric-1.20.4
+//            style.withColor(TextColor.parse(commonBaseComponent.getColor()).get().orThrow());
             // ELSE
 //            style.withColor(TextColor.parse(commonBaseComponent.getColor()));
             // END IF
@@ -100,7 +102,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         }
 
 
-        // IF < fabric-1.21 && >= fabric-1.19
+        // IF < fabric-1.20.4 && >= fabric-1.19
 //        MutableText mutableText = MutableText.of(tempTextContent);
 //        mutableText.setStyle(style);
 //        return mutableText;
@@ -111,7 +113,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
     }
 
     public ClickEvent getClickEvent(CommonTextComponent commonTextComponent) {
-        // IF fabric-1.21
+        // IF >= fabric-1.20.4
 //                ClickEvent.Action tempAction = ClickEvent.Action.valueOf(commonTextComponent.getClickEvent().getAction());
         // ELSE
 //        ClickEvent.Action tempAction = ClickEvent.Action.byName(commonTextComponent.getClickEvent().getAction());

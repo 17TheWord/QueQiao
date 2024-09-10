@@ -19,10 +19,12 @@ QueQiao-jar/
 *.tar.gz
 *.rar
 
-forge/forge-*/
-fabric/fabric-*/
-spigot/spigot-*/
-velocity/velocity-*/
+!gradle-wrapper.jar
+
+forge/forge-*/*
+fabric/fabric-*/*
+spigot/spigot-*/*
+velocity/velocity-*/*
 
 !fabric/fabric-*/gradle/
 !forge/forge-*/gradle/
