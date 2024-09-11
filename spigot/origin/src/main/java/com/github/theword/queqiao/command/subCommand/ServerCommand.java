@@ -1,12 +1,13 @@
 package com.github.theword.queqiao.command.subCommand;
 
 import com.github.theword.queqiao.command.SpigotSubCommand;
+import com.github.theword.queqiao.tool.command.subCommand.ServerCommandAbstract;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerCommand implements SpigotSubCommand {
+public class ServerCommand extends ServerCommandAbstract implements SpigotSubCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, String[] args) {
         commandSender.sendMessage("Server commands are not implemented yet.");
