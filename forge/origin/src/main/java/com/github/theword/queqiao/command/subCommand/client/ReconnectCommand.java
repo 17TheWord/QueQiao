@@ -5,7 +5,7 @@ import com.github.theword.queqiao.tool.command.subCommand.client.ReconnectComman
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 
-import static com.github.theword.queqiao.tool.utils.Tool.websocketManager;
+import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
 
 
 public class ReconnectCommand extends ReconnectCommandAbstract implements ForgeSubCommand {
@@ -13,10 +13,11 @@ public class ReconnectCommand extends ReconnectCommandAbstract implements ForgeS
     @Override
     // IF > forge-1.16.5
 //    public int onCommand(CommandContext<net.minecraft.commands.CommandSourceStack> context) {
-    // ELSE
+        // ELSE
 //    public int onCommand(CommandContext<net.minecraft.command.CommandSource> context) {
         // END IF
-        websocketManager.reconnectWebsocketClients(false, context);
+        if (!handleCommandReturnMessageService.hasPermission(context, getPermissionNode())) return 0;
+        execute(context, false);
         return Command.SINGLE_SUCCESS;
     }
 
