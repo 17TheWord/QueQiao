@@ -12,4 +12,18 @@ public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessag
         CommandContext<CommandSource> context = (CommandContext<CommandSource>) o;
         context.getSource().sendMessage(Component.text(s));
     }
+
+    /**
+     * @param object CommandContext
+     * @param node   权限节点
+     * @return 是否有权限
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean hasPermission(Object object, String node) {
+        CommandContext<CommandSource> context = (CommandContext<CommandSource>) object;
+        if (context.getSource().hasPermission(node)) return true;
+        handleCommandReturnMessage(object, "您没有执行此命令的权限");
+        return false;
+    }
 }

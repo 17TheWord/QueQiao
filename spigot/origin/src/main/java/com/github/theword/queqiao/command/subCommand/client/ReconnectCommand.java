@@ -16,12 +16,12 @@ public class ReconnectCommand extends ReconnectCommandAbstract implements Spigot
     public boolean onCommand(CommandSender commandSender, String[] args) {
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("reconnect")) {
-                websocketManager.reconnectWebsocketClients(false, commandSender);
+                execute(commandSender, false);
                 return true;
             }
         } else if (args.length == 3) {
             if (args[2].equalsIgnoreCase("all")) {
-                websocketManager.reconnectWebsocketClients(true, commandSender);
+                execute(commandSender, true);
                 return true;
             }
         }

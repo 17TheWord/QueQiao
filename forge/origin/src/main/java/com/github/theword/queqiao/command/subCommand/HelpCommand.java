@@ -17,6 +17,7 @@ public class HelpCommand extends HelpCommandAbstract implements ForgeSubCommand 
     // ELSE
 //    public int onCommand(CommandContext<net.minecraft.command.CommandSource> context) {
         // END IF
+        if (!handleCommandReturnMessageService.hasPermission(context, getPermissionNode())) return 0;
         handleCommandReturnMessageService.handleCommandReturnMessage(context, "-------------------");
         for (ForgeSubCommand forgeSubCommand : new CommandManager().getSubCommandList()) {
             handleCommandReturnMessageService.handleCommandReturnMessage(context, forgeSubCommand.getUsage() + "---" + forgeSubCommand.getDescription());
