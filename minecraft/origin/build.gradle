@@ -65,7 +65,7 @@ test {
 }
 
 shadowJar {
-    archiveBaseName.set("${mod_name}-origin")
+    archiveBaseName.set("${mod_name}-minecraft+origin")
     archiveClassifier.set("")
     destinationDirectory.set(file("../../QueQiao-jar/${version}"))
     manifest {
