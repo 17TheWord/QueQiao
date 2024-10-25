@@ -26,11 +26,13 @@ forge/forge-*/*
 fabric/fabric-*/*
 spigot/spigot-*/*
 velocity/velocity-*/*
+minecraft/minecraft-*/*
 
 !fabric/fabric-*/gradle/
 !forge/forge-*/gradle/
 !spigot/spigot-*/gradle/
 !velocity/velocity-*/gradle/
+!minecraft/minecraft-*/gradle/
 
 !fabric/fabric-*/gradlew
 !fabric/fabric-*/gradlew.bat
@@ -40,6 +42,8 @@ velocity/velocity-*/*
 !spigot/spigot-*/gradlew.bat
 !velocity/velocity-*/gradlew
 !velocity/velocity-*/gradlew.bat
+!minecraft/minecraft-*/gradlew
+!minecraft/minecraft-*/gradlew.bat
 
 !velocity/velocity-*/build/generated/sources/tamplates/
 
