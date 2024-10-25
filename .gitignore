@@ -20,6 +20,7 @@ QueQiao-jar/
 *.rar
 
 !gradle-wrapper.jar
+!ModMultiVersionTool-*.jar
 
 forge/forge-*/*
 fabric/fabric-*/*
