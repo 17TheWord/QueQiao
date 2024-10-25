@@ -22,7 +22,7 @@ jobs:
       - name: Generate Matrix
         id: set-matrix
         shell: pwsh
-        run: .\matrix.ps1 -path "fabric","forge","spigot","velocity"
+        run: .\matrix.ps1 -path "fabric","forge","spigot","velocity","minecraft"
 
   build:
     runs-on: windows-latest
