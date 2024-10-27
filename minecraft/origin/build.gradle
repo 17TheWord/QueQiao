@@ -1,6 +1,6 @@
 plugins {
-    id 'java'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
 }
 
 def getVersionFromFile() {
@@ -32,14 +32,6 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven {
-        name = "papermc-repo"
-        url = "https://repo.papermc.io/repository/maven-public/"
-    }
-    maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/groups/public/"
-    }
-    maven {
         url = uri(maven_repository_url)
         credentials {
             username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
@@ -47,21 +39,23 @@ repositories {
         }
     }
 }
-dependencies {
-    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
-    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
 
+dependencies {
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
     implementation "commons-io:commons-io:${project.commons_io_version}"
     implementation "org.slf4j:slf4j-simple:${slf4j_version}"
     implementation "com.google.code.gson:gson:${gson_version}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
 
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
 
 test {
     useJUnitPlatform()
+}
+
+kotlin {
+    jvmToolchain(8)
 }
 
 shadowJar {
@@ -81,6 +75,7 @@ shadowJar {
         include(dependency("org.slf4j:slf4j-simple:${slf4j_version}"))
         include(dependency("com.google.code.gson:gson:${gson_version}"))
         include(dependency("commons-io:commons-io:${commons_io_version}"))
+        include(dependency("org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"))
     }
     mergeServiceFiles()
 }
