@@ -3,10 +3,12 @@
 {
   "required": true,
   "package": "com.github.theword.queqiao.mixin",
-  // IF > fabric-1.16.5
-//  "compatibilityLevel": "JAVA_17",
+  // IF >= fabric-1.20.5
+  //  "compatibilityLevel": "JAVA_21",
+  // ELSE IF > fabric-1.16.5
+  //  "compatibilityLevel": "JAVA_17",
   // ELSE
-//  "compatibilityLevel": "JAVA_8",
+  //  "compatibilityLevel": "JAVA_8",
   // END IF
   "mixins": [
     "PlayerManagerMixin",
