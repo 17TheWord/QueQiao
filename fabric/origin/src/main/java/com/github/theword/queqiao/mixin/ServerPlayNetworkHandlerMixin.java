@@ -1,6 +1,5 @@
 package com.github.theword.queqiao.mixin;
 
-import com.github.theword.queqiao.tool.constant.BaseConstant;
 import com.github.theword.queqiao.event.fabric.FabricServerCommandMessageEvent;
 import com.github.theword.queqiao.event.fabric.FabricServerMessageEvent;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
