@@ -3,6 +3,7 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.event.spigot.*;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -21,7 +22,7 @@ class EventProcessor implements Listener {
      *
      * @param event 玩家聊天事件
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     void onPlayerChat(AsyncPlayerChatEvent event) {
         if (event.isCancelled() || !config.getSubscribeEvent().isPlayerChat()) return;
 
