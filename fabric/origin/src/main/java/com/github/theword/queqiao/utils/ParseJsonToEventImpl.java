@@ -84,21 +84,21 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
         if (commonBaseComponent.getColor() != null && !commonBaseComponent.getColor().isEmpty()) {
             // IF >= fabric-1.21
-//            style.withColor(TextColor.parse(commonBaseComponent.getColor()).getOrThrow());
+//           style = style.withColor(TextColor.parse(commonBaseComponent.getColor()).getOrThrow());
             // ELSE IF >= fabric-1.20.4
-//            style.withColor(TextColor.parse(commonBaseComponent.getColor()).get().orThrow());
+//           style = style.withColor(TextColor.parse(commonBaseComponent.getColor()).get().orThrow());
             // ELSE
-//            style.withColor(TextColor.parse(commonBaseComponent.getColor()));
+//            style = style.withColor(TextColor.parse(commonBaseComponent.getColor()));
             // END IF
-        } else style.withColor(TextColor.fromFormatting(Formatting.WHITE));
+        } else style = style.withColor(TextColor.fromFormatting(Formatting.WHITE));
 
         if (commonBaseComponent instanceof CommonTextComponent) {
             CommonTextComponent commonTextComponent = (CommonTextComponent) commonBaseComponent;
             if (commonTextComponent.getClickEvent() != null)
-                style.withClickEvent(getClickEvent(commonTextComponent));
+                style = style.withClickEvent(getClickEvent(commonTextComponent));
 
             if (commonTextComponent.getHoverEvent() != null)
-                style.withHoverEvent(getHoverEvent(commonTextComponent));
+                style = style.withHoverEvent(getHoverEvent(commonTextComponent));
         }
 
 
