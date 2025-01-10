@@ -1,10 +1,10 @@
 package com.github.theword.queqiao.mixin;
 
 import com.github.theword.queqiao.event.fabric.FabricServerPlayConnectionJoinEvent;
-import com.github.theword.queqiao.tool.utils.Tool;
+
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
-// IF >= fabric-1.21
+// IF >= fabric-1.20.4
 //import net.minecraft.server.network.ConnectedClientData;
 // END IF
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,7 +21,7 @@ import static com.github.theword.queqiao.tool.utils.Tool.sendWebsocketMessage;
 public class PlayerManagerMixin {
 
     @Inject(method = "onPlayerConnect", at = @At("TAIL"))
-    // IF >=fabric-1.21
+    // IF >= fabric-1.20.4
 //    private void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, ConnectedClientData clientData, CallbackInfo ci) {
         // ELSE
 //    private void onPlayerJoin(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
