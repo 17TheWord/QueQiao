@@ -2,8 +2,6 @@ package com.github.theword.queqiao.mixin;
 
 import com.github.theword.queqiao.event.fabric.FabricServerPlayConnectionJoinEvent;
 
-import net.minecraft.network.ClientConnection;
-import net.minecraft.server.PlayerManager;
 // IF >= fabric-1.20.4
 //import net.minecraft.server.network.ConnectedClientData;
 // END IF
