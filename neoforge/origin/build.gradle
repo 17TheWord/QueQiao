@@ -1,0 +1,133 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.78'
+}
+
+def getVersionFromFile() {
+    def versionFile = file('../../version.txt')
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("Version file not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def mod_version = getVersionFromFile()
+
+def getToolVersionFromFile() {
+    def versionFile = file('../../tool_version.txt')
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("Tool Version file not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def tool_version = getToolVersionFromFile()
+
+version = mod_version
+group = mod_group_id
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri(maven_repository_url)
+        credentials {
+            username = System.getenv("USERNAME")
+            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
+        }
+    }
+
+}
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+
+neoForge {
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        gameTestServer {
+            type = "gameTestServer"
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    implementation "org.projectlombok:lombok:${lombok_version}"
+
+    jarJar(implementation("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+    jarJar(implementation("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
+    jarJar(implementation("org.yaml:snakeyaml:${snakeyaml_version}"))
+}
+
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            neo_version_range      : neo_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
+}
+
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
