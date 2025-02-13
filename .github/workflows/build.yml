@@ -65,6 +65,9 @@ jobs:
           PACKAGE_READ_ONLY_TOKEN: ${{ secrets.PACKAGE_READ_ONLY_TOKEN }}
         run: |
           cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
+          if [ "${{ matrix.config.mc-loader }}" = "forge" ]; then
+          ./gradlew runGameTestServer
+          fi
           ./gradlew clean build
           cd ../..
 
