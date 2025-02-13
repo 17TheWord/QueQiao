@@ -3,6 +3,7 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.handle.HandleApiImpl;
 import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
+import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -19,7 +20,6 @@ public class QueQiao {
     public static MinecraftServer minecraftServer;
 
     public QueQiao() {
-        initTool(true, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new EventProcessor());
     }
@@ -27,19 +27,20 @@ public class QueQiao {
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
     // IF > forge-1.16.5
-//    public void onServerStarted(net.minecraftforge.event.server.ServerStartedEvent event) {
-        // ELSE
-//    public void onServerStarted(net.minecraftforge.fml.event.server.FMLServerStartedEvent event) {
+//    public void onServerStarted(net.minecraftforge.event.server.ServerStartingEvent event) {
+    // ELSE
+//    public void onServerStarted(net.minecraftforge.fml.event.server.FMLServerStartingEvent event) {
         // END IF
         minecraftServer = event.getServer();
-        websocketManager.startWebsocket(null);
+        initTool(true, minecraftServer.getServerVersion(), ServerTypeConstant.FORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
+        websocketManager.startWebsocketOnServerStart();
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
     // IF > forge-1.16.5
 //    public void onServerStopping(net.minecraftforge.event.server.ServerStoppingEvent event) {
-        // ELSE
+    // ELSE
 //    public void onServerStopping(net.minecraftforge.fml.event.server.FMLServerStoppingEvent event) {
         // END IF
         websocketManager.stopWebsocketByServerClose();

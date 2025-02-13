@@ -3,6 +3,7 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.handle.HandleApiImpl;
 import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
+import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -17,7 +18,6 @@ public class Queqiao {
     public static MinecraftServer minecraftServer;
 
     public Queqiao() {
-        initTool(true, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
         NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(new EventProcessor());
     }
@@ -26,6 +26,7 @@ public class Queqiao {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         minecraftServer = event.getServer();
+        initTool(true, minecraftServer.getServerVersion(), ServerTypeConstant.NEOFORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
         websocketManager.startWebsocket(null);
     }
 
