@@ -43,7 +43,7 @@ repositories {
 }
 
 base {
-    archivesName = mod_id
+    archivesName = "${mod_name}-neoforge+${minecraft_version}"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(java_version)
@@ -124,6 +124,10 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
 
 sourceSets.main.resources.srcDir generateModMetadata
 neoForge.ideSyncTask generateModMetadata
+
+tasks.named('jar') {
+    destinationDirectory = file("../../QueQiao-jar/${mod_version}")
+}
 
 idea {
     module {
