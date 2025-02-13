@@ -19,7 +19,7 @@ object QueQiao {
             HandleApiImpl(),
             HandleCommandReturnMessageImpl()
         )
-        websocketManager.startWebsocket(null)
+        websocketManager.startWebsocketOnServerStart()
         val config = Config()
         FileWatcher.fileListen(config.logPath, LineProcessor(config, EventProcessor()))
     }

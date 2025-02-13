@@ -27,7 +27,7 @@ public class Queqiao {
     public void onServerStarting(ServerStartingEvent event) {
         minecraftServer = event.getServer();
         initTool(true, minecraftServer.getServerVersion(), ServerTypeConstant.NEOFORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
-        websocketManager.startWebsocket(null);
+        websocketManager.startWebsocketOnServerStart();
     }
 
     @SubscribeEvent

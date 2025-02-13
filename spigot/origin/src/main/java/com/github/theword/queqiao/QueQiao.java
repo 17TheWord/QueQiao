@@ -26,7 +26,7 @@ public final class QueQiao extends JavaPlugin {
                 new HandleApiImpl(),
                 new HandleCommandReturnMessageImpl()
         );
-        websocketManager.startWebsocket(null);
+        websocketManager.startWebsocketOnServerStart();
         Bukkit.getPluginManager().registerEvents(new EventProcessor(), this);
 
         PluginCommand command = getCommand(BaseConstant.COMMAND_HEADER);

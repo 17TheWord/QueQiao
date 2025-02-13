@@ -33,7 +33,7 @@ public class QueQiao {
                 new HandleApiImpl(),
                 new HandleCommandReturnMessageImpl()
         );
-        websocketManager.startWebsocket(null);
+        websocketManager.startWebsocketOnServerStart();
         minecraftServer.getEventManager().register(this, new EventProcessor());
     }
 
