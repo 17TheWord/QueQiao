@@ -11,9 +11,9 @@ permissions:
 
 env:
   GH_TOKEN: ${{ github.token }}
-  JAVA_8_LIST: '["forge-1.16.5","fabric-1.16.5"]'
-  JAVA_17_LIST: '["fabric-1.18.2","fabric-1.19.2","fabric-1.20.1","forge-1.18.2","forge-1.19.2","forge-1.20.1"]'
-  JAVA_21_LIST: '["fabric-1.20.4","fabric-1.21","fabric-1.21.1","forge-1.21","neoforge-1.21.1"]'
+  JAVA_8_LIST: '["spigot-1.12.2","forge-1.16.5"]'
+  JAVA_17_LIST: '["spigot-1.13","velocity-3.3.0","forge-1.18.2","forge-1.19.2","forge-1.20.1","fabric-1.16.5","fabric-1.18.2","fabric-1.19.2","fabric-1.20.1"]'
+  JAVA_21_LIST: '["forge-1.21","fabric-1.20.4","fabric-1.21","fabric-1.21.1","neoforge-1.21.1"]'
 
 jobs:
   generate-matrix:
