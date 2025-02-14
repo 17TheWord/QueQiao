@@ -50,7 +50,7 @@ jobs:
 
       - name: Build
         run: |
-          cd ${matrix.config.mc-loader}/${matrix.config.mc-loader}-${matrix.config.mc-version}
+          cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
           chmod 777 gradlew
           ./gradlew clean build
           cd ../..
