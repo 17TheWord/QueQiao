@@ -40,16 +40,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper/dists
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
       - name: Read version.txt and save to variable
         shell: pwsh
         run: |
@@ -60,14 +50,6 @@ jobs:
       - name: Init Files
         shell: pwsh
         run: ./init.ps1
-
-      - name: Run Game Test Server
-        if: ${{ (matrix.config.mc-loader == 'forge' || matrix.config.mc-loader == 'neoforge') && matrix.config.mc-version != '1.16.5' }}
-        shell: pwsh
-        run: |
-          cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
-          echo Y | ./gradlew runGameTestServer  # Automate "Y" input for prompts
-          cd ../..
 
       - name: Build
         run: |
