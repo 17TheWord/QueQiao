@@ -35,9 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Debug Matrix Output
-        run: echo "Matrix is ${{ needs.generate-matrix.outputs.matrix }}"
-
       - name: Chose JDK 21
         uses: actions/setup-java@v4
         with:
