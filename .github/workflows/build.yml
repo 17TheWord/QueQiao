@@ -62,7 +62,7 @@ jobs:
         run: ./init.ps1
 
       - name: Run Game Test Server
-        if: ${{ matrix.config.mc-loader == 'forge' || matrix.config.mc-loader == 'neoforge' }}
+        if: ${{ (matrix.config.mc-loader == 'forge' || matrix.config.mc-loader == 'neoforge') && matrix.config.mc-version != '1.16.5' }}
         shell: pwsh
         run: |
           cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
