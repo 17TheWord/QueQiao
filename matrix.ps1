@@ -50,3 +50,6 @@ $json = [PSCustomObject]@{
 # 使用环境文件输出替换 `set-output`
 $env:GITHUB_ENV = "$env:GITHUB_WORKSPACE/.github/environment"
 $json | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+# 添加调试输出，查看 JSON 内容
+Write-Host "Generated JSON: $json"
+
