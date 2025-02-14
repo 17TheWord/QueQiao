@@ -66,7 +66,7 @@ jobs:
         shell: pwsh
         run: |
           cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
-          ./gradlew runGameTestServer --no-interactive
+          echo Y | ./gradlew runGameTestServer  # Automate "Y" input for prompts
           cd ../..
 
       - name: Build
