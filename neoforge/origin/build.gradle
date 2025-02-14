@@ -98,6 +98,8 @@ dependencies {
     implementation "org.projectlombok:lombok:${lombok_version}"
 
     jarJar(implementation("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+    additionalRuntimeClasspath "com.github.theword.queqiao:queqiao-tool:${tool_version}"
+
     jarJar(implementation("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
     jarJar(implementation("org.yaml:snakeyaml:${snakeyaml_version}"))
 }
