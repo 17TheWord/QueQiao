@@ -5,27 +5,18 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.78'
 }
 
-def getVersionFromFile() {
-    def versionFile = file('../../version.txt')
+def getVersionFromFile(String fileName) {
+    def versionFile = file(fileName)
     if (versionFile.exists()) {
         return versionFile.text.trim()
     } else {
-        throw new Exception("Version file not found: ${versionFile.absolutePath}") as Throwable
+        throw new Exception("File not found: ${versionFile.absolutePath}") as Throwable
     }
 }
 
-def mod_version = getVersionFromFile()
+def tool_version = getVersionFromFile('../../tool_version.txt')
 
-def getToolVersionFromFile() {
-    def versionFile = file('../../tool_version.txt')
-    if (versionFile.exists()) {
-        return versionFile.text.trim()
-    } else {
-        throw new Exception("Tool Version file not found: ${versionFile.absolutePath}") as Throwable
-    }
-}
-
-def tool_version = getToolVersionFromFile()
+def mod_version = getVersionFromFile('../../version.txt')
 
 version = mod_version
 group = mod_group_id
