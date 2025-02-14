@@ -59,15 +59,20 @@ jobs:
         shell: pwsh
         run: ./init.ps1
 
+      - name: Run Game Test Server
+        if: ${{ matrix.config.mc-loader == 'forge' || matrix.config.mc-loader == 'neoforge' }}
+        shell: pwsh
+        run: |
+          cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
+          ./gradlew runGameTestServer
+          cd ../..
+
       - name: Build
         env:
           USERNAME: ${{ github.actor }}
           PACKAGE_READ_ONLY_TOKEN: ${{ secrets.PACKAGE_READ_ONLY_TOKEN }}
         run: |
           cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
-          if ("${{ matrix.config.mc-loader }}" -eq 'forge') {
-            ./gradlew runGameTestServer
-          }
           ./gradlew clean build
           cd ../..
 
