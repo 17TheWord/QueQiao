@@ -1,4 +1,4 @@
-name: Build Plugin and Mod
+name: Build Plugin and Mod On Linux
 
 on:
   push:
@@ -16,7 +16,7 @@ env:
 
 jobs:
   generate-matrix:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -24,10 +24,10 @@ jobs:
       - name: Generate Matrix
         id: set-matrix
         shell: pwsh
-        run: .\matrix.ps1 -path "fabric","forge","spigot","velocity","minecraft","neoforge"
+        run: chmod 777 matrix.sh && ./matrix.sh -path "minecraft","spigot","velocity","forge","neoforge","fabric"
 
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs:
       - generate-matrix
     strategy:
@@ -42,41 +42,38 @@ jobs:
           distribution: 'temurin'
 
       - name: Read version.txt and save to variable
-        shell: pwsh
         run: |
-          $mod_version = Get-Content version.txt
-          Write-Host "Version: $mod_version"
-          echo "MOD_VERSION=$mod_version" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          mod_version=$(cat version.txt)
+          echo "Version: $mod_version"
+          echo "MOD_VERSION=$mod_version" >> $GITHUB_ENV
 
       - name: Init Files
-        shell: pwsh
-        run: ./init.ps1
+        run: chmod 777 init.sh && ./init.sh
 
       - name: Build
         run: |
-          cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
+          cd ${matrix.config.mc-loader}/${matrix.config.mc-loader}-${matrix.config.mc-version}
+          chmod 777 gradlew
           ./gradlew clean build
           cd ../..
 
       - name: Set Version Type
         id: set-version-type
-        shell: pwsh
         run: |
-          if ($env:GITHUB_REF -eq 'refs/heads/main') {
-            echo "VERSION_TYPE=release" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
-          } else {
-            echo "VERSION_TYPE=beta" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
-          }
+          if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
+            echo "VERSION_TYPE=release" >> $GITHUB_ENV
+          else
+            echo "VERSION_TYPE=beta" >> $GITHUB_ENV
+          fi
 
       - name: Set Game Version
         id: set-game-version
-        shell: pwsh
         run: |
-          if ("${{ matrix.config.mc-loader }}" -eq 'velocity') {
-          echo "game_version=1.20.1" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
-          } else {
-          echo "game_version=${{ matrix.config.mc-version }}" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
-          }
+          if [ "${{ matrix.config.mc-loader }}" == "velocity" ]; then
+            echo "game_version=1.20.1" >> $GITHUB_ENV
+          else
+            echo "game_version=${{ matrix.config.mc-version }}" >> $GITHUB_ENV
+          fi
 
       - uses: actions/upload-artifact@v4
         with:
@@ -90,7 +87,6 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           curseforge-id: 1084495
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}
           version: ${{ env.MOD_VERSION }}
           version-type: ${{ env.VERSION_TYPE }}
