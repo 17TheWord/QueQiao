@@ -53,10 +53,11 @@ dependencies {
 
 def targetJavaVersion = Integer.parseInt(java_version)
 java {
-    sourceCompatibility = targetJavaVersion
-    targetCompatibility = targetJavaVersion
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(java_version)  // 或者你想要的版本
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
 }
 
