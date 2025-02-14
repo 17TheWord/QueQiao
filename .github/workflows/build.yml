@@ -1,4 +1,4 @@
-name: Build Plugin and Mod On Linux
+name: Build Plugin and Mod
 
 on:
   push:
