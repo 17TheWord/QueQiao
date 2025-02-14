@@ -66,7 +66,7 @@ jobs:
         shell: pwsh
         run: |
           cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
-          ./gradlew runGameTestServer -y
+          ./gradlew runGameTestServer
           cd ../..
 
       - name: Build
