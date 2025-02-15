@@ -83,7 +83,7 @@ jobs:
         shell: pwsh
         run: |
           if ("${{ matrix.config.mc-loader }}" -eq 'velocity') {
-          echo "game_version=1.20.1" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
+          echo "game_version=1.20" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
           } else {
           echo "game_version=${{ matrix.config.mc-version }}" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
           }
