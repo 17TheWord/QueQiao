@@ -48,13 +48,14 @@
 ## 介绍
 
 - 将 `Minecraft` 服务端**玩家事件**以 `Json` 格式通过 `Websocket` 分发的服务端 `plugin/mod`。
-    - 已实现的 [`事件`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`玩家聊天`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`玩家命令`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`玩家死亡`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B) (`Velocity`
-          暂无)
-        - [`玩家加入`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`玩家登出`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+  -
+  已实现的 [`事件`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+  - [`玩家聊天`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+  - [`玩家命令`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+  - [`玩家死亡`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B) (`Velocity`
+  暂无)
+  - [`玩家加入`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+  - [`玩家登出`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
 - 通过 `Websocket` 接收 `Json` 消息，并转发至游戏玩家。
     - 已实现的接口
         - [`Broadcast`](https://github.com/17TheWord/QueQiao/wiki/5.-API#broadcast--send-message)
@@ -95,10 +96,16 @@
 
 ## 对接
 
-- [`@17TheWord/nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft)：`NoneBot2` 适配器，与本模组连接
-- [`@17TheWord/nonebot-plugin-mcqq`](https://github.com/17TheWord/nonebot-plugin-mcqq)：`NoneBot2` 插件，与 `Minecraft`
+- [`@17TheWord/nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft)：`NoneBot2`
+  适配器，支持收发消息与`Rcon`
+- [`@17TheWord/nonebot-plugin-mcqq`](https://github.com/17TheWord/nonebot-plugin-mcqq)：`NoneBot2` 插件，`QQ`
+  与 `Minecraft`
   互通聊天
-- [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin)：云崽插件，与 `Minecraft` 互通聊天
+- [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin)：云崽插件，`QQ` 与 `Minecraft` 互通聊天，`Rcon` 提供支持命令
+- [`@Twiyan0/koishi-plugin-minecraft-sync-msg`](https://github.com/Twiyin0/koishi-plugin-minecraft-sync-msg)：`Koishi`
+  插件，`QQ` 与 `Minecraft` 互通聊天，`Rcon` 提供支持命令
+- [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq)：`ZeroBot` 插件，`QQ`
+  与 `Minecraft` 互通聊天
 
 ## 兼容
 
@@ -116,6 +123,10 @@
 
 - 有意见或者建议也欢迎提交 [`Issues`](https://github.com/17TheWord/QueQiao/issues)
   和 [`Pull requests`](https://github.com/17TheWord/QueQiao/pulls) 。
+
+## 星星
+
+[![Stargazers over time](https://starchart.cc/17TheWord/QueQiao.svg?variant=adaptive)](https://starchart.cc/17TheWord/QueQiao)
 
 ## 开源许可
 
