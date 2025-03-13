@@ -40,7 +40,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly "org.spigotmc:spigot-api:${project.spigot_version}"
+    implementation "org.spigotmc:spigot-api:${project.spigot_version}"
     compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
@@ -49,6 +49,13 @@ dependencies {
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
     implementation "org.slf4j:slf4j-api:${slf4j_version}"
     implementation "org.slf4j:slf4j-simple:${slf4j_version}"
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}")
+}
+
+test {
+    useJUnitPlatform()
 }
 
 def targetJavaVersion = Integer.parseInt(java_version)
