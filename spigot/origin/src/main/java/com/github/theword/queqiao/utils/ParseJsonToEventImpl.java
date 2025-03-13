@@ -37,7 +37,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         msgComponent.setText(commonBaseComponent.getText());
         if (commonBaseComponent.getColor() != null && !commonBaseComponent.getColor().isEmpty())
             // IF spigot-1.12.2
-//            msgComponent.setColor(ChatColor.valueOf(commonBaseComponent.getColor()));
+//            msgComponent.setColor(ChatColor.valueOf(commonBaseComponent.getColor().toUpperCase()));
             // ELSE
 //            msgComponent.setColor(ChatColor.of(commonBaseComponent.getColor().toUpperCase()));
             // END IF
