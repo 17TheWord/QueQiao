@@ -60,6 +60,7 @@ jobs:
       - name: Build
         run: |
           ./gradlew clean build
+          cd ../..
 
       - name: Set Version Type
         id: set-version-type
