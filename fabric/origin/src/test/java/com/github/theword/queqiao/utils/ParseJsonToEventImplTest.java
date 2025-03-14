@@ -16,7 +16,7 @@ class ParseJsonToEventImplTest {
 
     ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
 
-    // IF < fabric-1.21.1
+    // IF < fabric-1.20.4
 //    @Test
 //    void parseMessage() throws FileNotFoundException {
 //        FileReader reader = new FileReader("../../test_messages.json");
