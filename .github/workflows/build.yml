@@ -49,7 +49,7 @@ jobs:
         run: chmod 777 init.sh && ./init.sh
 
       - name: Config Gradle
-        uses: gradle/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v4
         with:
           cache-read-only: false
 
