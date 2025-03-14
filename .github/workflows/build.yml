@@ -48,10 +48,10 @@ jobs:
       - name: Init Files
         run: chmod 777 init.sh && ./init.sh
 
-      - name: Chmod Files
+      - name: Init Gradle
         run: |
           cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
-          chmod 777 gradlew
+          chmod 777 gradlew && ./gradlew --version
 
       - name: Test
         run: |
