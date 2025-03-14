@@ -48,11 +48,6 @@ jobs:
       - name: Init Files
         run: chmod 777 init.sh && ./init.sh
 
-      - name: Config Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          cache-read-only: false
-
       - name: Init Gradle
         run: |
           cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
