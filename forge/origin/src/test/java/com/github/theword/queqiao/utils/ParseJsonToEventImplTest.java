@@ -18,7 +18,7 @@ class ParseJsonToEventImplTest {
     @Test
     void parseMessage() throws FileNotFoundException {
         FileReader reader = new FileReader("../../test_messages.json");
-        // IF <= fabric-1.16.5
+        // IF <= forge-1.16.5
 //        JsonElement testMessageJsonElement = new JsonParser().parse(reader);
         // ELSE
 //        JsonElement testMessageJsonElement = JsonParser.parseReader(reader);
