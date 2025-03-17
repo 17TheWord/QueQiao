@@ -1,5 +1,5 @@
 <div align="right">
-🌍English / <a href="https://github.com/17TheWord/QueQiao/blob/main/README.md">中文</a>
+🌍<a href="https://github.com/17TheWord/QueQiao/blob/main/README_EN.md">English</a> / Chinese
 </div>
 
 <p align="center">
@@ -10,7 +10,7 @@
 
 # QueQiao
 
-✨ A bridge for connecting to the `Minecraft` server ✨
+✨ A Bridge Connecting Minecraft Servers ✨
 
 </div>
 
@@ -31,7 +31,7 @@
     <img src="https://img.shields.io/badge/Velocity-3.3.0-blue?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAACA0lEQVRoBe2avUoEMRSF8yaCnWAvaGFjYWkjFhY2NlYWgoVgY2VnY+cjCFY+wGKzyiqIIGKt7LpvIDaRb+Asl1HZTIbZmUgCl5vJJpPzc2dYyLjPL+9t3A6e/OHxqV9d3/Tzi8t+bmGp1QADWMAENouVvrMDTGob8LT9wWgxTwhs7+53HrzIgVUkCgIpKC/wynLCUVcaTC2D3aWovoQGu+MJ10BqGeyuC6/KWOHA7mIXd2VdJtC2E9mB7EDNP4u5hHIJ5RKqqQAltLK24c/OL4qgP8uyin6ID45OfP/uwau9vQ/95dW1JydBQMCVIUTQejf9gghkQiOWdJQDKG0bTgAAsGrWHY1RZls7ez+iTtlVJsBmtgEaUICzbTQa++eXVztUEIS8gjUQZ/3MHEBZQptr47IrIB9+jAsC/KYSsxngCDJTBwQeAvRxgD4gbAkN7h8n6ts1zP0rICdBQnPtEhJKQKGomtTXtc0QVRnZzD1CgWteZQIsZKNyAxQKkq365Xlcs96WksDE5CgClAtl8VuDAL+FBg7EANeaKAIsFgkAoyhR520iQFVzNIGqGzU1PxNoStnQ+2YHQpVqal52oCllQ++bHQhVqql52YGmlA29b/oHHMkfMSV/yJf8MSsn3im6AGaw/49PDfTdQQpOSHlhnjigAZ4JJvF26sIZ8rTPbb4BrNNEDGiTm7EAAAAASUVORK5CYII=" alt="velocity">
   </a>
   <a href="https://github.com/17TheWord/QueQiao/releases">
-    <img  src="https://img.shields.io/github/v/release/17TheWord/QueQiao" alt="release">
+    <img src="https://img.shields.io/github/v/release/17TheWord/QueQiao" alt="release">
   </a>
 </p>
 
@@ -47,15 +47,17 @@
 
 ## Introduction
 
-- A server `plugin/mod` that distributes **player events** from `Minecraft` server in `Json` format via `Websocket`.
-    - Implemented [`events`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`Player Chat`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`Player Commands`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`Player Death`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B) (`Velocity` not yet available)
-        - [`Player Join`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`Player Logout`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-- Receives `Json` messages via `Websocket` and forwards them to the game players.
-    - Implemented interfaces
+- A server plugin/mod that dispatches **player events** from the `Minecraft` server in `JSON` format via `WebSocket`.
+    -
+    Implemented [`Events`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+    - [`Player Chat`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+    - [`Player Command`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+    - [`Player Death`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B) (
+      Not available for `Velocity`)
+    - [`Player Join`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+    - [`Player Logout`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+- Receives `JSON` messages via `WebSocket` and forwards them to in-game players.
+    - Implemented Interfaces:
         - [`Broadcast`](https://github.com/17TheWord/QueQiao/wiki/5.-API#broadcast--send-message)
         - [`PrivateMessage`](https://github.com/17TheWord/QueQiao/wiki/5.-API#privatemessage)
         - [`Title & SubTitle`](https://github.com/17TheWord/QueQiao/wiki/5.-API#title)
@@ -63,57 +65,69 @@
 
 ## Quick Start
 
-1. Install the corresponding `plugin/mod` for the server.
-2. Configure `websocket_server` in `config.yml`
-    - `enable: true` # Enable
+1. Install the corresponding server `plugin/mod`.
+2. Configure the `websocket_server` in the `config.yml`:
+    - `enable: true` # Whether to enable
     - `host: "127.0.0.1"`     # WebSocket Server address
     - `port: 8080` # WebSocket Server port
-3. Start the server and wait for the `Websocket Server` to start.
-4. Use [`ApiFox`](https://apifox.com/) or other API testing tools, or connect to [integration](#integration) projects.
-    - Configure global `Request Header`
+3. Start the server and wait for the `WebSocket Server` to launch.
+4. Use [`ApiFox`](https://apifox.com/) or another API testing tool—or integrate with the [Integration](#integration)
+   projects:
+    - Configure the global `Request Header`:
       ```json5
       {
         "x-self-name": "TestServer",
         // Required
-        // Server name, must match 'server_name' in config.yml
+        // Server name; must match the 'server_name' in config.yml
         "Authorization": "Bearer 123",
         // Optional
-        // Authorization, must match 'access_token' in config.yml, if 'access_token' in config.yml is empty, this item can be omitted
+        // Authentication; must match the 'access_token' in config.yml. If 'auth_token' in config.yml is empty, this can be omitted.
         "x-client-origin": "apifox"
         // Required
-        // Client origin, if the origin is 'minecraft', it indicates that the request is from a Minecraft Websocket Client and will be rejected by the Minecraft server's Websocket Server
+        // Client origin. If set to 'minecraft', it indicates the message comes from a Minecraft WebSocket Client and will be rejected by the Minecraft side WebSocket Server.
       }
       ```
 5. Start the game and join the server.
 
-## Help and Download
+## Help & Download
 
-- Go [`Docs`](https://github.com/17TheWord/QueQiao/wiki) for help
-- GO [`Modrinth`](https://modrinth.com/plugin/queqiao/versions) for download
-- Go [`CurseForge`](https://www.curseforge.com/minecraft/mc-mods/queqiao/files) for download
+- Visit the [`Wiki`](https://github.com/17TheWord/QueQiao/wiki) for documentation.
+    - Download from [`Modrinth`](https://modrinth.com/plugin/queqiao/versions).
+- Download from [`CurseForge`](https://www.curseforge.com/minecraft/mc-mods/queqiao).
 
 ## Integration
 
-- [`@17TheWord/nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft): `NoneBot2` adapter, connects to this mod
-- [`@17TheWord/nonebot-plugin-mcqq`](https://github.com/17TheWord/nonebot-plugin-mcqq): `NoneBot2` plugin, enables chat communication with `Minecraft`
-- [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin): Cloud plugin, enables chat communication with `Minecraft`
+- [`@17TheWord/nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft): A `NoneBot2` adapter
+  that supports sending and receiving messages, with command support provided by `Rcon`.
+- [`@17TheWord/nonebot-plugin-mcqq`](https://github.com/17TheWord/nonebot-plugin-mcqq): A `NoneBot2` plugin that
+  supports the `OneBot` and `QQ` adapters for integrated chat, with command support provided by `Rcon`.
+- [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin): A Yunzai plugin that connects to the `OneBot` protocol
+  endpoint for integrated chat, with command support provided by `Rcon`.
+- [`@Twiyan0/koishi-plugin-minecraft-sync-msg`](https://github.com/Twiyin0/koishi-plugin-minecraft-sync-msg): A `Koishi`
+  plugin that enables integrated chat, with command support provided by `Rcon`.
+- [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq): A `ZeroBot` plugin that enables
+  integrated chat between the `OneBot` protocol endpoint and `Minecraft`.
 
 ## Compatibility
 
-- [`@kitUIN/ChatImage`](https://github.com/kitUIN/ChatImage): Display images in the `Minecraft` chat window
+- [@kitUIN/ChatImage](https://github.com/kitUIN/ChatImage): Displays images in the Minecraft chat window.
 
 ## Special Thanks
 
-- [`@kitUIN`](https://github.com/kitUIN): Provided help with code and build tools
-- [`@kitUIN/ModMultiVersion`](https://github.com/kitUIN/ModMultiVersion): `IDEA` multi-version `MOD` plugin
-- [`@kitUIN/ModMultiVersionTool`](https://github.com/kitUIN/ModMultiVersionTool): Multi-version `MOD` build tool
+- [@kitUIN](https://github.com/kitUIN): For providing code assistance and build tools.
+- [@kitUIN/ModMultiVersion](https://github.com/kitUIN/ModMultiVersion): An IDEA multi-version MOD plugin.
+- [@kitUIN/ModMultiVersionTool](https://github.com/kitUIN/ModMultiVersionTool): A multi-version MOD build tool.
 
-## Contribution and Support
+## Contributions and Support
 
-- If you find it useful, please give this project a `Star` or support me on [`Afdian`](https://afdian.com/a/17TheWord).
+- If you find this project useful, please give it a `Star` or support me on [`Afdian`](https://afdian.com/a/17TheWord).
+- If you have any suggestions or feedback, feel free to submit [`Issues`](https://github.com/17TheWord/QueQiao/issues)
+  and [`Pull requests`](https://github.com/17TheWord/QueQiao/pulls).
 
-- Any feedback or suggestions are welcome, and you can submit [`Issues`](https://github.com/17TheWord/QueQiao/issues) and [`Pull requests`](https://github.com/17TheWord/QueQiao/pulls).
+## Stars
+
+[![Stargazers over time](https://starchart.cc/17TheWord/QueQiao.svg?variant=adaptive)](https://starchart.cc/17TheWord/QueQiao)
 
 ## Open Source License
 
-This project uses the [`MIT`](https://github.com/17TheWord/QueQiao/blob/main/LICENSE) open-source license.
+This project is licensed under the [`MIT`](https://github.com/17TheWord/QueQiao/blob/main/LICENSE) open source license.
