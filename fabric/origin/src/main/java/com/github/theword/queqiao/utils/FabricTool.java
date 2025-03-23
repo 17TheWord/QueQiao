@@ -6,6 +6,8 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.server.network.ServerPlayerEntity;
 // IF >= fabric-1.21
 //import net.minecraft.registry.RegistryKey;
+// END IF
+// IF >= fabric-1.20.4
 //import net.minecraft.util.Identifier;
 //import java.util.stream.Collectors;
 // END IF
@@ -63,6 +65,7 @@ public class FabricTool {
 //        });
 //        AdvancementRewardsDTO advancementRewardsDTO = new AdvancementRewardsDTO();
 //        advancementRewardsDTO.setExperience(advancement.rewards().experience());
+//        advancementRewardsDTO.setRecipes(advancement.rewards().recipes().stream().map(Identifier::toString).collect(Collectors.toList()));
 //        advancementRewardsDTO.setRecipes(advancement.rewards().recipes().stream().map(Identifier::toString).collect(Collectors.toList()));
         // IF >= fabric-1.21
 //        advancementRewardsDTO.setLoot(advancement.rewards().loot().stream().map(RegistryKey::toString).collect(Collectors.toList()));
