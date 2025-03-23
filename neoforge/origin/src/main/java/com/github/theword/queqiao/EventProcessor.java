@@ -1,16 +1,20 @@
 package com.github.theword.queqiao;
 
 import com.github.theword.queqiao.event.neoforge.*;
+import com.github.theword.queqiao.event.neoforge.dto.advancement.NeoForgeAdvancement;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.CommandEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import static com.github.theword.queqiao.tool.utils.Tool.*;
+import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgeAdvancement;
 import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgePlayer;
 
 public class EventProcessor {
@@ -66,7 +70,6 @@ public class EventProcessor {
         }
         NeoForgeCommandEvent forgeCommandEvent = new NeoForgeCommandEvent("", player, command);
         sendWebsocketMessage(forgeCommandEvent);
-
     }
 
     @SubscribeEvent
@@ -82,5 +85,14 @@ public class EventProcessor {
 
         NeoForgePlayerDeathEvent forgeCommandEvent = new NeoForgePlayerDeathEvent("", player, message);
         sendWebsocketMessage(forgeCommandEvent);
+    }
+
+    @SubscribeEvent
+    public void onPlayerAdvancement(AdvancementEvent event) {
+        if (!config.getSubscribeEvent().isPlayerAdvancement()) return;
+        Advancement advancement = event.getAdvancement().value();
+        NeoForgeAdvancement neoForgeAdvancement = getNeoForgeAdvancement(advancement);
+        NeoForgeAdvancementEvent forgeAdvancementEvent = new NeoForgeAdvancementEvent(getNeoForgePlayer((ServerPlayer) event.getEntity()), neoForgeAdvancement);
+        sendWebsocketMessage(forgeAdvancementEvent);
     }
 }
