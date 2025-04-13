@@ -88,7 +88,7 @@ public class EventProcessor {
     }
 
     @SubscribeEvent
-    public void onPlayerAdvancement(AdvancementEvent event) {
+    public void onPlayerAdvancement(AdvancementEvent.AdvancementEarnEvent event) {
         if (!config.getSubscribeEvent().isPlayerAdvancement()) return;
         Advancement advancement = event.getAdvancement().value();
         NeoForgeAdvancement neoForgeAdvancement = getNeoForgeAdvancement(advancement);
