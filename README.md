@@ -10,7 +10,7 @@
 
 # 鹊桥
 
-✨ 连接 Minecraft 服务器的桥梁 ✨
+✨ Minecraft 服务端 Mod/Plugin，实时接收玩家事件、API广播消息 ✨
 
 </div>
 
@@ -47,9 +47,8 @@
 
 ## 介绍
 
-- 将 `Minecraft` 服务端**玩家事件**以 `Json` 格式通过 `Websocket` 分发的服务端 `plugin/mod`。
-  -
-  已实现的 [`事件`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+- 将服务端**玩家事件**以 `Json` 格式通过 `Websocket` 分发。
+  - 已实现的 [`事件`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
     - [`玩家聊天`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
     - [`玩家命令`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
     - [`玩家死亡`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B) (`Velocity`
