@@ -9,6 +9,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 import static com.github.theword.queqiao.tool.utils.Tool.initTool;
 import static com.github.theword.queqiao.tool.utils.Tool.websocketManager;
@@ -22,7 +23,6 @@ public class Queqiao {
         NeoForge.EVENT_BUS.register(new EventProcessor());
     }
 
-
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         minecraftServer = event.getServer();
@@ -31,7 +31,7 @@ public class Queqiao {
     }
 
     @SubscribeEvent
-    public void onServerStopping(ServerStartingEvent event) {
+    public void onServerStopping(ServerStoppingEvent event) {
         websocketManager.stopWebsocketByServerClose();
     }
 }
