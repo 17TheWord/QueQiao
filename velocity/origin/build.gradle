@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly "com.velocitypowered:velocity-api:${project.api_version}-SNAPSHOT"
+    implementation "com.velocitypowered:velocity-api:${project.api_version}-SNAPSHOT"
     annotationProcessor "com.velocitypowered:velocity-api:${project.api_version}-SNAPSHOT"
 
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
@@ -51,7 +51,16 @@ dependencies {
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
     implementation "commons-io:commons-io:${project.commons_io_version}"
 
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${project.junit_jupiter_version}"
+    testImplementation "org.slf4j:slf4j-simple:${slf4j_version}"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}")
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 def targetJavaVersion = Integer.parseInt(project.java_version)

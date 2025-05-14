@@ -1,7 +1,18 @@
 package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.event.spigot.SpigotPlayer;
+import com.github.theword.queqiao.event.spigot.dto.advancement.SpigotAdvancement;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
+
+// IF > spigot-1.12.2
+//import com.github.theword.queqiao.event.spigot.dto.advancement.ItemMetaDTO;
+//import com.github.theword.queqiao.event.spigot.dto.advancement.ItemStackDTO;
+//import com.github.theword.queqiao.event.spigot.dto.advancement.AdvancementDisplayDTO;
+//import org.bukkit.advancement.AdvancementDisplay;
+//import org.bukkit.inventory.ItemStack;
+//import org.bukkit.inventory.meta.ItemMeta;
+// END IF
 
 import java.util.Objects;
 
@@ -40,5 +51,62 @@ public class SpigotTool {
         spigotPlayer.setFlying(player.isFlying());
         spigotPlayer.setOp(player.isOp());
         return spigotPlayer;
+    }
+
+    // IF > spigot-1.12.2
+//    public static ItemMetaDTO getItemMetaDTO(ItemMeta itemMeta) {
+//        ItemMetaDTO itemMetaDTO = new ItemMetaDTO();
+//        if (itemMeta.hasDisplayName()) itemMetaDTO.setDisplayName(itemMeta.getDisplayName());
+//        if (itemMeta.hasLocalizedName()) itemMetaDTO.setLocalizedName(itemMeta.getLocalizedName());
+//        if (itemMeta.hasLore()) itemMetaDTO.setLore(itemMeta.getLore());
+//        if (itemMeta.hasCustomModelData()) itemMetaDTO.setCustomModelData(itemMeta.getCustomModelData());
+//        if (itemMeta.hasEnchants()) itemMetaDTO.setEnchants(itemMeta.getEnchants());
+//        itemMetaDTO.setItemFlags(itemMeta.getItemFlags());
+//        itemMetaDTO.setUnbreakable(itemMeta.isUnbreakable());
+//        if (itemMeta.hasAttributeModifiers()) itemMetaDTO.setAttributeModifiers(itemMeta.getAttributeModifiers());
+//        return itemMetaDTO;
+//    }
+//
+//    public static ItemStackDTO getItemStackDTO(ItemStack itemStack) {
+//        ItemStackDTO itemStackDTO = new ItemStackDTO();
+//
+//        itemStackDTO.setAmount(itemStack.getAmount());
+//        itemStackDTO.setMaterial(itemStack.getType().name());
+//
+//        ItemMeta itemMeta = itemStack.getItemMeta();
+//        if (itemMeta != null) {
+//            ItemMetaDTO itemMetaDTO = getItemMetaDTO(itemMeta);
+//            itemStackDTO.setMeta(itemMetaDTO);
+//        }
+//        return itemStackDTO;
+//    }
+//
+    // END IF
+
+    public static SpigotAdvancement getSpigotAdvancement(Advancement advancement) {
+        // IF spigot-1.12.2
+//        return new SpigotAdvancement(advancement.getCriteria());
+        // ELSE
+//        AdvancementDisplay advancementDisplay = advancement.getDisplay();
+//
+//        AdvancementDisplayDTO advancementDisplayDTO;
+//        if (advancementDisplay != null) {
+//            ItemStackDTO itemStackDTO = getItemStackDTO(advancementDisplay.getIcon());
+//            advancementDisplayDTO = new AdvancementDisplayDTO();
+//            advancementDisplayDTO.setTitle(advancementDisplay.getTitle());
+//            advancementDisplayDTO.setDescription(advancementDisplay.getDescription());
+//            advancementDisplayDTO.setIcon(itemStackDTO);
+//            advancementDisplayDTO.setShouldShowToast(advancementDisplay.shouldShowToast());
+//            advancementDisplayDTO.setShouldAnnounceChat(advancementDisplay.shouldAnnounceChat());
+//            advancementDisplayDTO.setIsHidden(advancementDisplay.isHidden());
+//            advancementDisplayDTO.setX(advancementDisplay.getX());
+//            advancementDisplayDTO.setY(advancementDisplay.getY());
+//            advancementDisplayDTO.setType(advancementDisplay.getType());
+//        } else advancementDisplayDTO = null;
+//
+//        SpigotAdvancement spigotAdvancement = new SpigotAdvancement(advancement.getCriteria(), advancementDisplayDTO);
+//        spigotAdvancement.setText(advancementDisplay != null ? advancementDisplay.getTitle() : "");
+//        return spigotAdvancement;
+        // END IF
     }
 }

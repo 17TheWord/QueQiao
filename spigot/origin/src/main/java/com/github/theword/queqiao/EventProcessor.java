@@ -2,18 +2,18 @@ package com.github.theword.queqiao;
 
 import com.github.theword.queqiao.event.spigot.*;
 
+import com.github.theword.queqiao.event.spigot.dto.advancement.SpigotAdvancement;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 
 import static com.github.theword.queqiao.tool.utils.Tool.*;
 import static com.github.theword.queqiao.utils.SpigotTool.getSpigotPlayer;
+import static com.github.theword.queqiao.utils.SpigotTool.getSpigotAdvancement;
 
 
 class EventProcessor implements Listener {
@@ -85,4 +85,17 @@ class EventProcessor implements Listener {
         SpigotPlayerCommandPreprocessEvent spigotPlayerCommandPreprocessEvent = new SpigotPlayerCommandPreprocessEvent(getSpigotPlayer(event.getPlayer()), command);
         sendWebsocketMessage(spigotPlayerCommandPreprocessEvent);
     }
+
+    @EventHandler
+    void onPlayerAdvancement(PlayerAdvancementDoneEvent event) {
+        if (!config.getSubscribeEvent().isPlayerAdvancement()) return;
+        Advancement advancement = event.getAdvancement();
+
+        SpigotAdvancement spigotAdvancement = getSpigotAdvancement(advancement);
+
+        SpigotPlayerAdvancementDoneEvent spigotPlayerAdvancementDoneEvent = new SpigotPlayerAdvancementDoneEvent(getSpigotPlayer(event.getPlayer()), spigotAdvancement);
+        sendWebsocketMessage(spigotPlayerAdvancementDoneEvent);
+    }
+
+
 }

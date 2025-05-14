@@ -116,6 +116,15 @@ dependencies {
 //implementation "org.slf4j:slf4j-api:${slf4j_version}"
 //implementation "org.slf4j:slf4j-simple:${slf4j_version}"
     // END IF
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}")
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 tasks.named('processResources', ProcessResources).configure {

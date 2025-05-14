@@ -1,7 +1,19 @@
 package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.event.fabric.FabricServerPlayer;
+import com.github.theword.queqiao.event.fabric.dto.advancement.*;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.server.network.ServerPlayerEntity;
+// IF >= fabric-1.20.4
+// IF >= fabric-1.21
+//import net.minecraft.registry.RegistryKey;
+// END IF
+//
+// IF <= fabric-1.21.1
+//import net.minecraft.util.Identifier;
+// END IF
+//import java.util.stream.Collectors;
+// END IF
 
 public class FabricTool {
 
@@ -32,5 +44,68 @@ public class FabricTool {
         player.isSwimming();
 
         return fabricServerPlayer;
+    }
+
+    public static FabricAdvancement getFabricAdvancement(Advancement advancement) {
+        FabricAdvancement fabricAdvancement = new FabricAdvancement();
+        // IF >= fabric-1.20.4
+//        advancement.parent().ifPresent(parent -> fabricAdvancement.setParent(parent.toString()));
+//        advancement.display().ifPresent(displayInfo -> {
+//            AdvancementDisplayDTO advancementDisplayDTO = new AdvancementDisplayDTO();
+//            advancementDisplayDTO.setTitle(displayInfo.getTitle().getString());
+//            advancementDisplayDTO.setDescription(displayInfo.getDescription().getString());
+//            displayInfo.getBackground().ifPresent(background -> advancementDisplayDTO.setBackground(background.toString()));
+//            advancementDisplayDTO.setFrame(displayInfo.getFrame().getToastText().getString());
+//            advancementDisplayDTO.setShowToast(displayInfo.shouldShowToast());
+//            advancementDisplayDTO.setAnnounceToChat(displayInfo.shouldAnnounceToChat());
+//            advancementDisplayDTO.setHidden(displayInfo.isHidden());
+//            if (!displayInfo.getIcon().isEmpty()) {
+//                ItemStackDTO itemStackDTO = new ItemStackDTO();
+//                itemStackDTO.setCount(displayInfo.getIcon().getCount());
+//                itemStackDTO.setName(displayInfo.getIcon().getName().getString());
+//            }
+//            fabricAdvancement.setDisplay(advancementDisplayDTO);
+//        });
+//        AdvancementRewardsDTO advancementRewardsDTO = new AdvancementRewardsDTO();
+//        advancementRewardsDTO.setExperience(advancement.rewards().experience());
+        // IF <= fabric-1.21.1
+//        advancementRewardsDTO.setRecipes(advancement.rewards().recipes().stream().map(Identifier::toString).collect(Collectors.toList()));
+//        advancementRewardsDTO.setRecipes(advancement.rewards().recipes().stream().map(Identifier::toString).collect(Collectors.toList()));
+        // ELSE
+//        advancementRewardsDTO.setRecipes(advancement.rewards().recipes().stream().map(RegistryKey::toString).collect(Collectors.toList()));
+//        advancementRewardsDTO.setRecipes(advancement.rewards().recipes().stream().map(RegistryKey::toString).collect(Collectors.toList()));
+        // END IF
+        // IF >= fabric-1.21
+//        advancementRewardsDTO.setLoot(advancement.rewards().loot().stream().map(RegistryKey::toString).collect(Collectors.toList()));
+        // ELSE
+//        advancementRewardsDTO.setLoot(advancement.rewards().loot().stream().map(Identifier::toString).collect(Collectors.toList()));
+        // END IF
+//
+//        fabricAdvancement.setSendsTelemetryEvent(advancement.sendsTelemetryEvent());
+//        advancement.name().ifPresent(name -> fabricAdvancement.setName(name.getString()));
+        // ELSE
+//        fabricAdvancement.setParent(advancement.getParent() != null ? advancement.getParent().toString() : "");
+//        if (advancement.getDisplay() != null) {
+//            AdvancementDisplayDTO advancementDisplayDTO = new AdvancementDisplayDTO();
+//            advancementDisplayDTO.setTitle(advancement.getDisplay().getTitle().getString());
+//            advancementDisplayDTO.setDescription(advancement.getDisplay().getDescription().getString());
+//            advancementDisplayDTO.setBackground(advancement.getDisplay().getBackground() != null ? advancement.getDisplay().getBackground().toString() : "");
+//            advancementDisplayDTO.setFrame(advancement.getDisplay().getFrame().getToastText().getString());
+//            advancementDisplayDTO.setShowToast(advancement.getDisplay().shouldShowToast());
+//            advancementDisplayDTO.setAnnounceToChat(advancement.getDisplay().shouldAnnounceToChat());
+//            advancementDisplayDTO.setHidden(advancement.getDisplay().isHidden());
+//            advancementDisplayDTO.setX(advancement.getDisplay().getX());
+//            advancementDisplayDTO.setY(advancement.getDisplay().getY());
+//            if (!advancement.getDisplay().getIcon().isEmpty()) {
+//                ItemStackDTO itemStackDTO = new ItemStackDTO();
+//                itemStackDTO.setCount(advancement.getDisplay().getIcon().getCount());
+//                itemStackDTO.setName(advancement.getDisplay().getIcon().getName().getString());
+//            }
+//            fabricAdvancement.setDisplay(advancementDisplayDTO);
+//        }
+//        fabricAdvancement.setRewards(advancement.getRewards().toJson());
+//        fabricAdvancement.setId(advancement.getId().toString());
+        // END IF
+        return fabricAdvancement;
     }
 }

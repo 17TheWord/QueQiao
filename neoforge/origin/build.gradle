@@ -93,6 +93,17 @@ dependencies {
 
     jarJar(implementation("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
     jarJar(implementation("org.yaml:snakeyaml:${snakeyaml_version}"))
+    
+    testImplementation("com.google.code.gson:gson:${gson_version}")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}")
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

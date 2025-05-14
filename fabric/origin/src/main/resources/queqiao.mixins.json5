@@ -11,6 +11,7 @@
   //  "compatibilityLevel": "JAVA_8",
   // END IF
   "mixins": [
+    "AdvancementMixin",
     "PlayerManagerMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin"
