@@ -1,0 +1,125 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+def getVersionFromFile(String fileName) {
+    def versionFile = file(fileName)
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("File not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def tool_version = getVersionFromFile('/tool_version.txt')
+
+def mod_version = getVersionFromFile('./version.txt')
+
+version = mod_version
+group = mod_group_id
+archivesBaseName = mod_name
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = java_version
+
+repositories {
+    mavenLocal()
+    maven {
+        name 'GitHub Packages'
+        url 'https://maven.pkg.github.com/17TheWord/QueQiaoTool'
+        credentials {
+            username = System.getenv("USERNAME")
+            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
+        }
+    }
+}
+
+minecraft {
+    mappings channel: mp_channel, version: mp_version
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+        server {
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    implementation("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
+        // 排除 slf4j
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'org.yaml', module: 'snakeyaml'
+    }
+    implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
+    implementation "org.slf4j:slf4j-simple:${slf4j_version}"
+    implementation 'org.yaml:snakeyaml:1.33'
+    compileOnly "org.projectlombok:lombok:${lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+}
+
+shadowJar {
+    archiveName("QueQiao-forge+${minecraft_version}-${mod_version}.jar")
+    classifier("")
+    dependencies {
+        include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+        include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
+        include(dependency('org.slf4j:slf4j-api:.*'))
+        include(dependency('org.slf4j:slf4j-simple:.*'))
+        include(dependency('org.yaml:snakeyaml:1.33'))
+    }
+    mergeServiceFiles()
+    manifest {
+        attributes 'Main-Class': 'com.github.theword.queqiao.QueQiao'
+    }
+    relocate 'org.slf4j', 'shadow.org.slf4j'
+    relocate 'org.slf4j.impl', 'shadow.org.slf4j.impl'
+}
+
+processResources {
+    filesMatching('mcmod.info') {
+        expand (
+                'mod_id': mod_id,
+                'mod_name': mod_name,
+                'mod_description': mod_description,
+                'version': version,
+                'minecraft_version': minecraft_version,
+                'mod_author': mod_authors
+        )
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : mod_name,
+                "Specification-Vendor"    : mod_authors,
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : mod_name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : mod_authors,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
