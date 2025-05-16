@@ -16,7 +16,6 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
-        logger.info(event.getPlayer().getDisplayNameString());
         if (event.isCanceled() || !config.getSubscribeEvent().isPlayerChat()) return;
         ForgeServerPlayer player = getForgePlayer(event.getPlayer());
         ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", player, event.getMessage());
@@ -25,7 +24,6 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        logger.info(event.toString());
         if (event.isCanceled() || !config.getSubscribeEvent().isPlayerJoin()) return;
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.player);
         ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(player);
@@ -34,7 +32,6 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onPlayerQuit(PlayerEvent.PlayerLoggedOutEvent event) {
-        logger.info(event.toString());
         if (event.isCanceled() || !config.getSubscribeEvent().isPlayerQuit()) return;
         EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player;
         ForgeServerPlayer player = getForgePlayer(entityPlayerMP);
