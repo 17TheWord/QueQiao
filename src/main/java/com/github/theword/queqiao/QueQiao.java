@@ -32,7 +32,7 @@ public class QueQiao {
     public void preInit(FMLPreInitializationEvent event) {
     }
 
-    @SideOnly(Side.SERVER)
+//    @SideOnly(Side.SERVER)
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         minecraftServer = event.getServer();
@@ -40,7 +40,7 @@ public class QueQiao {
         websocketManager.startWebsocketOnServerStart();
     }
 
-    @SideOnly(Side.SERVER)
+//    @SideOnly(Side.SERVER)
     @Mod.EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
         websocketManager.stopWebsocketByServerClose();
