@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import static com.github.theword.queqiao.tool.utils.Tool.initTool;
 import static com.github.theword.queqiao.tool.utils.Tool.websocketManager;
 
-@Mod(modid = BaseConstant.MOD_ID, version = QueQiao.VERSION, name = BaseConstant.MODULE_NAME, acceptableRemoteVersions = "*", serverSideOnly = true, clientSideOnly = false)
+@Mod(modid = BaseConstant.MOD_ID, version = QueQiao.VERSION, name = BaseConstant.MODULE_NAME, acceptableRemoteVersions = "*", serverSideOnly = false, clientSideOnly = false)
 public class QueQiao {
     public static final String VERSION = "@VERSION@";
     public static MinecraftServer minecraftServer;
