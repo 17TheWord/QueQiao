@@ -1,7 +1,9 @@
 package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.event.forge.ForgeServerPlayer;
-import net.minecraft.entity.ai.attributes.AttributeMap;
+import com.github.theword.queqiao.event.forge.dto.advancement.DisplayInfoDTO;
+import com.github.theword.queqiao.event.forge.dto.advancement.ForgeAdvancement;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 
@@ -30,4 +32,22 @@ public class ForgeTool {
 
         return forgeServerPlayer;
     }
+    public static ForgeAdvancement getForgeAdvancement(Advancement advancement) {
+        ForgeAdvancement forgeAdvancement = new ForgeAdvancement();
+        forgeAdvancement.setId(advancement.getId().toString());
+        forgeAdvancement.setParent(advancement.getParent() != null ? advancement.getParent().getId().toString() : null);
+        if (advancement.getDisplay() != null) {
+            DisplayInfoDTO displayInfoDTO = new DisplayInfoDTO();
+            displayInfoDTO.setTitle(advancement.getDisplay().getTitle().getFormattedText());
+            displayInfoDTO.setDescription(advancement.getDisplay().getDescription().getFormattedText());
+
+            forgeAdvancement.setDisplay(displayInfoDTO);
+        }
+//        forgeAdvancement.setRewards(advancement.getRewards());
+        forgeAdvancement.setChatComponent(advancement.getDisplayText().getFormattedText());
+        forgeAdvancement.setText(advancement.getDisplayText().getFormattedText());
+
+        return forgeAdvancement;
+    }
+
 }
