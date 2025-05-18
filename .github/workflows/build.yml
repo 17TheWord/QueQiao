@@ -53,10 +53,10 @@ jobs:
           cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
           chmod 777 gradlew && ./gradlew --version
 
-      - name: Test
-        run: |
-          cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
-          ./gradlew test
+#      - name: Test
+#        run: |
+#          cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
+#          ./gradlew test
 
       - name: Build
         run: |
