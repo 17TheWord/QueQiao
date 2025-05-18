@@ -48,7 +48,7 @@ public class ForgeTool {
             displayInfoDTO.setTitle(advancement.getDisplay().getTitle().getFormattedText());
             displayInfoDTO.setDescription(advancement.getDisplay().getDescription().getFormattedText());
             // Set advancement icon
-            ItemStack icon = advancement.getDisplay().getIcon();
+            ItemStack icon = advancement.getDisplay().icon;
             ItemStackDTO itemStackDTO = new ItemStackDTO();
             itemStackDTO.setCount(icon.getCount());
             itemStackDTO.setDisplayName(icon.getDisplayName());
