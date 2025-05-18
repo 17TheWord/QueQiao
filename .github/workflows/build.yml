@@ -33,10 +33,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Chose JDK 21
+      - name: Chose JDK 8
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '8'
           distribution: 'temurin'
 
       - name: Read version.txt and save to variable
