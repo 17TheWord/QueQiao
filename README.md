@@ -65,16 +65,8 @@
 ## 帮助与下载
 
 - 前往 [`Wiki`](https://github.com/17TheWord/QueQiao/wiki) 查看文档
-
-<div style="display: flex; flex-direction: column; gap: 20px;">
-  <a href="https://modrinth.com/plugin/queqiao/versions">
-    <img src="./assets/modrinth.svg" alt="Modrinth">
-  </a>
-  <a href="https://www.curseforge.com/minecraft/mc-mods/queqiao">
-    <img src="./assets/curseforge.svg" alt="CurseForge">
-  </a>
-</div>
-
+- [![`Modrinth`](./assets/modrinth.svg)](https://modrinth.com/plugin/queqiao)
+- [![`CurseForge`](./assets/curseforge.svg)](https://www.curseforge.com/minecraft/mc-mods/queqiao)
 
 ## 快速开始
 
