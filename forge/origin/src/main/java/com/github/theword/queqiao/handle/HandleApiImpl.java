@@ -6,26 +6,10 @@ import com.github.theword.queqiao.tool.payload.TitlePayload;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
 import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
-// IF > forge-1.16.5
-//import net.minecraft.network.chat.MutableComponent;
-//import net.minecraft.network.protocol.Packet;
-//import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
-//import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
-//import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
-//import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
-//import net.minecraft.server.level.ServerPlayer;
-// ELSE
-//import net.minecraft.entity.player.ServerPlayerEntity;
-//import net.minecraft.network.IPacket;
-//import net.minecraft.network.play.server.SChatPacket;
-//import net.minecraft.network.play.server.STitlePacket;
-//import net.minecraft.util.text.ChatType;
-//import net.minecraft.util.text.StringTextComponent;
-// END IF
-
-// IF < forge-1.19
-//import java.util.UUID;
-// END IF
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.SPacketTitle;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,31 +28,13 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public void handleBroadcastMessage(List<MessageSegment> messageList) {
-        // IF > forge-1.16.5
-//        MutableComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
-        // ELSE
-//        StringTextComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
-        // END IF
-
-        mutableComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
-
-        // IF < forge-1.19
-//        UUID uuid = UUID.randomUUID();
-        // END IF
-
-        // IF > forge-1.16.5
-//        for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-            // ELSE
-//        for (ServerPlayerEntity serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-            // END IF
-
-            // IF >= forge-1.19
-//            serverPlayer.sendSystemMessage(mutableComponent);
-            // ELSE
-//            serverPlayer.sendMessage(mutableComponent, uuid);
-            // END IF
+        TextComponentString mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
+        mutableComponent.appendSibling(parseJsonToEventImpl.parseMessageListToComponent(messageList));
+        for (EntityPlayerMP serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
+            serverPlayer.sendMessage(mutableComponent);
         }
     }
+
 
     /**
      * 广播 Send Title 消息
@@ -77,17 +43,21 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public void handleSendTitleMessage(TitlePayload titlePayload) {
-        // IF > forge-1.16.5
-//        sendPacket(new ClientboundSetTitleTextPacket(parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle())));
-//        if (titlePayload.getSubtitle() != null)
-//            sendPacket(new ClientboundSetSubtitleTextPacket(parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle())));
-//        sendPacket(new ClientboundSetTitlesAnimationPacket(titlePayload.getFadein(), titlePayload.getStay(), titlePayload.getFadeout()));
-        // ELSE
-//        sendPacket(new STitlePacket(STitlePacket.Type.TITLE, parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle())));
-//        if (titlePayload.getSubtitle() != null)
-//            sendPacket(new STitlePacket(STitlePacket.Type.SUBTITLE, parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle())));
-//        sendPacket(new STitlePacket(titlePayload.getFadein(), titlePayload.getStay(), titlePayload.getFadeout()));
-        // END IF
+        sendPacket(new SPacketTitle(
+                SPacketTitle.Type.TITLE,
+                parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle()),
+                titlePayload.getFadein(),
+                titlePayload.getStay(),
+                titlePayload.getFadeout()
+        ));
+        if (titlePayload.getSubtitle() != null)
+            sendPacket(new SPacketTitle(
+                    SPacketTitle.Type.SUBTITLE,
+                    parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle()),
+                    titlePayload.getFadein(),
+                    titlePayload.getStay(),
+                    titlePayload.getFadeout()
+            ));
     }
 
     /**
@@ -97,11 +67,7 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public void handleSendActionBarMessage(List<MessageSegment> messageList) {
-        // IF > forge-1.16.5
-//        sendPacket(new ClientboundSetActionBarTextPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList)));
-        // ELSE
-//        sendPacket(new SChatPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList), ChatType.GAME_INFO, UUID.randomUUID()));
-        // END IF
+        sendPacket(new SPacketTitle(SPacketTitle.Type.ACTIONBAR, parseJsonToEventImpl.parseMessageListToComponent(messageList)));
     }
 
     /**
@@ -113,15 +79,11 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, List<MessageSegment> messageList) {
-        // IF > forge-1.16.5
-//        ServerPlayer targetPlayer;
-        // ELSE
-//        ServerPlayerEntity targetPlayer;
-        // END IF
+        EntityPlayerMP targetPlayer;
         if (uuid != null)
-            targetPlayer = minecraftServer.getPlayerList().getPlayer(uuid);
+            targetPlayer = minecraftServer.getPlayerList().getPlayerByUUID(uuid);
         else if (nickname != null && !nickname.isEmpty())
-            targetPlayer = minecraftServer.getPlayerList().getPlayerByName(nickname);
+            targetPlayer = minecraftServer.getPlayerList().getPlayerByUsername(nickname);
         else {
             return PrivateMessageResponse.playerNotFound();
         }
@@ -133,34 +95,15 @@ public class HandleApiImpl implements HandleApiService {
         if (targetPlayer.hasDisconnected()) {
             return PrivateMessageResponse.playerNotOnline();
         }
-        // IF > forge-1.16.5
-//        MutableComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
-//        mutableComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
-        // ELSE
-//        StringTextComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
-//        mutableComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
-        // END IF
-
-        // IF >= forge-1.19
-//        targetPlayer.sendSystemMessage(mutableComponent);
-        // ELSE
-//        targetPlayer.sendMessage(mutableComponent, UUID.randomUUID());
-        // END IF
-
+        TextComponentString mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
+        mutableComponent.appendSibling(parseJsonToEventImpl.parseMessageListToComponent(messageList));
+        targetPlayer.sendMessage(mutableComponent);
         return PrivateMessageResponse.sendSuccess(getForgePlayer(targetPlayer));
     }
 
-    // IF > forge-1.16.5
-//    private void sendPacket(Packet<?> packet) {
-//        for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-//            serverPlayer.connection.send(packet);
-//        }
-//    }
-    // ELSE
-//    private void sendPacket(IPacket<?> packet) {
-//        for (ServerPlayerEntity serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-//            serverPlayer.connection.send(packet);
-//        }
-//    }
-    // END IF
+    private void sendPacket(Packet<?> packet) {
+        for (EntityPlayerMP serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
+            serverPlayer.connection.sendPacket(packet);
+        }
+    }
 }

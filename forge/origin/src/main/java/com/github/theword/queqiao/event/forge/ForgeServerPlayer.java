@@ -42,4 +42,5 @@ public class ForgeServerPlayer extends BasePlayer {
     private int blockY;
     @SerializedName("block_z")
     private int blockZ;
+
 }

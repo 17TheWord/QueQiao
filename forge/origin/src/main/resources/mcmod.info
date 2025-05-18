@@ -1,0 +1,21 @@
+[
+  {
+    "modid": "${mod_id}",
+    "name": "${mod_name}",
+    "description": "${mod_description}",
+    "version": "${version}",
+    "mcversion": "${minecraft_version}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "${mod_authors}"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": [],
+    "serverSideOnly": true,
+    "clientSideOnly": false,
+    "requiredOnClient": false
+  }
+]

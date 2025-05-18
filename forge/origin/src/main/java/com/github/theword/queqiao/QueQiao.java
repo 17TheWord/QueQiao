@@ -5,18 +5,21 @@ import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
 import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import static com.github.theword.queqiao.tool.utils.Tool.initTool;
 import static com.github.theword.queqiao.tool.utils.Tool.websocketManager;
 
-
-@Mod(BaseConstant.MOD_ID)
+@Mod(modid = BaseConstant.MOD_ID, version = QueQiao.VERSION, name = BaseConstant.MODULE_NAME, acceptableRemoteVersions = "*", serverSideOnly = true, clientSideOnly = false)
 public class QueQiao {
+    public static final String VERSION = "@VERSION@";
     public static MinecraftServer minecraftServer;
 
     public QueQiao() {
@@ -24,25 +27,23 @@ public class QueQiao {
         MinecraftForge.EVENT_BUS.register(new EventProcessor());
     }
 
-    @OnlyIn(Dist.DEDICATED_SERVER)
-    @SubscribeEvent
-    // IF > forge-1.16.5
-//    public void onServerStarted(net.minecraftforge.event.server.ServerStartingEvent event) {
-    // ELSE
-//    public void onServerStarted(net.minecraftforge.fml.event.server.FMLServerStartingEvent event) {
-        // END IF
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+    }
+
+    @SideOnly(Side.SERVER)
+    @Mod.EventHandler
+    public void onServerStarting(FMLServerStartingEvent event) {
         minecraftServer = event.getServer();
-        initTool(true, minecraftServer.getServerVersion(), ServerTypeConstant.FORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
+        initTool(true, "1.12.2", ServerTypeConstant.FORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
         websocketManager.startWebsocketOnServerStart();
     }
 
-    @OnlyIn(Dist.DEDICATED_SERVER)
-    @SubscribeEvent
-    // IF > forge-1.16.5
-//    public void onServerStopping(net.minecraftforge.event.server.ServerStoppingEvent event) {
-    // ELSE
-//    public void onServerStopping(net.minecraftforge.fml.event.server.FMLServerStoppingEvent event) {
-        // END IF
+    @SideOnly(Side.SERVER)
+    @Mod.EventHandler
+    public void onServerStopping(FMLServerStoppingEvent event) {
         websocketManager.stopWebsocketByServerClose();
     }
+
 }

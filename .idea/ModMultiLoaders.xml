@@ -3,13 +3,7 @@
   <component name="LoadersPluginState">
     <option name="loaders">
       <list>
-        <option value="fabric" />
         <option value="forge" />
-        <option value="neoforge" />
-        <option value="quilt" />
-        <option value="spigot" />
-        <option value="velocity" />
-        <option value="minecraft" />
       </list>
     </option>
   </component>
