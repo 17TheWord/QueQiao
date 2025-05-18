@@ -47,7 +47,7 @@
 
 ## Introduction
 
-- Distributes ​**​player events​**​ from the server in `JSON` format via `WebSocket`
+- Distributes **player events** from the server in `JSON` format via `WebSocket`
     - Implemented [`Events`](https://github.com/17TheWord/QueQiao/wiki/4.-Event-Types):
         - [`Player Chat`](https://github.com/17TheWord/QueQiao/wiki/4.-Event-Types)
         - [`Player Command`](https://github.com/17TheWord/QueQiao/wiki/4.-Event-Types)
@@ -60,6 +60,19 @@
         - [`PrivateMessage`](https://github.com/17TheWord/QueQiao/wiki/5.-API#privatemessage)
         - [`Title & SubTitle`](https://github.com/17TheWord/QueQiao/wiki/5.-API#title)
         - [`ActionBar`](https://github.com/17TheWord/QueQiao/wiki/5.-API#actionbar)
+
+## Documentation & Downloads
+
+- Visit the [`Wiki`](https://github.com/17TheWord/QueQiao/wiki) for detailed documentation
+
+<div style="display: flex; flex-direction: column; gap: 20px;">
+  <a href="https://modrinth.com/plugin/queqiao/versions">
+    <img src="./assets/modrinth.svg" alt="Modrinth">
+  </a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/queqiao">
+    <img src="./assets/curseforge.svg" alt="CurseForge">
+  </a>
+</div>
 
 ## Quick Start
 
@@ -85,12 +98,6 @@
       }
       ```
 5. Launch the game and join the server
-
-## Documentation & Downloads
-
-- Visit the [`Wiki`](https://github.com/17TheWord/QueQiao/wiki) for detailed documentation
-- Download from [`Modrinth`](https://modrinth.com/plugin/queqiao)
-- Download from [`CurseForge`](https://www.curseforge.com/minecraft/mc-mods/queqiao)
 
 ## Integration Projects
 
