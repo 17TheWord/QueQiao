@@ -1,11 +1,18 @@
 package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.event.forge.ForgeServerPlayer;
+import com.github.theword.queqiao.event.forge.dto.advancement.AdvancementRewardsDTO;
 import com.github.theword.queqiao.event.forge.dto.advancement.DisplayInfoDTO;
 import com.github.theword.queqiao.event.forge.dto.advancement.ForgeAdvancement;
+import com.github.theword.queqiao.event.forge.dto.advancement.ItemStackDTO;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class ForgeTool {
     public static ForgeServerPlayer getForgePlayer(EntityPlayerMP player) {
@@ -40,10 +47,21 @@ public class ForgeTool {
             DisplayInfoDTO displayInfoDTO = new DisplayInfoDTO();
             displayInfoDTO.setTitle(advancement.getDisplay().getTitle().getFormattedText());
             displayInfoDTO.setDescription(advancement.getDisplay().getDescription().getFormattedText());
-
+            // Set advancement icon
+            ItemStack icon = advancement.getDisplay().getIcon();
+            ItemStackDTO itemStackDTO = new ItemStackDTO();
+            itemStackDTO.setCount(icon.getCount());
+            itemStackDTO.setDisplayName(icon.getDisplayName());
+            itemStackDTO.setItem(icon.getItem().toString());
+            displayInfoDTO.setIcon(itemStackDTO);
             forgeAdvancement.setDisplay(displayInfoDTO);
         }
-//        forgeAdvancement.setRewards(advancement.getRewards());
+        AdvancementRewardsDTO advancementRewardsDTO = new AdvancementRewardsDTO();
+        advancementRewardsDTO.setExperience(advancement.getRewards().experience);
+
+        advancementRewardsDTO.setLoot(Arrays.stream(advancement.getRewards().loot).map(ResourceLocation::toString).collect(Collectors.toList()));
+        advancementRewardsDTO.setRecipes(Arrays.stream(advancement.getRewards().recipes).map(ResourceLocation::toString).collect(Collectors.toList()));
+        forgeAdvancement.setRewards(advancementRewardsDTO);
         forgeAdvancement.setChatComponent(advancement.getDisplayText().getFormattedText());
         forgeAdvancement.setText(advancement.getDisplayText().getFormattedText());
 

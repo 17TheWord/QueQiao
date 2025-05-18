@@ -1,7 +1,6 @@
 package com.github.theword.queqiao.event.forge.dto.advancement;
 
 import com.github.theword.queqiao.tool.event.base.BasePlayerAdvancementEvent;
-import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,7 +36,7 @@ public class ForgeAdvancement extends BasePlayerAdvancementEvent.BaseAdvancement
      * <p>serializeToJson()</p>
      * <p>version &lt 1.21</p>
      */
-    private JsonElement rewards;
+    private AdvancementRewardsDTO rewards;
     /**
      * Original type: net.minecraft.network.chat.Component
      * <p>toString()</p>
