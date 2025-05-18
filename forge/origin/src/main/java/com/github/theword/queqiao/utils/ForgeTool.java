@@ -10,6 +10,18 @@ public class ForgeTool {
         forgeServerPlayer.setUuid(player.getUniqueID());
         forgeServerPlayer.setDisplayName(player.getDisplayNameString());
         forgeServerPlayer.setIpAddress(player.getPlayerIP());
+
+        forgeServerPlayer.setSpeed(player.capabilities.getWalkSpeed());
+        forgeServerPlayer.setFlyingSpeed(player.capabilities.getFlySpeed());
+
+        forgeServerPlayer.setGameMode(player.interactionManager.getGameType().getName());
+        forgeServerPlayer.setFlying(player.capabilities.isFlying);
+        forgeServerPlayer.setSleeping(player.isPlayerSleeping());
+        forgeServerPlayer.setBlocking(player.isActiveItemStackBlocking());
+
+        forgeServerPlayer.setBlockX(player.getPosition().getX());
+        forgeServerPlayer.setBlockY(player.getPosition().getY());
+        forgeServerPlayer.setBlockZ(player.getPosition().getZ());
         return forgeServerPlayer;
     }
 }
