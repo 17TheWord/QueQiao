@@ -165,8 +165,8 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
 //        else style = style.withColor(TextColor.fromLegacyFormat(ChatFormatting.WHITE));
         // ELSE
 //        if (myBaseComponent.getColor() != null && !myBaseComponent.getColor().isEmpty())
-//            style.withColor(Color.fromLegacyFormat(TextFormatting.valueOf(myBaseComponent.getColor().toUpperCase())));
-//        else style.withColor(Color.fromLegacyFormat(TextFormatting.WHITE));
+//            style = style.withColor(Color.fromLegacyFormat(TextFormatting.valueOf(myBaseComponent.getColor().toUpperCase())));
+//        else style = style.withColor(Color.fromLegacyFormat(TextFormatting.WHITE));
         // END IF
         return style;
     }

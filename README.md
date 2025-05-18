@@ -57,10 +57,16 @@
     - [`玩家登出`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
 - 通过 `Websocket` 接收 `Json` 消息，并转发至游戏玩家。
     - 已实现的接口
-        - [`Broadcast`](https://github.com/17TheWord/QueQiao/wiki/5.-API#broadcast--send-message)
-        - [`PrivateMessage`](https://github.com/17TheWord/QueQiao/wiki/5.-API#privatemessage)
-        - [`Title & SubTitle`](https://github.com/17TheWord/QueQiao/wiki/5.-API#title)
-        - [`ActionBar`](https://github.com/17TheWord/QueQiao/wiki/5.-API#actionbar)
+        - [`广播消息`](https://github.com/17TheWord/QueQiao/wiki/5.-API#broadcast--send-message)
+        - [`私聊消息`](https://github.com/17TheWord/QueQiao/wiki/5.-API#privatemessage)
+        - [`标题 & 子标题`](https://github.com/17TheWord/QueQiao/wiki/5.-API#title)
+        - [`动画栏`](https://github.com/17TheWord/QueQiao/wiki/5.-API#actionbar)
+
+## 帮助与下载
+
+- 前往 [`Wiki`](https://github.com/17TheWord/QueQiao/wiki) 查看文档
+- [![`Modrinth`](./assets/modrinth.svg)](https://modrinth.com/plugin/queqiao)
+- [![`CurseForge`](./assets/curseforge.svg)](https://www.curseforge.com/minecraft/mc-mods/queqiao)
 
 ## 快速开始
 
@@ -74,24 +80,15 @@
     - 配置全局 `Request Header`
       ```json5
       {
-        "x-self-name": "TestServer",
         // 必填
         // 服务器名称，必须与 config.yml 中的 'server_name' 一致
-        "Authorization": "Bearer 123",
+        "x-self-name": "TestServer",
         // 选填
         // 鉴权，必须与 config.yml 中的 'access_token' 一致,如果 config.yml 中的 'auth_token' 为空，则可不设置此项
-        "x-client-origin": "apifox"
-        // 必填
-        // 客户端来源，如果来源为 'minecraft'，则表示来自 Minecraft 的 Websocket Client，且会被 Minecraft 端的 Websocket Server 拒绝
+        "Authorization": "Bearer 123"
       }
       ```
 5. 开始游戏，加入服务器
-
-## 帮助与下载
-
-- 前往 [`Wiki`](https://github.com/17TheWord/QueQiao/wiki) 查看文档
-- 前往 [`Modrinth`](https://modrinth.com/plugin/queqiao/versions) 下载
-- 前往 [`CurseForge`](https://www.curseforge.com/minecraft/mc-mods/queqiao) 下载
 
 ## 对接
 

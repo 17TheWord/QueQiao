@@ -2,6 +2,9 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+    // IF forge-1.16.5
+//    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    // END IF
 }
 
 def getVersionFromFile(String fileName) {
@@ -84,20 +87,45 @@ repositories {
 //    archiveClassifier.set('')
 //    destinationDirectory = file("../../QueQiao-jar/${mod_version}")
 //}
+// ELSE
+//shadowJar {
+//    archiveBaseName.set("${mod_name}-forge+${minecraft_version}")
+//    archiveClassifier.set("")
+//    destinationDirectory.set(file("../../QueQiao-jar/${version}"))
+//    dependencies {
+//        include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+//        include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
+//        include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
+//        include(dependency("org.slf4j:slf4j-api:${slf4j_version}"))
+//        include(dependency("org.slf4j:slf4j-simple:${slf4j_version}"))
+//    }
+//    mergeServiceFiles()
+//    relocate 'org.slf4j', 'shadow.org.slf4j'
+//    relocate 'org.slf4j.impl', 'shadow.org.slf4j.impl'
+//}
+//reobf {
+//    shadowJar { }
+//}
+//tasks.named('shadowJar') {
+//    finalizedBy 'reobfShadowJar'
+//}
+//tasks.named('build') {
+//    dependsOn 'shadowJar'
+//}
 // END IF
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
-    implementation "org.projectlombok:lombok:${project.lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    implementation "org.projectlombok:lombok:${lombok_version}"
 
     minecraftLibrary("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
-    implementation "org.java-websocket:Java-WebSocket:${project.java_websocket_version}"
-    implementation "org.yaml:snakeyaml:${project.snakeyaml_version}"
+    implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
+    implementation "org.yaml:snakeyaml:${snakeyaml_version}"
     // IF > forge-1.16.5
 //    jarJar("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
 //        jarJar.ranged(it, "[${tool_version},)")
@@ -113,8 +141,8 @@ dependencies {
 //        jarJar.ranged(it, "[${project.snakeyaml_version},3.0)")
 //    }
     // ELSE
-//implementation "org.slf4j:slf4j-api:${slf4j_version}"
-//implementation "org.slf4j:slf4j-simple:${slf4j_version}"
+//    implementation "org.slf4j:slf4j-api:${slf4j_version}"
+//    implementation "org.slf4j:slf4j-simple:${slf4j_version}"
     // END IF
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}")
@@ -144,21 +172,6 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 tasks.named('jar', Jar).configure {
-    // IF forge-1.16.5
-//    from {
-//        configurations.compileClasspath.collect {
-//            if (
-//                    it.name.containsIgnoreCase("queqiao-tool")
-//                            || it.name.containsIgnoreCase("websocket")
-//                            || it.name.containsIgnoreCase("snake")
-//                            || it.name.containsIgnoreCase("slf4j")
-//            )
-//                zipTree(it)
-//        }
-//    }
-//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//    destinationDirectory = file("../../QueQiao-jar/${mod_version}")
-    // END IF
     manifest {
         attributes([
                 "Specification-Title"     : mod_id,
