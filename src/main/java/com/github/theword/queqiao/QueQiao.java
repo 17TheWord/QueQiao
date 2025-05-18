@@ -1,18 +1,16 @@
 package com.github.theword.queqiao;
 
+import com.github.theword.queqiao.command.CommandTreeQueQiao;
 import com.github.theword.queqiao.handle.HandleApiImpl;
 import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
 import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
 import static com.github.theword.queqiao.tool.utils.Tool.initTool;
 import static com.github.theword.queqiao.tool.utils.Tool.websocketManager;
@@ -38,6 +36,8 @@ public class QueQiao {
         minecraftServer = event.getServer();
         initTool(true, "1.12.2", ServerTypeConstant.FORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
         websocketManager.startWebsocketOnServerStart();
+
+        event.registerServerCommand(new CommandTreeQueQiao());
     }
 
 //    @SideOnly(Side.SERVER)
