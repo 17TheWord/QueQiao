@@ -48,7 +48,11 @@ public class EventProcessor {
         if (event.isCanceled() || !config.getSubscribeEvent().isPlayerCommand()) return;
         if(!(event.getSender() instanceof EntityPlayerMP)) return;
 
-        String command = isRegisterOrLoginCommand(event.getCommand().toString());
+        StringBuilder commandString = new StringBuilder(event.getCommand().getName());
+        for (String parameter:event.getParameters()){
+            commandString.append(" ").append(parameter);
+        }
+        String command = isRegisterOrLoginCommand(commandString.toString());
         if (command.isEmpty()) return;
 
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getSender());
