@@ -52,7 +52,9 @@ public class ForgeTool {
             ItemStackDTO itemStackDTO = new ItemStackDTO();
             itemStackDTO.setCount(icon.getCount());
             itemStackDTO.setDisplayName(icon.getDisplayName());
-            itemStackDTO.setItem(icon.getItem().toString());
+            ResourceLocation itemID = icon.getItem().getRegistryName();
+            if(itemID!=null)
+                itemStackDTO.setItem(itemID.toString());
             displayInfoDTO.setIcon(itemStackDTO);
             forgeAdvancement.setDisplay(displayInfoDTO);
         }
