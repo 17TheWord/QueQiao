@@ -88,7 +88,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
     private ClickEvent getClickEventFromBaseComponent(CommonTextComponent myTextComponent) {
         if (myTextComponent.getClickEvent() != null) {
-            ClickEvent.Action tempAction = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction().toLowerCase());
+            ClickEvent.Action tempAction = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction().toUpperCase());
             return new ClickEvent(tempAction, myTextComponent.getClickEvent().getValue());
         }
         return null;
