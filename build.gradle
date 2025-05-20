@@ -42,11 +42,25 @@ setDefaultProperty 'extra_jvm_args', false, ''
 setDefaultProperty 'extra_tweak_classes', false, ''
 setDefaultProperty 'change_minecraft_sources', false, false
 
-version = propertyString('mod_version')
+//version = propertyString('mod_version')
 group = propertyString('root_package')
 
+
+def getVersionFromFile(String fileName) {
+    def versionFile = file(fileName)
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("File not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def tool_version = getVersionFromFile('./tool_version.txt')
+def mod_version = getVersionFromFile('./version.txt')
+def version = getVersionFromFile('./version.txt')
+
 base {
-    archivesName.set(propertyString('mod_id'))
+    archivesName.set("QueQiao-forge+${minecraft_version}-${mod_version}")
 }
 
 tasks.decompressDecompiledSources.enabled !propertyBool('change_minecraft_sources')
@@ -164,6 +178,7 @@ dependencies {
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'
+
 
 // Adds Access Transformer files to tasks
 if (propertyBool('use_access_transformer')) {
@@ -361,3 +376,27 @@ idea.project.settings {
 
 apply from: 'gradle/scripts/publishing.gradle'
 apply from: 'gradle/scripts/extra.gradle'
+
+shadowJar {
+    archiveFileName.set("QueQiao-forge+${minecraft_version}-${mod_version}-deobf.jar")
+    archiveClassifier.set("")
+    manifest {
+        attributes 'Main-Class': 'com.github.theword.queqiao.QueQiao'
+    }
+    dependencies {
+        include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+        include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
+        include(dependency('org.slf4j:slf4j-api:.*'))
+        include(dependency('org.slf4j:slf4j-simple:.*'))
+        include(dependency('org.yaml:snakeyaml:1.33'))
+    }
+    mergeServiceFiles()
+    relocate 'org.slf4j', 'shadow.org.slf4j'
+    relocate 'org.slf4j.impl', 'shadow.org.slf4j.impl'
+}
+reobfJar {
+    inputJar.set(file("build/libs/QueQiao-forge+${minecraft_version}-${mod_version}-deobf.jar"))
+}
+tasks.reobfJar {
+    dependsOn(tasks.shadowJar)
+}
