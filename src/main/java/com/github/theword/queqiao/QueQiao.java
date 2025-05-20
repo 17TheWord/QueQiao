@@ -37,7 +37,8 @@ public class QueQiao {
         initTool(true, "1.12.2", ServerTypeConstant.FORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
         websocketManager.startWebsocketOnServerStart();
 
-        event.registerServerCommand(new CommandTreeQueQiao());
+        CommandTreeQueQiao command = new CommandTreeQueQiao();
+        event.registerServerCommand(command);
     }
 
 //    @SideOnly(Side.SERVER)

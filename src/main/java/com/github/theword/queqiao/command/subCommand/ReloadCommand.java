@@ -7,12 +7,19 @@ import net.minecraft.command.ICommandSender;
 import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
 
 
-public class ReloadCommand extends ReloadCommandAbstract implements ForgeSubCommand {
+public class ReloadCommand extends ForgeSubCommand {
 
+    public ReloadCommand() {
+        super(new InnerReloadCommand());
+    }
+
+    public static class InnerReloadCommand extends ReloadCommandAbstract {
+
+    }
     @Override
     public int onCommand(ICommandSender sender) {
-        if (!handleCommandReturnMessageService.hasPermission(sender, getPermissionNode())) return 0;
-        execute(sender, true);
+        if (!handleCommandReturnMessageService.hasPermission(sender, inner.getPermissionNode())) return 0;
+        inner.execute(sender, true);
         return 1;
     }
 }

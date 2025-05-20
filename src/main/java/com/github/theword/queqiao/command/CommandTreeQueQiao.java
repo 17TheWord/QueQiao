@@ -10,6 +10,7 @@ import net.minecraftforge.server.command.CommandTreeBase;
 public class CommandTreeQueQiao extends CommandTreeBase {
 
     public CommandTreeQueQiao(){
+        super();
         this.addSubcommand(new HelpCommand(this));
         this.addSubcommand(new ReloadCommand());
         this.addSubcommand(new ReconnectCommand());

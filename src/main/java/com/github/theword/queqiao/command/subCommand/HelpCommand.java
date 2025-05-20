@@ -9,22 +9,28 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
 
 
-public class HelpCommand extends HelpCommandAbstract implements ForgeSubCommand {
+public class HelpCommand extends ForgeSubCommand {
     CommandTreeBase commandTree;
+
     public HelpCommand(CommandTreeBase tree){
+        super(new InnerHelpCommand());
         this.commandTree=tree;
     }
+
+    public static class InnerHelpCommand extends HelpCommandAbstract {
+
+    }
+
     @Override
     public int onCommand(ICommandSender sender) {
-        if (!handleCommandReturnMessageService.hasPermission(sender, getPermissionNode())) return 0;
+        if (!handleCommandReturnMessageService.hasPermission(sender, inner.getPermissionNode())) return 0;
         handleCommandReturnMessageService.handleCommandReturnMessage(sender, "-------------------");
         for (ICommand subCommand : commandTree.getSubCommands()) {
             if(!(subCommand instanceof ForgeSubCommand)) continue;
             ForgeSubCommand forgeSubCommand = (ForgeSubCommand) subCommand;
-            handleCommandReturnMessageService.handleCommandReturnMessage(sender, forgeSubCommand.getUsage() + "---" + forgeSubCommand.getDescription());
+            handleCommandReturnMessageService.handleCommandReturnMessage(sender, forgeSubCommand.getUsage(sender) + "---" + forgeSubCommand.inner.getDescription());
         }
         handleCommandReturnMessageService.handleCommandReturnMessage(sender, "-------------------");
         return 1;
-
     }
 }

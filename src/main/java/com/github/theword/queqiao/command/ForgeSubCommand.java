@@ -1,6 +1,8 @@
 package com.github.theword.queqiao.command;
 
+import com.github.theword.queqiao.tool.command.SubCommand;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -11,46 +13,36 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public interface ForgeSubCommand extends ICommand {
-
-    String getName();
-
-    String getDescription();
-
-    String getUsage();
-
-    default List<String> getAliases(){
-        return Collections.emptyList();
+public abstract class ForgeSubCommand extends CommandBase {
+    public final SubCommand inner;
+    public ForgeSubCommand(SubCommand inner){
+        this.inner=inner;
     }
-
-    default String getUsage(ICommandSender sender){
-        return getUsage();
-    }
-
-    int onCommand(ICommandSender sender);
 
     @Override
-    default void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
+    public String getName(){
+        return inner.getName();
+    }
+
+    @Override
+    public String getUsage(ICommandSender sender){
+        return inner.getUsage();
+    }
+
+    public abstract int onCommand(ICommandSender sender);
+
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException{
         int result = onCommand(sender);
     }
 
     @Override
-    default boolean checkPermission(MinecraftServer server, ICommandSender sender){
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender){
         return sender.canUseCommand(BaseConstant.MOD_PERMISSION_LEVEL,"");
     };
 
     @Override
-    default List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    default boolean isUsernameIndex(String[] args, int index) {
-        return false;
-    }
-
-    @Override
-    default int compareTo(ICommand o) {
+    public int compareTo(ICommand o) {
         return this.getName().compareTo(o.getName());
     }
 }

@@ -15,8 +15,16 @@ import java.util.Objects;
 import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
 
 
-public class ReconnectCommand extends ReconnectCommandAbstract implements ForgeSubCommand {
+public class ReconnectCommand extends ForgeSubCommand {
 
+
+    public ReconnectCommand() {
+        super(new InnerReconnectCommand());
+    }
+
+    public static class InnerReconnectCommand extends ReconnectCommandAbstract{
+
+    }
     @Override
     public int onCommand(ICommandSender sender) {
         return 0;
@@ -28,7 +36,7 @@ public class ReconnectCommand extends ReconnectCommandAbstract implements ForgeS
     }
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (!handleCommandReturnMessageService.hasPermission(sender, getPermissionNode())) return;
-        execute(sender, args.length>0 && Objects.equals(args[0], "all"));
+        if (!handleCommandReturnMessageService.hasPermission(sender, inner.getPermissionNode())) return;
+        inner.execute(sender, args.length>0 && Objects.equals(args[0], "all"));
     }
 }
