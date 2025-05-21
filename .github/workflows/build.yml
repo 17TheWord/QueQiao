@@ -3,7 +3,7 @@ name: Build Plugin and Mod
 on:
   push:
     branches:
-      - forge-1.12.2
+      - cleanroom-1.12.2
   workflow_dispatch:
 
 permissions:
@@ -66,7 +66,7 @@ jobs:
       - name: Set Version Type
         id: set-version-type
         run: |
-          if [ "${GITHUB_REF}" == "refs/heads/forge-1.12.2" ]; then
+          if [ "${GITHUB_REF}" == "refs/heads/cleanroom-1.12.2" ]; then
             echo "VERSION_TYPE=release" >> $GITHUB_ENV
           else
             echo "VERSION_TYPE=beta" >> $GITHUB_ENV
