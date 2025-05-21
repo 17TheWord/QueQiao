@@ -94,7 +94,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
     private ClickEvent getClickEventFromBaseComponent(CommonTextComponent myTextComponent) {
         if (myTextComponent.getClickEvent() != null) {
-            ClickEvent.Action tempAction = ClickEvent.Action.valueOf(myTextComponent.getClickEvent().getAction().toLowerCase());
+            ClickEvent.Action tempAction = ClickEvent.Action.getValueByCanonicalName(myTextComponent.getClickEvent().getAction().toLowerCase());
             return new ClickEvent(tempAction, myTextComponent.getClickEvent().getValue());
         }
         return null;
@@ -102,7 +102,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
     public HoverEvent getHoverEventFromBaseComponent(CommonTextComponent myTextComponent) {
         HoverEvent hoverEvent = null;
-        HoverEvent.Action action = HoverEvent.Action.valueOf(myTextComponent.getHoverEvent().getAction().toLowerCase());
+        HoverEvent.Action action = HoverEvent.Action.getValueByCanonicalName(myTextComponent.getHoverEvent().getAction().toLowerCase());
         if (action.equals(HoverEvent.Action.SHOW_TEXT)) {
             if (myTextComponent.getHoverEvent().getText() != null && !myTextComponent.getHoverEvent().getText().isEmpty()) {
                 TextComponentString textComponent = parseCommonBaseComponentListToComponent(myTextComponent.getHoverEvent().getText());
@@ -110,7 +110,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
             }
         } else if (action.equals(HoverEvent.Action.SHOW_ITEM)) {
             CommonHoverItem commonHoverItem = myTextComponent.getHoverEvent().getItem();
-            Item item = Item.getItemById(Integer.parseInt(commonHoverItem.getId()));
+            Item item = Item.REGISTRY.getObject(new ResourceLocation(commonHoverItem.getId()));
             ItemStack itemStack = new ItemStack(item, commonHoverItem.getCount());
             hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ITEM, new TextComponentString(itemStack.getDisplayName()));
         } else if (action.equals(HoverEvent.Action.SHOW_ENTITY)) {
