@@ -2,14 +2,18 @@ package com.github.theword.queqiao;
 
 
 import com.github.theword.queqiao.event.forge.*;
+import com.github.theword.queqiao.event.forge.dto.advancement.ForgeAdvancement;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import static com.github.theword.queqiao.tool.utils.Tool.*;
+import static com.github.theword.queqiao.utils.ForgeTool.getForgeAdvancement;
 import static com.github.theword.queqiao.utils.ForgeTool.getForgePlayer;
 
 public class EventProcessor {
@@ -42,11 +46,16 @@ public class EventProcessor {
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
         if (event.isCanceled() || !config.getSubscribeEvent().isPlayerCommand()) return;
-        if (event.getSender().getCommandSenderEntity() == null || !(event.getSender().getCommandSenderEntity() instanceof EntityPlayerMP))
-            return;
-        String command = isRegisterOrLoginCommand(event.getCommand().toString());
+        if(!(event.getSender() instanceof EntityPlayerMP)) return;
+
+        StringBuilder commandString = new StringBuilder(event.getCommand().getName());
+        for (String parameter:event.getParameters()){
+            commandString.append(" ").append(parameter);
+        }
+        String command = isRegisterOrLoginCommand(commandString.toString());
         if (command.isEmpty()) return;
-        ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getSender().getCommandSenderEntity());
+
+        ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getSender());
         ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
         sendWebsocketMessage(forgeCommandEvent);
     }
@@ -57,7 +66,20 @@ public class EventProcessor {
         if (event.getEntity() == null || !(event.getEntity() instanceof EntityPlayerMP)) return;
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getEntity());
         String message = event.getEntityLiving().getCombatTracker().getDeathMessage().getUnformattedText();
-        ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, message);
-        sendWebsocketMessage(forgeCommandEvent);
+        ForgePlayerDeathEvent forgePlayerDeathEvent = new ForgePlayerDeathEvent("", player, message);
+        sendWebsocketMessage(forgePlayerDeathEvent);
+    }
+
+    @SubscribeEvent
+    public void onPlayerAdvancement(AdvancementEvent event) {
+        if (!config.getSubscribeEvent().isPlayerAdvancement()) return;
+        Advancement advancement = event.getAdvancement();
+
+        ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getEntityPlayer());
+
+        ForgeAdvancement forgeAdvancement = getForgeAdvancement(advancement);
+
+        ForgeAdvancementEvent forgeAdvancementEvent = new ForgeAdvancementEvent(player, forgeAdvancement);
+        sendWebsocketMessage(forgeAdvancementEvent);
     }
 }
