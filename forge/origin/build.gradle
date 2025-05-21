@@ -55,9 +55,9 @@ def getVersionFromFile(String fileName) {
     }
 }
 
-def tool_version = getVersionFromFile('./tool_version.txt')
-def mod_version = getVersionFromFile('./version.txt')
-def version = getVersionFromFile('./version.txt')
+def tool_version = getVersionFromFile('../../tool_version.txt')
+def mod_version = getVersionFromFile('../../version.txt')
+def version = getVersionFromFile('../../version.txt')
 
 base {
     archivesName.set("QueQiao-forge+${minecraft_version}-${mod_version}")

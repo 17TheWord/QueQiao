@@ -1,7 +1,7 @@
 apply from: 'gradle/scripts/helpers.gradle'
 
-def tool_version = getVersionFromFile('./tool_version.txt')
-def mod_version = getVersionFromFile('./version.txt')
+def tool_version = getVersionFromFile('../../tool_version.txt')
+def mod_version = getVersionFromFile('../../version.txt')
 
 repositories {
     // Other repositories described by default:
@@ -66,4 +66,3 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${lombok_version}"
 }
-
