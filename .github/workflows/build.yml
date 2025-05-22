@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - cleanroom-1.12.2
-      - dev-cleanroom-1.12.2
   workflow_dispatch:
 
 permissions:
@@ -49,11 +48,11 @@ jobs:
       - name: Init Files
         run: chmod 777 init.sh && ./init.sh
 
-      - name: Generate Gradle Wrapper
-        run: |
-          cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
-          gradle wrapper --gradle-version 8.10.2
-          chmod +x gradlew
+#      - name: Generate Gradle Wrapper
+#        run: |
+#          cd ${{ matrix.config.mc-loader }}/${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}
+#          gradle wrapper --gradle-version 8.10.2
+#          chmod +x gradlew
 
       - name: Init Gradle
         run: |
