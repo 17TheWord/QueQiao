@@ -47,6 +47,8 @@ dependencies {
     implementation "org.projectlombok:lombok:${project.lombok_version}"
 
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
+    implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
+    implementation "org.yaml:snakeyaml:${snakeyaml_version}"
     implementation "org.slf4j:slf4j-api:${slf4j_version}"
     implementation "org.slf4j:slf4j-simple:${slf4j_version}"
 
@@ -73,7 +75,10 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    if (targetJavaVersion >= Integer.parseInt(java_version) || JavaVersion.current().isJava8Compatible()) {
+    if (JavaVersion.current().isJava8Compatible()) {
+        sourceCompatibility = "$targetJavaVersion"
+        targetCompatibility = "$targetJavaVersion"
+    } else {
         options.release.set(targetJavaVersion)
     }
 }
