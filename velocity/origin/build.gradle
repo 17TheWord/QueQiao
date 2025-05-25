@@ -35,8 +35,8 @@ repositories {
     maven {
         url = uri(maven_repository_url)
         credentials {
-            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-            password = project.findProperty("gpr.key") ?: System.getenv("PACKAGE_READ_ONLY_TOKEN")
+            username = System.getenv("USERNAME")
+            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
         }
     }
 }
