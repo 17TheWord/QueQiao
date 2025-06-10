@@ -13,6 +13,10 @@ import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+// IF >= fabric-1.21.5
+//import java.net.URI;
+//import java.net.URISyntaxException;
+// END IF
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -113,12 +117,39 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
     }
 
     public ClickEvent getClickEvent(CommonTextComponent commonTextComponent) {
-        // IF >= fabric-1.20.4
+        ClickEvent clickEvent = null;
+        // IF >= fabric-1.21.5
+//        switch (commonTextComponent.getClickEvent().getAction().toLowerCase()) {
+//            case "open_url":
+//                try {
+//                    clickEvent = new ClickEvent.OpenUrl(new URI(commonTextComponent.getClickEvent().getValue()));
+//                } catch (URISyntaxException e) {
+//                    logger.warn("Invalid URL: " + commonTextComponent.getClickEvent().getValue());
+//                }
+//                break;
+//            case "open_file":
+//                clickEvent = new ClickEvent.OpenFile(commonTextComponent.getClickEvent().getValue());
+//                break;
+//            case "run_command":
+//                clickEvent = new ClickEvent.RunCommand(commonTextComponent.getClickEvent().getValue());
+//                break;
+//            case "suggest_command":
+//                clickEvent = new ClickEvent.SuggestCommand(commonTextComponent.getClickEvent().getValue());
+//                break;
+//            case "change_page":
+//                clickEvent = new ClickEvent.ChangePage(Integer.parseInt(commonTextComponent.getClickEvent().getValue()));
+//                break;
+//            default:
+//                break;
+//        }
+        // ELSE IF >= fabric-1.20.4
 //                ClickEvent.Action tempAction = ClickEvent.Action.valueOf(commonTextComponent.getClickEvent().getAction());
+//                clickEvent = new ClickEvent(tempAction, commonTextComponent.getClickEvent().getValue());
         // ELSE
 //        ClickEvent.Action tempAction = ClickEvent.Action.byName(commonTextComponent.getClickEvent().getAction());
+//        clickEvent = new ClickEvent(tempAction, commonTextComponent.getClickEvent().getValue());
         // END IF
-        return new ClickEvent(tempAction, commonTextComponent.getClickEvent().getValue());
+        return clickEvent;
     }
 
     public HoverEvent getHoverEvent(CommonTextComponent commonTextComponent) {
@@ -127,22 +158,34 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
             case "show_text":
                 if (commonTextComponent.getHoverEvent().getText() != null && !commonTextComponent.getHoverEvent().getText().isEmpty()) {
                     Text textComponent = parseCommonBaseComponentListToComponent(commonTextComponent.getHoverEvent().getText());
-                    hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, textComponent);
+                    // IF >= fabric-1.21.5
+//                    hoverEvent = new HoverEvent.ShowText(textComponent);
+                    // ELSE
+//                    hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, textComponent);
+                    // END IF
                 }
                 break;
             case "show_item":
                 CommonHoverItem commonHoverItem = commonTextComponent.getHoverEvent().getItem();
                 Item item = Item.byRawId(Integer.parseInt(commonHoverItem.getId()));
                 ItemStack itemStack = new ItemStack(item, commonHoverItem.getCount());
-                HoverEvent.ItemStackContent itemStackContent = new HoverEvent.ItemStackContent(itemStack);
-                hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemStackContent);
+                // IF >= fabric-1.21.5
+//                hoverEvent = new HoverEvent.ShowItem(itemStack);
+                // ELSE
+//                HoverEvent.ItemStackContent itemStackContent = new HoverEvent.ItemStackContent(itemStack);
+//                hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemStackContent);
+                // END IF
                 break;
             case "show_entity":
                 CommonHoverEntity commonHoverEntity = commonTextComponent.getHoverEvent().getEntity();
                 Optional<EntityType<?>> entityType = EntityType.get(commonHoverEntity.getType());
                 if (entityType.isPresent()) {
                     HoverEvent.EntityContent entityTooltipInfo = new HoverEvent.EntityContent(entityType.get(), UUID.randomUUID(), parseCommonBaseComponentListToComponent(commonHoverEntity.getName()));
-                    hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, entityTooltipInfo);
+                    // IF >= fabric-1.21.5
+//                    hoverEvent = new HoverEvent.ShowEntity(entityTooltipInfo);
+                    // ELSE
+//                    hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_ENTITY, entityTooltipInfo);
+                    // END IF
                 }
                 break;
             default:
