@@ -3,13 +3,14 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.event.folia.*;
 
 import com.github.theword.queqiao.event.folia.dto.advancement.FoliaAdvancement;
+import net.kyori.adventure.text.Component;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
-
+import io.papermc.paper.event.player.AsyncChatEvent;
 
 import static com.github.theword.queqiao.tool.utils.Tool.*;
 import static com.github.theword.queqiao.utils.FoliaTool.getFoliaPlayer;
@@ -23,10 +24,10 @@ class EventProcessor implements Listener {
      * @param event 玩家聊天事件
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    void onPlayerChat(AsyncPlayerChatEvent event) {
+    void onPlayerChat(AsyncChatEvent event) {
         if (event.isCancelled() || !config.getSubscribeEvent().isPlayerChat()) return;
 
-        FoliaAsyncPlayerChatEvent foliaAsyncPlayerChatEvent = new FoliaAsyncPlayerChatEvent(getFoliaPlayer(event.getPlayer()), event.getMessage());
+        FoliaAsyncPlayerChatEvent foliaAsyncPlayerChatEvent = new FoliaAsyncPlayerChatEvent(getFoliaPlayer(event.getPlayer()), event.message().examinableName());
         sendWebsocketMessage(foliaAsyncPlayerChatEvent);
     }
 
@@ -38,8 +39,11 @@ class EventProcessor implements Listener {
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event) {
         if (!config.getSubscribeEvent().isPlayerDeath()) return;
+        Component component = event.deathMessage();
+        if (component == null) return;
 
-        FoliaPlayerDeathEvent foliaPlayerDeathEvent = new FoliaPlayerDeathEvent(getFoliaPlayer(event.getEntity()), event.getDeathMessage());
+        String string = component.examinableName();
+        FoliaPlayerDeathEvent foliaPlayerDeathEvent = new FoliaPlayerDeathEvent(getFoliaPlayer(event.getEntity()), string);
         sendWebsocketMessage(foliaPlayerDeathEvent);
     }
 
