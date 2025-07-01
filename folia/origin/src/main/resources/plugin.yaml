@@ -1,0 +1,24 @@
+name: QueQiao
+version: ${version}
+main: com.github.theword.queqiao.QueQiao
+api-version: ${api_version}
+authors: [ 17TheWord ]
+description: ${description}
+website: https://github.com/17TheWord/QueQiao
+
+# Folia 特定配置
+folia-supported: true
+
+# 命令配置
+commands:
+  queqiao:
+    description: 鹊桥命令
+    permission: queqiao
+    permission-message: 您没有执行命令的权限
+    usage: /queqiao [参数]
+
+# 权限节点
+permissions:
+  queqiao:
+    description: 允许使用鹊桥命令
+    default: op
