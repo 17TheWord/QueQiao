@@ -26,6 +26,7 @@ QueQiao-jar/
 
 !*/*-*/gradlew
 !*/*-*/gradlew.bat
+!*/*-*/support_version.txt
 
 !velocity/velocity-*/build/generated/sources/tamplates/
 

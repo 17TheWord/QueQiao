@@ -4,6 +4,7 @@
     <option name="loaders">
       <list>
         <option value="fabric" />
+        <option value="folia" />
         <option value="forge" />
         <option value="neoforge" />
         <option value="quilt" />

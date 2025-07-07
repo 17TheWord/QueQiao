@@ -1,0 +1,113 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+def getVersionFromFile(String fileName) {
+    def versionFile = file(fileName)
+    if (versionFile.exists()) {
+        return versionFile.text.trim()
+    } else {
+        throw new Exception("File not found: ${versionFile.absolutePath}") as Throwable
+    }
+}
+
+def tool_version = getVersionFromFile('../../tool_version.txt')
+
+def mod_version = getVersionFromFile('../../version.txt')
+
+group = project.mod_group_id
+version = mod_version
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        name = "papermc"
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+    maven {
+        url = uri(maven_repository_url)
+        credentials {
+            username = System.getenv("USERNAME")
+            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
+        }
+    }
+}
+
+dependencies {
+    implementation "dev.folia:folia-api:${folia_version}"
+    compileOnly "org.jetbrains:annotations:${jetbrains_annotations_version}"
+
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    implementation "org.projectlombok:lombok:${lombok_version}"
+
+    implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
+    implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
+    implementation "org.yaml:snakeyaml:${snakeyaml_version}"
+    implementation "org.slf4j:slf4j-api:${slf4j_version}"
+    implementation "org.slf4j:slf4j-simple:${slf4j_version}"
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}")
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+def targetJavaVersion = Integer.parseInt(java_version)
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    if (JavaVersion.current().isJava8Compatible()) {
+        sourceCompatibility = "$targetJavaVersion"
+        targetCompatibility = "$targetJavaVersion"
+    } else {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [
+            version    : mod_version,
+            api_version: api_version,
+            description: mod_description
+    ]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+shadowJar {
+    archiveBaseName.set("${mod_name}-folia+${api_version}")
+    archiveClassifier.set("")
+    destinationDirectory.set(file("../../QueQiao-jar/${version}"))
+    dependencies {
+        include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+        include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
+        include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
+        include(dependency("org.slf4j:slf4j-api:${slf4j_version}"))
+        include(dependency("org.slf4j:slf4j-simple:${slf4j_version}"))
+    }
+
+    mergeServiceFiles()
+}
+
+tasks.build {
+    dependsOn shadowJar
+    dependsOn test
+}
