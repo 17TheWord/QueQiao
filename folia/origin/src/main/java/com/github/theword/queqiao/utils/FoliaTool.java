@@ -3,6 +3,7 @@ package com.github.theword.queqiao.utils;
 import com.github.theword.queqiao.event.folia.FoliaPlayer;
 import com.github.theword.queqiao.event.folia.dto.advancement.FoliaAdvancement;
 import io.papermc.paper.advancement.AdvancementDisplay;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
@@ -18,6 +19,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FoliaTool {
+
+    public static String getComponentText(Component component) {
+        return PlainTextComponentSerializer.plainText().serializeOr(component, "");
+    }
+
+
     /**
      * 获取SpigotPlayer
      *
@@ -27,9 +34,9 @@ public class FoliaTool {
     public static FoliaPlayer getFoliaPlayer(Player player) {
         FoliaPlayer foliaPlayer = new FoliaPlayer();
         foliaPlayer.setUuid(player.getUniqueId());
-        foliaPlayer.setNickname(player.getName());
-        foliaPlayer.setDisplayName(player.displayName().examinableName());
-        foliaPlayer.setPlayerListName(player.playerListName().examinableName());
+        foliaPlayer.setNickname(getComponentText(player.displayName()));
+        foliaPlayer.setDisplayName(getComponentText(player.displayName()));
+        foliaPlayer.setPlayerListName(getComponentText(player.playerListName()));
         foliaPlayer.setAddress((Objects.requireNonNull(player.getAddress()).toString()));
         foliaPlayer.setHealthScale(player.getHealthScale());
         foliaPlayer.setExp(player.getExp());
@@ -87,8 +94,8 @@ public class FoliaTool {
         if (advancementDisplay != null) {
             ItemStackDTO itemStackDTO = getItemStackDTO(advancementDisplay.icon());
             advancementDisplayDTO = new AdvancementDisplayDTO();
-            advancementDisplayDTO.setTitle(advancementDisplay.title().examinableName());
-            advancementDisplayDTO.setDescription(advancementDisplay.description().examinableName());
+            advancementDisplayDTO.setTitle(getComponentText(advancementDisplay.title()));
+            advancementDisplayDTO.setDescription(getComponentText(advancementDisplay.description()));
             advancementDisplayDTO.setIcon(itemStackDTO);
             advancementDisplayDTO.setDoesShowToast(advancementDisplay.doesShowToast());
             advancementDisplayDTO.setDoesAnnounceToChat(advancementDisplay.doesAnnounceToChat());
@@ -97,7 +104,7 @@ public class FoliaTool {
         } else advancementDisplayDTO = null;
 
         FoliaAdvancement foliaAdvancement = new FoliaAdvancement(advancement.getCriteria(), advancementDisplayDTO);
-        foliaAdvancement.setText(advancementDisplay != null ? advancementDisplay.title().examinableName() : "");
+        foliaAdvancement.setText(advancementDisplay != null ? getComponentText(advancementDisplay.title()) : "");
         return foliaAdvancement;
     }
 }

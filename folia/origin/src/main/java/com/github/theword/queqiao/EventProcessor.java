@@ -13,8 +13,7 @@ import org.bukkit.event.player.*;
 import io.papermc.paper.event.player.AsyncChatEvent;
 
 import static com.github.theword.queqiao.tool.utils.Tool.*;
-import static com.github.theword.queqiao.utils.FoliaTool.getFoliaPlayer;
-import static com.github.theword.queqiao.utils.FoliaTool.getFoliaAdvancement;
+import static com.github.theword.queqiao.utils.FoliaTool.*;
 
 
 class EventProcessor implements Listener {
@@ -27,7 +26,7 @@ class EventProcessor implements Listener {
     void onPlayerChat(AsyncChatEvent event) {
         if (event.isCancelled() || !config.getSubscribeEvent().isPlayerChat()) return;
 
-        FoliaAsyncPlayerChatEvent foliaAsyncPlayerChatEvent = new FoliaAsyncPlayerChatEvent(getFoliaPlayer(event.getPlayer()), event.message().examinableName());
+        FoliaAsyncPlayerChatEvent foliaAsyncPlayerChatEvent = new FoliaAsyncPlayerChatEvent(getFoliaPlayer(event.getPlayer()), getComponentText(event.message()));
         sendWebsocketMessage(foliaAsyncPlayerChatEvent);
     }
 
@@ -42,7 +41,7 @@ class EventProcessor implements Listener {
         Component component = event.deathMessage();
         if (component == null) return;
 
-        String string = component.examinableName();
+        String string = getComponentText(component);
         FoliaPlayerDeathEvent foliaPlayerDeathEvent = new FoliaPlayerDeathEvent(getFoliaPlayer(event.getEntity()), string);
         sendWebsocketMessage(foliaPlayerDeathEvent);
     }
