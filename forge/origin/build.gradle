@@ -123,7 +123,9 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
-    implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
+    implementation("org.java-websocket:Java-WebSocket:${java_websocket_version}") {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
     implementation "org.yaml:snakeyaml:${snakeyaml_version}"
     // IF > forge-1.16.5
 //    jarJar("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
