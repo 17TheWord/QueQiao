@@ -96,12 +96,11 @@ repositories {
 //        include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
 //        include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
 //        include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
-//        include(dependency("org.slf4j:slf4j-api:${slf4j_version}"))
-//        include(dependency("org.slf4j:slf4j-simple:${slf4j_version}"))
+//        include(dependency("org.slf4j:slf4j-api"))
+//        include(dependency("org.slf4j:slf4j-simple"))
 //    }
 //    mergeServiceFiles()
 //    relocate 'org.slf4j', 'shadow.org.slf4j'
-//    relocate 'org.slf4j.impl', 'shadow.org.slf4j.impl'
 //}
 //reobf {
 //    shadowJar { }
