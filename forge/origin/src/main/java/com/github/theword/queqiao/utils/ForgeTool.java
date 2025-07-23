@@ -22,7 +22,12 @@ public class ForgeTool {
         forgeServerPlayer.setDisplayName(player.getDisplayNameString());
 
         forgeServerPlayer.setUuid(player.getGameProfile().getId());
-        forgeServerPlayer.setIpAddress(player.getPlayerIP());
+
+        if(player.connection != null && player.connection.netManager != null){
+            forgeServerPlayer.setIpAddress(player.getPlayerIP());
+        }else {
+            forgeServerPlayer.setIpAddress("");
+        }
 
         forgeServerPlayer.setSpeed(player.capabilities.getWalkSpeed());
         forgeServerPlayer.setFlyingSpeed(player.capabilities.getFlySpeed());
