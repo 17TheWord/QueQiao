@@ -20,66 +20,90 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerChat()) return;
-        ForgeServerPlayer player = getForgePlayer(event.getPlayer());
-        ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", player, event.getMessage());
-        sendWebsocketMessage(forgeServerChatEvent);
+        try {
+            if (event.isCanceled() || !config.getSubscribeEvent().isPlayerChat()) return;
+            ForgeServerPlayer player = getForgePlayer(event.getPlayer());
+            ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", player, event.getMessage());
+            sendWebsocketMessage(forgeServerChatEvent);
+        }catch (Exception e){
+            logger.error("Error processing ServerChatEvent: ",e);
+        }
     }
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerJoin()) return;
-        ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.player);
-        ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(player);
-        sendWebsocketMessage(forgePlayerLoggedInEvent);
+        try{
+            if (event.isCanceled() || !config.getSubscribeEvent().isPlayerJoin()) return;
+            ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.player);
+            ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(player);
+            sendWebsocketMessage(forgePlayerLoggedInEvent);
+        }catch (Exception e){
+            logger.error("Error processing PlayerLoggedInEvent: ",e);
+        }
     }
 
     @SubscribeEvent
     public void onPlayerQuit(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerQuit()) return;
-        EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player;
-        ForgeServerPlayer player = getForgePlayer(entityPlayerMP);
-        ForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new ForgePlayerLoggedOutEvent(player);
-        sendWebsocketMessage(forgePlayerLoggedOutEvent);
+        try{
+            if (event.isCanceled() || !config.getSubscribeEvent().isPlayerQuit()) return;
+            EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player;
+            ForgeServerPlayer player = getForgePlayer(entityPlayerMP);
+            ForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new ForgePlayerLoggedOutEvent(player);
+            sendWebsocketMessage(forgePlayerLoggedOutEvent);
+        }catch (Exception e){
+            logger.error("Error processing PlayerLoggedOutEvent: ",e);
+        }
     }
 
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerCommand()) return;
-        if(!(event.getSender() instanceof EntityPlayerMP)) return;
+        try{
+            if (event.isCanceled() || !config.getSubscribeEvent().isPlayerCommand()) return;
+            if(!(event.getSender() instanceof EntityPlayerMP)) return;
 
-        StringBuilder commandString = new StringBuilder(event.getCommand().getName());
-        for (String parameter:event.getParameters()){
-            commandString.append(" ").append(parameter);
+            StringBuilder commandString = new StringBuilder(event.getCommand().getName());
+            for (String parameter:event.getParameters()){
+                commandString.append(" ").append(parameter);
+            }
+            String command = isRegisterOrLoginCommand(commandString.toString());
+            if (command.isEmpty()) return;
+
+            ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getSender());
+            ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
+            sendWebsocketMessage(forgeCommandEvent);
+        }catch (Exception e){
+            logger.error("Error processing CommandEvent: ",e);
         }
-        String command = isRegisterOrLoginCommand(commandString.toString());
-        if (command.isEmpty()) return;
-
-        ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getSender());
-        ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
-        sendWebsocketMessage(forgeCommandEvent);
     }
 
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerDeath()) return;
-        if (event.getEntity() == null || !(event.getEntity() instanceof EntityPlayerMP)) return;
-        ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getEntity());
-        String message = event.getEntityLiving().getCombatTracker().getDeathMessage().getUnformattedText();
-        ForgePlayerDeathEvent forgePlayerDeathEvent = new ForgePlayerDeathEvent("", player, message);
-        sendWebsocketMessage(forgePlayerDeathEvent);
+        try{
+            if (event.isCanceled() || !config.getSubscribeEvent().isPlayerDeath()) return;
+            if (event.getEntity() == null || !(event.getEntity() instanceof EntityPlayerMP)) return;
+            ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getEntity());
+            String message = event.getEntityLiving().getCombatTracker().getDeathMessage().getUnformattedText();
+            ForgePlayerDeathEvent forgePlayerDeathEvent = new ForgePlayerDeathEvent("", player, message);
+            sendWebsocketMessage(forgePlayerDeathEvent);
+        }catch (Exception e){
+            logger.error("Error processing LivingDeathEvent: ",e);
+        }
     }
 
     @SubscribeEvent
     public void onPlayerAdvancement(AdvancementEvent event) {
-        if (!config.getSubscribeEvent().isPlayerAdvancement()) return;
-        Advancement advancement = event.getAdvancement();
+        try{
+            if (!config.getSubscribeEvent().isPlayerAdvancement()) return;
+            Advancement advancement = event.getAdvancement();
 
-        ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getEntityPlayer());
+            ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getEntityPlayer());
 
-        ForgeAdvancement forgeAdvancement = getForgeAdvancement(advancement);
+            ForgeAdvancement forgeAdvancement = getForgeAdvancement(advancement);
 
-        ForgeAdvancementEvent forgeAdvancementEvent = new ForgeAdvancementEvent(player, forgeAdvancement);
-        sendWebsocketMessage(forgeAdvancementEvent);
+            ForgeAdvancementEvent forgeAdvancementEvent = new ForgeAdvancementEvent(player, forgeAdvancement);
+            sendWebsocketMessage(forgeAdvancementEvent);
+        }catch (Exception e){
+            logger.error("Error processing AdvancementEvent: ",e);
+        }
     }
 }
