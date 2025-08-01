@@ -5,6 +5,6 @@ import com.github.theword.queqiao.tool.event.base.BasePlayerAdvancementEvent;
 
 public class FoliaPlayerAdvancementDoneEvent extends BasePlayerAdvancementEvent {
     public FoliaPlayerAdvancementDoneEvent(FoliaPlayer player, FoliaAdvancement advancement) {
-        super("PlayerAdvancementDoneEvent", player, advancement);
+        super("FoliaPlayerAdvancementDoneEvent", player, advancement);
     }
 }

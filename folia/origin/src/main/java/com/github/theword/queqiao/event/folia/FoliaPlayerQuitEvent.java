@@ -5,6 +5,6 @@ import com.github.theword.queqiao.tool.event.base.BasePlayerQuitEvent;
 public class FoliaPlayerQuitEvent extends BasePlayerQuitEvent {
 
     public FoliaPlayerQuitEvent(FoliaPlayer player) {
-        super("PlayerQuitEvent", player);
+        super("FoliaPlayerQuitEvent", player);
     }
 }

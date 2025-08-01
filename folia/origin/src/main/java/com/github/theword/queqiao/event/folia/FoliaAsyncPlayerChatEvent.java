@@ -5,6 +5,6 @@ import com.github.theword.queqiao.tool.event.base.BasePlayerChatEvent;
 public class FoliaAsyncPlayerChatEvent extends BasePlayerChatEvent {
 
     public FoliaAsyncPlayerChatEvent(FoliaPlayer player, String message) {
-        super("AsyncPlayerChatEvent", "", player, message);
+        super("FoliaAsyncPlayerChatEvent", "", player, message);
     }
 }
