@@ -12,6 +12,7 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
 import net.kyori.adventure.text.TextComponent;
 
+
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
@@ -28,8 +29,11 @@ public class HandleApiImpl implements HandleApiService {
     public void handleBroadcastMessage(List<MessageSegment> messageList) {
         TextComponent textComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
         textComponent = textComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
-        instance.getServer().broadcast(textComponent);
+        for (Player player : instance.getServer().getOnlinePlayers()) {
+            if (player.isOnline()) player.sendMessage(textComponent);
+        }
     }
+
 
     @Override
     public void handleSendTitleMessage(TitlePayload titlePayload) {
@@ -48,7 +52,7 @@ public class HandleApiImpl implements HandleApiService {
                 )
         );
         for (Player player : instance.getServer().getOnlinePlayers()) {
-            player.showTitle(title);
+            if (player.isOnline()) player.showTitle(title);
         }
     }
 
@@ -66,17 +70,11 @@ public class HandleApiImpl implements HandleApiService {
             targetPlayer = instance.getServer().getPlayer(uuid);
         else if (nickname != null && !nickname.isEmpty())
             targetPlayer = instance.getServer().getPlayer(nickname);
-        else {
-            return PrivateMessageResponse.playerNotFound();
-        }
+        else return PrivateMessageResponse.playerNotFound();
 
-        if (targetPlayer == null) {
-            return PrivateMessageResponse.playerIsNull();
-        }
+        if (targetPlayer == null) return PrivateMessageResponse.playerIsNull();
 
-        if (!targetPlayer.isOnline()) {
-            return PrivateMessageResponse.playerNotOnline();
-        }
+        if (!targetPlayer.isOnline()) return PrivateMessageResponse.playerNotOnline();
 
         TextComponent textComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
         textComponent = textComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
@@ -88,7 +86,7 @@ public class HandleApiImpl implements HandleApiService {
     public void handleSendActionBarMessage(List<MessageSegment> messageList) {
         TextComponent actionTextComponent = parseJsonToEventImpl.parseMessageListToComponent(messageList);
         for (Player player : instance.getServer().getOnlinePlayers()) {
-            player.sendActionBar(actionTextComponent);
+            if (player.isOnline()) player.sendActionBar(actionTextComponent);
         }
     }
 }

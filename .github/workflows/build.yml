@@ -103,7 +103,7 @@ jobs:
           version: ${{ env.MOD_VERSION }}
           version-type: ${{ env.VERSION_TYPE }}
           loaders: ${{ matrix.config.mc-loader }}
-          game-versions: ${{ env.game_version }}
+          game-versions: ${{ matrix.config.publish-version }}
           files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
       - name: Upload to Release
