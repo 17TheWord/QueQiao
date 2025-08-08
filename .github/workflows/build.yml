@@ -54,9 +54,10 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle*', '**/settings.gradle*') }}
+          key: ${{ runner.os }}-gradle-${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}-${{ hashFiles(format('{0}/{0}-{1}/build.gradle*', matrix.config.mc-loader, matrix.config.mc-version), format('{0}/{0}-{1}/settings.gradle*', matrix.config.mc-loader, matrix.config.mc-version)) }}
           restore-keys: |
-            ${{ runner.os }}-gradle-
+            ${{ runner.os }}-gradle-${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}-
+            ${{ runner.os }}-gradle-${{ matrix.config.mc-loader }}-
 
       - name: Read version.txt and save to variable
         run: |
