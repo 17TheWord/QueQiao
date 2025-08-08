@@ -48,6 +48,16 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle*', '**/settings.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Read version.txt and save to variable
         run: |
           mod_version=$(cat version.txt)
