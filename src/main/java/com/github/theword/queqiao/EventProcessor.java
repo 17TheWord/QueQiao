@@ -66,10 +66,8 @@ public class EventProcessor {
             .isPlayerDeath()) return;
         if (!(event.entityLiving instanceof EntityPlayerMP)) return;
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.entityLiving);
-        IChatComponent iChatComponent = event.entityLiving.func_145748_c_();
-        String message = iChatComponent.getFormattedText();
-
-        ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, message);
+        String reason = event.source.func_151519_b(event.entityLiving).getUnformattedText();
+        ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, reason);
         sendWebsocketMessage(forgeCommandEvent);
     }
 }
