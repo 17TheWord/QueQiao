@@ -1,0 +1,91 @@
+name: Build Plugin and Mod
+
+on:
+  push:
+    branches:
+      - gtnh-1.7.10
+  workflow_dispatch:
+    inputs:
+      publish_beta:
+        description: '是否发布 Beta 版本'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+permissions:
+  contents: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  USERNAME: ${{ github.actor }}
+  PACKAGE_READ_ONLY_TOKEN: ${{ secrets.PACKAGE_READ_ONLY_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Chose JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-forge-1.7.10-${{ hashFiles('**/*.gradle*', '**/gradle.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-forge-1.7.10-
+
+
+      - name: Read version.txt and save to variable
+        run: |
+          mod_version=$(cat version.txt)
+          echo "Version: $mod_version"
+          echo "MOD_VERSION=$mod_version" >> $GITHUB_ENV
+
+      - name: Init Gradle
+        run: |
+          chmod 777 gradlew && ./gradlew --version
+
+      - name: Build
+        run: |
+          ./gradlew clean build
+
+      - name: Set Version Type
+        id: set-version-type
+        run: |
+          if [ "${GITHUB_REF}" == "refs/heads/gtnh-1.7.10" ]; then
+            echo "VERSION_TYPE=release" >> $GITHUB_ENV
+          else
+            echo "VERSION_TYPE=beta" >> $GITHUB_ENV
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: QueQiao-forge+1.7.10-${{ env.MOD_VERSION }}.jar
+          path: build/libs/QueQiao-forge+1.7.10-${{ env.MOD_VERSION }}.jar
+
+      - uses: Kir-Antipov/mc-publish@v3.3
+        if: |
+          (github.ref == 'refs/heads/gtnh-1.7.10' && github.event_name == 'push') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.publish_beta == 'true')
+        with:
+          modrinth-id: rVJvtYoX
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: 1084495
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          name: QueQiao-forge+1.7.10-${{ env.MOD_VERSION }}
+          version: ${{ env.MOD_VERSION }}
+          version-type: ${{ env.VERSION_TYPE }}
+          loaders: forge
+          game-versions: 1.7.10
+          files: build/libs/QueQiao-forge+1.7.10-${{ env.MOD_VERSION }}.jar

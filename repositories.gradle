@@ -1,0 +1,12 @@
+// Add any additional repositories for your dependencies here.
+
+repositories {
+    maven {
+        name = " GitHub Packages"
+        url = uri(project.properties["maven_repository_url"] as String)
+        credentials {
+            username = System.getenv("USERNAME")
+            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
+        }
+    }
+}
