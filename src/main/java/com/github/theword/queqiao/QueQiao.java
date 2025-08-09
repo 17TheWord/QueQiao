@@ -3,6 +3,7 @@ package com.github.theword.queqiao;
 import static com.github.theword.queqiao.tool.utils.Tool.initTool;
 import static com.github.theword.queqiao.tool.utils.Tool.websocketManager;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -31,6 +32,7 @@ public class QueQiao {
     public QueQiao() {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new EventProcessor());
+        FMLCommonHandler.instance().bus().register(new EventProcessor());
     }
 
     @Mod.EventHandler
