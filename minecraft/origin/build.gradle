@@ -33,9 +33,12 @@ repositories {
 
 dependencies {
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
-    implementation "commons-io:commons-io:${project.commons_io_version}"
+    implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
+    implementation "org.yaml:snakeyaml:${snakeyaml_version}"
+    implementation "org.slf4j:slf4j-api:${slf4j_version}"
     implementation "org.slf4j:slf4j-simple:${slf4j_version}"
     implementation "com.google.code.gson:gson:${gson_version}"
+    implementation "commons-io:commons-io:${commons_io_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
 
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
