@@ -31,8 +31,8 @@ public class QueQiao {
 
     public QueQiao() {
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new EventProcessor());
-        FMLCommonHandler.instance().bus().register(new EventProcessor());
+        // MinecraftForge.EVENT_BUS.register(new EventProcessor());
+        // FMLCommonHandler.instance().bus().register(new EventProcessor());
     }
 
     @Mod.EventHandler
@@ -46,6 +46,11 @@ public class QueQiao {
             new HandleApiImpl(),
             new HandleCommandReturnMessageImpl());
         websocketManager.startWebsocketOnServerStart();
+
+        // 在工具类初始化完成之后再注册事件处理器
+        // var eventProcessor = new EventProcessor();
+        MinecraftForge.EVENT_BUS.register(new EventProcessor());
+        FMLCommonHandler.instance().bus().register(new EventProcessor());
     }
 
     @Mod.EventHandler
