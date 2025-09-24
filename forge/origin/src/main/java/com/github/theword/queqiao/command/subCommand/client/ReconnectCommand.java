@@ -1,11 +1,10 @@
 package com.github.theword.queqiao.command.subCommand.client;
 
 import com.github.theword.queqiao.command.ForgeSubCommand;
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.command.subCommand.client.ReconnectCommandAbstract;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
-
-import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
 
 
 public class ReconnectCommand extends ReconnectCommandAbstract implements ForgeSubCommand {
@@ -16,7 +15,7 @@ public class ReconnectCommand extends ReconnectCommandAbstract implements ForgeS
         // ELSE
 //    public int onCommand(CommandContext<net.minecraft.command.CommandSource> context) {
         // END IF
-        if (!handleCommandReturnMessageService.hasPermission(context, getPermissionNode())) return 0;
+        if (!GlobalContext.getHandleCommandReturnMessageService().hasPermission(context, getPermissionNode())) return 0;
         execute(context, false);
         return Command.SINGLE_SUCCESS;
     }

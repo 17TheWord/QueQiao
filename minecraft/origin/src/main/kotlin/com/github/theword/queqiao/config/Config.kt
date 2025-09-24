@@ -1,7 +1,7 @@
 package com.github.theword.queqiao.config
 
+import com.github.theword.queqiao.tool.GlobalContext
 import com.github.theword.queqiao.tool.config.CommonConfig
-import com.github.theword.queqiao.tool.utils.Tool.logger
 
 
 class Config : CommonConfig() {
@@ -24,7 +24,7 @@ class Config : CommonConfig() {
     private fun convertToRegexConfigSet(configMap: Map<String, Any>, key: String): Set<RegexConfig> {
         val value = configMap[key]
         if (value !is List<*>) {
-            logger.warn("配置项 {} 不是列表类型，将使用空集合。", key)
+            GlobalContext.getLogger().warn("配置项 {} 不是列表类型，将使用空集合。", key)
             return emptySet()
         }
         return value.mapNotNull { item ->
@@ -35,11 +35,11 @@ class Config : CommonConfig() {
                 if (regex != null && playerGroup != null) {
                     RegexConfig(regex, playerGroup, messageGroup)
                 } else {
-                    logger.warn("配置项 {} 中包含无效的 Map，将跳过该值。", key)
+                    GlobalContext.getLogger().warn("配置项 {} 中包含无效的 Map，将跳过该值。", key)
                     null
                 }
             } else {
-                logger.warn("配置项 {} 中包含非Map类型，将跳过该值。", key)
+                GlobalContext.getLogger().warn("配置项 {} 中包含非Map类型，将跳过该值。", key)
                 null
             }
         }.toSet()

@@ -1,7 +1,6 @@
 package com.github.theword.queqiao.utils
 
-import com.github.theword.queqiao.tool.utils.Tool.logger
-import com.github.theword.queqiao.tool.utils.Tool.config
+import com.github.theword.queqiao.tool.GlobalContext
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -48,7 +47,7 @@ class FileWatcher(private val lineProcessor: LineProcessor) {
                     lastPointer.set(getFileContent(configFile, lastPointer.get(), str))
 
                     val line = str.toString()
-                    if (line.isNotEmpty() && line.length < 320 && config.isEnable) {
+                    if (line.isNotEmpty() && line.length < 320 && GlobalContext.getConfig().isEnable) {
                         lineProcessor.processLine(line)
                     }
                 }
@@ -88,14 +87,14 @@ class FileWatcher(private val lineProcessor: LineProcessor) {
             }
             return file.filePointer
         } catch (e: IOException) {
-            logger.error("Error reading file content", e)
+            GlobalContext.getLogger().error("Error reading file content", e)
             return -1
         } finally {
             if (file != null) {
                 try {
                     file.close()
                 } catch (e: IOException) {
-                    logger.error("Error closing file", e)
+                    GlobalContext.getLogger().error("Error closing file", e)
                 }
             }
         }
@@ -114,7 +113,7 @@ class FileWatcher(private val lineProcessor: LineProcessor) {
                 try {
                     FileWatcher(lineProcessor).watcherLog(path)
                 } catch (e: Exception) {
-                    logger.error("监听日志时出现异常", e)
+                    GlobalContext.getLogger().error("监听日志时出现异常", e)
                 }
             }.start()
 
@@ -127,7 +126,7 @@ class FileWatcher(private val lineProcessor: LineProcessor) {
                         writer.close()
                     }
                 } catch (e: IOException) {
-                    logger.error("写日志时出现异常", e)
+                    GlobalContext.getLogger().error("写日志时出现异常", e)
                 }
             }.start()
         }

@@ -7,8 +7,6 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.theword.queqiao.tool.utils.Tool.websocketManager;
-
 
 public class ReconnectCommand extends ReconnectCommandAbstract implements SpigotSubCommand {
 

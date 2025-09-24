@@ -2,7 +2,7 @@ package com.github.theword.queqiao;
 
 import com.github.theword.queqiao.event.forge.*;
 import com.github.theword.queqiao.event.forge.dto.advancement.ForgeAdvancement;
-import com.github.theword.queqiao.tool.utils.GsonUtils;
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 // IF > forge-1.16.5
 //import net.minecraft.advancements.Advancement;
@@ -31,7 +31,7 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerChat()) return;
+        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
 
         ForgeServerPlayer player = getForgePlayer(event.getPlayer());
 
@@ -42,12 +42,12 @@ public class EventProcessor {
         // END IF
 
         ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", player, message);
-        sendWebsocketMessage(forgeServerChatEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgeServerChatEvent);
     }
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerLoggedInEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerJoin()) return;
+        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
 
         // IF > forge-1.16.5
 //        ForgeServerPlayer player = getForgePlayer((ServerPlayer) event.getEntity());
@@ -56,12 +56,12 @@ public class EventProcessor {
         // END IF
 
         ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(player);
-        sendWebsocketMessage(forgePlayerLoggedInEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedInEvent);
     }
 
     @SubscribeEvent
     public void onPlayerQuit(PlayerLoggedOutEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerQuit()) return;
+        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
 
         // IF > forge-1.16.5
 //        ForgeServerPlayer player = getForgePlayer((ServerPlayer) event.getEntity());
@@ -70,12 +70,12 @@ public class EventProcessor {
         // END IF
 
         ForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new ForgePlayerLoggedOutEvent(player);
-        sendWebsocketMessage(forgePlayerLoggedOutEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedOutEvent);
     }
 
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerCommand()) return;
+        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
 
         // IF >= forge-1.19
 //        if (!event.getParseResults().getContext().getSource().isPlayer()) return;
@@ -97,13 +97,13 @@ public class EventProcessor {
             return;
         }
         ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
-        sendWebsocketMessage(forgeCommandEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
 
     }
 
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerDeath()) return;
+        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
 
         // IF > forge-1.16.5
 //        if (!(event.getEntity() instanceof ServerPlayer)) return;
@@ -122,12 +122,12 @@ public class EventProcessor {
         String message = event.getSource().getLocalizedDeathMessage(entity).getString();
 
         ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, message);
-        sendWebsocketMessage(forgeCommandEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
     }
 
     @SubscribeEvent
     public void onPlayerAdvancement(AdvancementEvent event) {
-        if (!config.getSubscribeEvent().isPlayerAdvancement()) return;
+        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
         // IF <= forge-1.20.1
 //        Advancement advancement = event.getAdvancement();
         // ELSE
@@ -143,6 +143,6 @@ public class EventProcessor {
         ForgeAdvancement forgeAdvancement = getForgeAdvancement(advancement);
 
         ForgeAdvancementEvent forgeAdvancementEvent = new ForgeAdvancementEvent(player, forgeAdvancement);
-        sendWebsocketMessage(forgeAdvancementEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgeAdvancementEvent);
     }
 }
