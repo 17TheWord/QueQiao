@@ -5,16 +5,19 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;
 import net.md_5.bungee.api.ChatColor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 import static com.github.theword.queqiao.tool.utils.TestUtils.testParseJsonMessage;
-import static com.github.theword.queqiao.tool.utils.Tool.logger;
-import static org.slf4j.LoggerFactory.getLogger;
 
 
 class ParseJsonToEventImplTest {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
 
     @Test
     void parseChatColor() {
@@ -23,10 +26,9 @@ class ParseJsonToEventImplTest {
         // ELSE
 //        ChatColor yellow = ChatColor.of("BLACK");
         // END IF
-        System.out.println("yellow = " + yellow);
+        logger.info("yellow = {}", yellow);
     }
 
-    ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
 
     @Test
     void parseMessage() throws FileNotFoundException {
@@ -36,7 +38,6 @@ class ParseJsonToEventImplTest {
         // ELSE
 //        JsonElement testMessageJsonElement = JsonParser.parseReader(reader);
         // END IF
-        logger = getLogger(getClass());
 
         if (!testMessageJsonElement.isJsonArray()) {
             logger.warn("jsonElement is not json array");
@@ -48,7 +49,7 @@ class ParseJsonToEventImplTest {
         for (JsonElement message : testMessageJsonElement.getAsJsonArray()) {
             logger.info("============================================");
             Response response = testParseJsonMessage(message.getAsString(), parseJsonToEventImpl);
-            logger.info("response = " + response);
+            logger.info("response = {}", response);
         }
 
     }
