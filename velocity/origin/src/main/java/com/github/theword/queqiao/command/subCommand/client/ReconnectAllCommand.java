@@ -4,15 +4,16 @@ import com.github.theword.queqiao.command.VelocitySubCommand;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.command.subCommand.client.ReconnectCommandAbstract;
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.context.CommandContext;
-import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.SimpleCommand;
 
 
 public class ReconnectAllCommand extends ReconnectCommandAbstract implements VelocitySubCommand {
     @Override
-    public int onCommand(CommandContext<CommandSource> context) {
-        if (!GlobalContext.getHandleCommandReturnMessageService().hasPermission(context, getPermissionNode())) return 0;
-        execute(context, true);
+    public int onCommand(SimpleCommand.Invocation invocation) {
+        if (!GlobalContext.getHandleCommandReturnMessageService().hasPermission(invocation, getPermissionNode()))
+            return 0;
+        execute(invocation, true);
         return Command.SINGLE_SUCCESS;
     }
+
 }
