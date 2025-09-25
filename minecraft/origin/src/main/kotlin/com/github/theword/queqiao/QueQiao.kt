@@ -19,7 +19,14 @@ object QueQiao {
             HandleApiImpl(),
             HandleCommandReturnMessageImpl()
         )
-        val config = Config()
-        FileWatcher.fileListen(config.logPath, LineProcessor(config, EventProcessor()))
+        val config = Config(GlobalContext.getLogger())
+        FileWatcher.fileListen(
+            config.logPath,
+            LineProcessor(
+                config,
+                GlobalContext.getConfig(),
+                GlobalContext.getLogger(), EventProcessor()
+            )
+        )
     }
 }

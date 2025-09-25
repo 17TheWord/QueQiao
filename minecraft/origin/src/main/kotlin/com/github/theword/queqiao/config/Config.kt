@@ -2,9 +2,10 @@ package com.github.theword.queqiao.config
 
 import com.github.theword.queqiao.tool.GlobalContext
 import com.github.theword.queqiao.tool.config.CommonConfig
+import org.slf4j.Logger
 
 
-class Config : CommonConfig() {
+class Config(logger: Logger) : CommonConfig(logger) {
     var logPath: String = ".\\logs\\latest.log"
     var chatRegexSet: Set<RegexConfig> = emptySet()
     var joinRegexSet: Set<RegexConfig> = emptySet()

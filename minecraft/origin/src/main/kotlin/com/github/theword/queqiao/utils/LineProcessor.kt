@@ -2,10 +2,14 @@ package com.github.theword.queqiao.utils
 
 import com.github.theword.queqiao.EventProcessor
 import com.github.theword.queqiao.config.Config
-import com.github.theword.queqiao.tool.utils.Tool.logger
-import com.github.theword.queqiao.tool.utils.Tool.config
+import org.slf4j.Logger
 
-class LineProcessor(private val regexConfig: Config, private val eventProcessor: EventProcessor) {
+class LineProcessor(
+    private val regexConfig: Config,
+    private val config: com.github.theword.queqiao.tool.config.Config,
+    private val logger: Logger,
+    private val eventProcessor: EventProcessor
+) {
 
     fun processLine(line: String) {
         logger.debug("LogWatcher: $line")
