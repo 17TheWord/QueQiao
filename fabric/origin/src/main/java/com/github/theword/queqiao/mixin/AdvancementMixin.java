@@ -1,9 +1,9 @@
 package com.github.theword.queqiao.mixin;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.event.fabric.FabricAdvancementCriterionEvent;
 import com.github.theword.queqiao.event.fabric.dto.advancement.FabricAdvancement;
 // IF < fabric-1.20.4
-//import com.github.theword.queqiao.tool.GlobalContext;
 //import net.minecraft.advancement.Advancement;
 // ELSE
 //import net.minecraft.advancement.AdvancementEntry;
@@ -32,7 +32,7 @@ public abstract class AdvancementMixin {
 //        FabricAdvancement fabricAdvancement = getFabricAdvancement(advancement);
     // ELSE
 //    private void onGrantCriterion(AdvancementEntry advancementEntry, String criterionName, CallbackInfoReturnable<Boolean> cir) {
-//        if (!config.getSubscribeEvent().isPlayerAdvancement()) return;
+//        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
 //        FabricAdvancement fabricAdvancement = getFabricAdvancement(advancementEntry.value());
 //        fabricAdvancement.setId(advancementEntry.id().toString());
         // END IF

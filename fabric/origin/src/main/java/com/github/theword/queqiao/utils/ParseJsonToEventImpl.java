@@ -124,7 +124,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
 //                try {
 //                    clickEvent = new ClickEvent.OpenUrl(new URI(commonTextComponent.getClickEvent().getValue()));
 //                } catch (URISyntaxException e) {
-//                    logger.warn("Invalid URL: " + commonTextComponent.getClickEvent().getValue());
+//                    GlobalContext.getLogger().warn("Invalid URL: {}", commonTextComponent.getClickEvent().getValue());
 //                }
 //                break;
 //            case "open_file":
