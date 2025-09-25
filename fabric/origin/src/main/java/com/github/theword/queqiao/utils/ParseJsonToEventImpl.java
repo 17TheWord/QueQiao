@@ -1,5 +1,6 @@
 package com.github.theword.queqiao.utils;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
 import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.modle.component.CommonBaseComponent;
@@ -21,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.github.theword.queqiao.tool.utils.Tool.logger;
 
 public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
@@ -37,7 +37,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
             mutableText.append(parsePerMessageToComponent(messageSegment.getData()));
             msgLogText.append(messageSegment.getData().getText());
         }
-        logger.info(msgLogText.toString());
+        GlobalContext.getLogger().info(msgLogText.toString());
         return mutableText;
     }
 
