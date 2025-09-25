@@ -4,17 +4,18 @@ import com.github.theword.queqiao.tool.response.Response;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 import static com.github.theword.queqiao.tool.utils.TestUtils.testParseJsonMessage;
-import static com.github.theword.queqiao.tool.utils.Tool.logger;
-import static org.slf4j.LoggerFactory.getLogger;
 
 class ParseJsonToEventImplTest {
 
-    ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
 
     // IF < fabric-1.20.4
 //    @Test
@@ -25,7 +26,6 @@ class ParseJsonToEventImplTest {
         // ELSE
 //        JsonElement testMessageJsonElement = JsonParser.parseReader(reader);
         // END IF
-//        logger = getLogger(getClass());
 //
 //        if (!testMessageJsonElement.isJsonArray()) {
 //            logger.warn("jsonElement is not json array");
@@ -37,7 +37,7 @@ class ParseJsonToEventImplTest {
 //        for (JsonElement message : testMessageJsonElement.getAsJsonArray()) {
 //            logger.info("============================================");
 //            Response response = testParseJsonMessage(message.getAsString(), parseJsonToEventImpl);
-//            logger.info("response = " + response);
+//            logger.info("response = {}", response);
 //        }
 //    }
     // END IF
