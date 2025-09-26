@@ -93,7 +93,8 @@ dependencies {
 
     jarJar(implementation("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
     jarJar(implementation("org.yaml:snakeyaml:${snakeyaml_version}"))
-    
+    jarJar(implementation("org.glavo:rcon-java:${glavoRconVersion}"))
+
     testImplementation("com.google.code.gson:gson:${gson_version}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}")
