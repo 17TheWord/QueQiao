@@ -145,7 +145,7 @@ dependencies {
 //    }
 //
 //    jarJar("org.glavo:rcon-java:${glavoRconVersion}") {
-//        jarJar.ranged(it, "[${project.glavoRconVersion},3.0)")
+//        jarJar.ranged(it, "[${project.glavoRconVersion},4.0)")
 //    }
     // ELSE
 //    implementation "org.slf4j:slf4j-api:${slf4j_version}"
