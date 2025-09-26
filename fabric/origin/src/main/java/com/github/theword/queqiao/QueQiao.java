@@ -14,9 +14,10 @@ public class QueQiao implements ModInitializer {
 
     public static MinecraftServer minecraftServer;
 
+
     @Override
     public void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             minecraftServer = server;
             GlobalContext.init(
                     true,

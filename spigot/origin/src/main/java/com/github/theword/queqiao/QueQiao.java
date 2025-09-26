@@ -33,6 +33,6 @@ public final class QueQiao extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        GlobalContext.getWebsocketManager().stopWebsocketByServerClose();
+        GlobalContext.shutdown();
     }
 }

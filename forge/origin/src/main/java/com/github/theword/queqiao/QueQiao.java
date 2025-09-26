@@ -41,6 +41,6 @@ public class QueQiao {
     // ELSE
 //    public void onServerStopping(net.minecraftforge.fml.event.server.FMLServerStoppingEvent event) {
         // END IF
-        GlobalContext.getWebsocketManager().stopWebsocketByServerClose();
+        GlobalContext.shutdown();
     }
 }

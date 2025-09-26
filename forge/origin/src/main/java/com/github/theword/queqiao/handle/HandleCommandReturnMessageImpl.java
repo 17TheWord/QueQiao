@@ -11,7 +11,7 @@ import com.mojang.brigadier.context.CommandContext;
 // IF >= forge-1.18
 // END IF
 
-public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessageService {
+public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageService {
 
     @Override
     @SuppressWarnings("unchecked")

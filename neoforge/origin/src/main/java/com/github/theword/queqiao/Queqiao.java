@@ -30,6 +30,6 @@ public class Queqiao {
 
     @SubscribeEvent
     public void onServerStopping(ServerStoppingEvent event) {
-        GlobalContext.getWebsocketManager().stopWebsocketByServerClose();
+        GlobalContext.shutdown();
     }
 }

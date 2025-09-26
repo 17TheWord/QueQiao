@@ -5,7 +5,7 @@ import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.network.chat.contents.PlainTextContents;
 
-public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessageService {
+public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageService {
 
     @Override
     @SuppressWarnings("unchecked")

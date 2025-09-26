@@ -4,7 +4,7 @@ import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
 import com.velocitypowered.api.command.SimpleCommand;
 import net.kyori.adventure.text.Component;
 
-public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessageService {
+public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageService {
     @Override
     public void handleCommandReturnMessage(Object o, String s) {
         SimpleCommand.Invocation invocation = (SimpleCommand.Invocation) o;

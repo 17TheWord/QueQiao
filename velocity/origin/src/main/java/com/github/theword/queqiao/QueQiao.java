@@ -45,7 +45,7 @@ public class QueQiao {
 
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
-        GlobalContext.getWebsocketManager().stopWebsocketByServerClose();
+        GlobalContext.shutdown();
     }
 
 }

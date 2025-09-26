@@ -7,7 +7,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessageService {
+public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageService {
 
     /**
      * @param object  命令返回者
