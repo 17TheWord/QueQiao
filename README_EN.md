@@ -99,7 +99,8 @@
 - [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin): Yunzai plugin for `OneBot` protocol integration
 - [`@Twiyan0/koishi-plugin-minecraft-sync-msg`](https://github.com/Twiyin0/koishi-plugin-minecraft-sync-msg): `Koishi` plugin for chat integration
 - [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq): `ZeroBot` plugin for `OneBot`-Minecraft integration
-- [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq): AstrBot plugin for QQ-Minecraft message integration
+- [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq): `AstrBot` plugin for `QQ-Minecraft` message integration
+- [`kterna/queqiao_mcdr`](https://github.com/kterna/queqiao_mcdr): `MCDR` implementation of `QueQiao` for message exchange
 
 ## Compatibility
 

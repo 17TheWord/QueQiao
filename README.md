@@ -102,7 +102,8 @@
   插件，实现互通聊天，由 `Rcon` 提供命令支持
 - [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq)：`ZeroBot` 插件，实现 `OneBot` 协议端
   与 `Minecraft` 互通聊天
-- [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq)：提供 QQ <-> MC 消息互通的 AstrBot 插件。
+- [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq)：提供 `QQ` <-> `MC` 消息互通的 `AstrBot` 插件。
+- [`kterna/queqiao_mcdr`](https://github.com/kterna/queqiao_mcdr)：鹊桥的 `MCDR` 实现，实现消息收发。
 
 ## 兼容
 
