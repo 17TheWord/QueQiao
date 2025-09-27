@@ -1,9 +1,8 @@
 package com.github.theword.queqiao;
 
-import static com.github.theword.queqiao.tool.utils.Tool.initTool;
-import static com.github.theword.queqiao.tool.utils.Tool.websocketManager;
-
+import com.github.theword.queqiao.tool.GlobalContext;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -39,15 +38,17 @@ public class QueQiao {
     @SideOnly(Side.SERVER)
     public void onServerStarting(FMLServerStartingEvent event) {
         minecraftServer = event.getServer();
-        initTool(
+    }
+
+    @Mod.EventHandler
+    @SideOnly(Side.SERVER)
+    public void FMLServerStarted(FMLServerStartedEvent event) {
+        GlobalContext.init(
             true,
             minecraftServer.getMinecraftVersion(),
             ServerTypeConstant.FORGE,
             new HandleApiImpl(),
             new HandleCommandReturnMessageImpl());
-        websocketManager.startWebsocketOnServerStart();
-
-        // 在工具类初始化完成之后再注册事件处理器
         // var eventProcessor = new EventProcessor();
         MinecraftForge.EVENT_BUS.register(new EventProcessor());
         FMLCommonHandler.instance().bus().register(new EventProcessor());
@@ -56,6 +57,6 @@ public class QueQiao {
     @Mod.EventHandler
     @SideOnly(Side.SERVER)
     public void onServerStopping(FMLServerStoppingEvent event) {
-        websocketManager.stopWebsocketByServerClose();
+        GlobalContext.shutdown();
     }
 }

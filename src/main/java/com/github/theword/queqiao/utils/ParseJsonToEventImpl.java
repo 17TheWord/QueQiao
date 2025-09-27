@@ -1,9 +1,8 @@
 package com.github.theword.queqiao.utils;
 
-import static com.github.theword.queqiao.tool.utils.Tool.logger;
-
 import java.util.List;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.item.Item;
@@ -32,7 +31,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
                 messageSegment.getData()
                     .getText());
         }
-        logger.info(msgLogText.toString());
+        GlobalContext.getLogger().info(msgLogText.toString());
         return mutableComponent;
     }
 
@@ -54,8 +53,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
 
         ChatStyle style = getStyleFromBaseComponent(myBaseComponent);
 
-        if (myBaseComponent instanceof CommonTextComponent) {
-            CommonTextComponent commonTextComponent = (CommonTextComponent) myBaseComponent;
+        if (myBaseComponent instanceof CommonTextComponent commonTextComponent) {
             if (commonTextComponent.getClickEvent() != null) {
                 ClickEvent clickEventFromBaseComponent = getClickEventFromBaseComponent(commonTextComponent);
                 if (clickEventFromBaseComponent != null) style = style.setChatClickEvent(clickEventFromBaseComponent);
