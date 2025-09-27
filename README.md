@@ -102,10 +102,15 @@
   插件，实现互通聊天，由 `Rcon` 提供命令支持
 - [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq)：`ZeroBot` 插件，实现 `OneBot` 协议端
   与 `Minecraft` 互通聊天
+- [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq)：提供 QQ <-> MC 消息互通的 AstrBot 插件。
 
 ## 兼容
 
 - [`@kitUIN/ChatImage`](https://github.com/kitUIN/ChatImage)：在 `Minecraft` 聊天栏中显示图片
+
+## 社群
+
+- [`Discord`](https://discord.gg/SBUkMYsyf2)
 
 ## 特别感谢
 
