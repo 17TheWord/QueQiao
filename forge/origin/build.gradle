@@ -389,6 +389,7 @@ shadowJar {
         include(dependency('org.slf4j:slf4j-api:.*'))
         include(dependency('org.slf4j:slf4j-simple:.*'))
         include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
+        include(dependency("org.glavo:rcon-java:${glavoRconVersion}"))
     }
     mergeServiceFiles()
     relocate 'org.slf4j', 'shadow.org.slf4j'

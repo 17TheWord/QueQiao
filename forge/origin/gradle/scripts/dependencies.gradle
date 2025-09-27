@@ -60,6 +60,7 @@ dependencies {
     implementation ("org.java-websocket:Java-WebSocket:${java_websocket_version}")
     implementation ("org.slf4j:slf4j-simple:${slf4j_version}")
     implementation ("org.yaml:snakeyaml:${snakeyaml_version}")
+    implementation ("org.glavo:rcon-java:${glavoRconVersion}")
 //    implementation embed("org.java-websocket:Java-WebSocket:${java_websocket_version}")
 //    implementation embed("org.slf4j:slf4j-simple:${slf4j_version}")
 //    implementation embed('org.yaml:snakeyaml:1.33')
