@@ -18,13 +18,13 @@ public final class QueQiao extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        GlobalContext.init(
+        Bukkit.getScheduler().runTask(this, () -> GlobalContext.init(
                 false,
                 instance.getServer().getVersion(),
                 ServerTypeConstant.SPIGOT,
                 new HandleApiImpl(),
                 new HandleCommandReturnMessageImpl()
-        );
+        ));
         Bukkit.getPluginManager().registerEvents(new EventProcessor(), this);
 
         PluginCommand command = getCommand(BaseConstant.COMMAND_HEADER);

@@ -35,7 +35,6 @@ public class QueQiao {
                 new HandleCommandReturnMessageImpl()
         );
         minecraftServer.getEventManager().register(this, new EventProcessor());
-        // 注册命令（新版API）
         CommandExecutor commandExecutor = new CommandExecutor();
         CommandMeta meta = minecraftServer.getCommandManager().metaBuilder(BaseConstant.COMMAND_HEADER)
                 .aliases("qq")

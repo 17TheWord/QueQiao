@@ -30,6 +30,6 @@ public class QueQiao implements ModInitializer {
 
         new CommandExecutor();
 
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> GlobalContext.getWebsocketManager().stopWebsocketByServerClose());
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> GlobalContext.shutdown());
     }
 }

@@ -9,7 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 
@@ -23,7 +23,7 @@ public class Queqiao {
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
+    public void ServerStarted(ServerStartedEvent event) {
         minecraftServer = event.getServer();
         GlobalContext.init(true, minecraftServer.getServerVersion(), ServerTypeConstant.NEOFORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
     }

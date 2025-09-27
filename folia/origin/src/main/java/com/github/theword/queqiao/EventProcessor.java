@@ -3,7 +3,10 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.event.folia.*;
 
 import com.github.theword.queqiao.event.folia.dto.advancement.FoliaAdvancement;
+import com.github.theword.queqiao.handle.HandleApiImpl;
+import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.GlobalContext;
+import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
 import net.kyori.adventure.text.Component;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
@@ -12,12 +15,25 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import org.bukkit.event.server.ServerLoadEvent;
 
 import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.FoliaTool.*;
 
 
 class EventProcessor implements Listener {
+
+    @EventHandler
+    public void onServerLoad(ServerLoadEvent event) {
+        GlobalContext.init(
+                false,
+                QueQiao.instance.getServer().getVersion(),
+                ServerTypeConstant.SPIGOT,
+                new HandleApiImpl(),
+                new HandleCommandReturnMessageImpl()
+        );
+    }
+
     /**
      * 监听玩家聊天
      *

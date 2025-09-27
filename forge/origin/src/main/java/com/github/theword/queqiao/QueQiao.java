@@ -25,9 +25,9 @@ public class QueQiao {
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
     // IF > forge-1.16.5
-//    public void onServerStarted(net.minecraftforge.event.server.ServerStartingEvent event) {
+//    public void onServerStarted(net.minecraftforge.event.server.ServerStartedEvent event) {
     // ELSE
-//    public void onServerStarted(net.minecraftforge.fml.event.server.FMLServerStartingEvent event) {
+//    public void onServerStarted(net.minecraftforge.fml.event.server.FMLServerStartedEvent event) {
         // END IF
         minecraftServer = event.getServer();
         GlobalContext.init(true, minecraftServer.getServerVersion(), ServerTypeConstant.FORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
