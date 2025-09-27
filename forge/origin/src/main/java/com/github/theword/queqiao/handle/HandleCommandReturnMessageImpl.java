@@ -5,10 +5,9 @@ import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.TextComponentString;
 
-public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessageService {
+public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageService {
 
     @Override
-    @SuppressWarnings("unchecked")
     public void handleCommandReturnMessage(Object object, String message) {
         ICommandSender sender = (ICommandSender) object;
         sender.sendMessage(new TextComponentString(message));
@@ -23,7 +22,6 @@ public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessag
      * @return boolean 是否有权限
      */
     @Override
-    @SuppressWarnings("unchecked")
     public boolean hasPermission(Object object, String node) {
         ICommandSender sender = (ICommandSender) object;
         if (sender.canUseCommand(BaseConstant.MOD_PERMISSION_LEVEL,"")) return true;
