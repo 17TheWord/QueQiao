@@ -47,9 +47,14 @@ def tool_version = getVersionFromFile('./tool_version.txt')
 
 dependencies {
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.69-GTNH:dev")
-    shadowImplementation("com.github.theword.queqiao:queqiao-tool:${tool_version}")
+    shadowImplementation("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
+        exclude group: "com.google.code.gson", module: "gson"
+        exclude group: "commons-io", module: "commons-io"
+        exclude group: "org.yaml", module: "snakeyaml"
+    }
     shadowImplementation("org.java-websocket:Java-WebSocket:${project.properties["java_websocket_version"]}")
     shadowImplementation("org.slf4j:slf4j-api:${project.properties["slf4j_version"]}")
     shadowImplementation("org.slf4j:slf4j-simple:${project.properties["slf4j_version"]}")
     shadowImplementation("org.yaml:snakeyaml:${project.properties["snakeyaml_version"]}")
+    shadowImplementation("commons-io:commons-io:${project.properties["commons_io_version"]}")
 }
