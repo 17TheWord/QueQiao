@@ -2,6 +2,7 @@ package com.github.theword.queqiao.mixin;
 
 import com.github.theword.queqiao.event.fabric.FabricServerCommandMessageEvent;
 import com.github.theword.queqiao.event.fabric.FabricServerMessageEvent;
+import com.github.theword.queqiao.tool.GlobalContext;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 // IF > fabric-1.18.2
 //import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 
-import static com.github.theword.queqiao.tool.utils.Tool.*;
+import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
 
 @Mixin(ServerPlayNetworkHandler.class)
@@ -39,10 +40,10 @@ public class ServerPlayNetworkHandlerMixin {
         // END IF
 
         if (message.startsWith("/")) return;
-        if (!config.getSubscribeEvent().isPlayerChat()) return;
+        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
 
         FabricServerMessageEvent event = new FabricServerMessageEvent("", getFabricPlayer(player), message);
-        sendWebsocketMessage(event);
+        GlobalContext.getWebsocketManager().sendEvent(event);
     }
 
     // IF > fabric-1.18.2
@@ -56,13 +57,13 @@ public class ServerPlayNetworkHandlerMixin {
 //    @Inject(method = "executeCommand", at = @At("HEAD"))
 //    private void executeCommand(String input, CallbackInfo ci) {
         // END IF
-        if (!config.getSubscribeEvent().isPlayerCommand()) return;
+        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
 
         String registerOrLoginCommand = isRegisterOrLoginCommand(input);
 
         if (registerOrLoginCommand.isEmpty()) return;
 
         FabricServerCommandMessageEvent event = new FabricServerCommandMessageEvent("", getFabricPlayer(Objects.requireNonNull(player)), registerOrLoginCommand);
-        sendWebsocketMessage(event);
+        GlobalContext.getWebsocketManager().sendEvent(event);
     }
 }

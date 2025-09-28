@@ -1,6 +1,7 @@
 package com.github.theword.queqiao.command.subCommand;
 
 import com.github.theword.queqiao.command.ForgeSubCommand;
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.command.subCommand.ReloadCommandAbstract;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
@@ -17,7 +18,7 @@ public class ReloadCommand extends ReloadCommandAbstract implements ForgeSubComm
         // ELSE
 //    public int onCommand(CommandContext<net.minecraft.command.CommandSource> context) {
         // END IF
-        if (!handleCommandReturnMessageService.hasPermission(context, getPermissionNode())) return 0;
+        if (!GlobalContext.getHandleCommandReturnMessageService().hasPermission(context, getPermissionNode())) return 0;
         execute(context, true);
         return Command.SINGLE_SUCCESS;
     }

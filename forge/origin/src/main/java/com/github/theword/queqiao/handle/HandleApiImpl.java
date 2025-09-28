@@ -23,10 +23,6 @@ import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 //import net.minecraft.util.text.StringTextComponent;
 // END IF
 
-// IF < forge-1.19
-//import java.util.UUID;
-// END IF
-
 import java.util.List;
 import java.util.UUID;
 

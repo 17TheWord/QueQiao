@@ -47,6 +47,7 @@ dependencies {
     implementation "org.yaml:snakeyaml:${snakeyaml_version}"
     implementation "org.slf4j:slf4j-api:${slf4j_version}"
     implementation "org.slf4j:slf4j-simple:${slf4j_version}"
+    implementation "org.glavo:rcon-java:${glavoRconVersion}"
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}")
@@ -102,6 +103,7 @@ shadowJar {
         include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
         include(dependency("org.slf4j:slf4j-api:${slf4j_version}"))
         include(dependency("org.slf4j:slf4j-simple:${slf4j_version}"))
+        include(dependency("org.glavo:rcon-java:${glavoRconVersion}"))
     }
 
     mergeServiceFiles()

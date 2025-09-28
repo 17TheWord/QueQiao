@@ -1,5 +1,6 @@
 package com.github.theword.queqiao.mixin;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.event.fabric.FabricAdvancementCriterionEvent;
 import com.github.theword.queqiao.event.fabric.dto.advancement.FabricAdvancement;
 // IF < fabric-1.20.4
@@ -15,8 +16,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.github.theword.queqiao.tool.utils.Tool.config;
-import static com.github.theword.queqiao.tool.utils.Tool.sendWebsocketMessage;
 import static com.github.theword.queqiao.utils.FabricTool.getFabricAdvancement;
 import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
 
@@ -29,15 +28,15 @@ public abstract class AdvancementMixin {
     @Inject(method = "grantCriterion", at = @At("TAIL"))
     // IF < fabric-1.20.4
 //    private void onGrantCriterion(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
-//        if (!config.getSubscribeEvent().isPlayerAdvancement()) return;
+//        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
 //        FabricAdvancement fabricAdvancement = getFabricAdvancement(advancement);
     // ELSE
 //    private void onGrantCriterion(AdvancementEntry advancementEntry, String criterionName, CallbackInfoReturnable<Boolean> cir) {
-//        if (!config.getSubscribeEvent().isPlayerAdvancement()) return;
+//        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
 //        FabricAdvancement fabricAdvancement = getFabricAdvancement(advancementEntry.value());
 //        fabricAdvancement.setId(advancementEntry.id().toString());
         // END IF
         FabricAdvancementCriterionEvent fabricAdvancementCriterionEvent = new FabricAdvancementCriterionEvent(getFabricPlayer(owner), fabricAdvancement);
-        sendWebsocketMessage(fabricAdvancementCriterionEvent);
+        GlobalContext.getWebsocketManager().sendEvent(fabricAdvancementCriterionEvent);
     }
 }

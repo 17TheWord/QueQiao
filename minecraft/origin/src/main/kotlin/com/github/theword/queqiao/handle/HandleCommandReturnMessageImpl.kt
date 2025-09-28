@@ -2,7 +2,7 @@ package com.github.theword.queqiao.handle
 
 import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService
 
-class HandleCommandReturnMessageImpl : HandleCommandReturnMessageService {
+class HandleCommandReturnMessageImpl : HandleCommandReturnMessageService() {
     override fun handleCommandReturnMessage(o: Any, s: String) {
     }
 

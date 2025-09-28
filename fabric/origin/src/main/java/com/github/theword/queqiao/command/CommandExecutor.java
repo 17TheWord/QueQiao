@@ -4,6 +4,7 @@ import com.github.theword.queqiao.command.subCommand.HelpCommand;
 import com.github.theword.queqiao.command.subCommand.ReloadCommand;
 import com.github.theword.queqiao.command.subCommand.client.ReconnectAllCommand;
 import com.github.theword.queqiao.command.subCommand.client.ReconnectCommand;
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
 import com.mojang.brigadier.Command;
 // IF > fabric-1.18.2
@@ -13,15 +14,13 @@ import com.mojang.brigadier.Command;
 // END IF
 import net.minecraft.server.command.CommandManager;
 
-import static com.github.theword.queqiao.tool.utils.Tool.handleCommandReturnMessageService;
-
 public class CommandExecutor {
 
     public CommandExecutor() {
         // IF >= fabric-1.19
 //        CommandRegistrationCallback.EVENT.register(
 //                (dispatcher, registryAccess, environment) ->
-                        // ELSE
+        // ELSE
 //        CommandRegistrationCallback.EVENT.register(
 //                (dispatcher, dedicated) ->
                         // END IF
@@ -46,7 +45,7 @@ public class CommandExecutor {
                                         .then(CommandManager.literal("server")
                                                 .executes(context -> {
                                                             // TODO Websocket Server Command
-                                                            handleCommandReturnMessageService.handleCommandReturnMessage(context, "Server command is not supported");
+                                                            GlobalContext.getHandleCommandReturnMessageService().handleCommandReturnMessage(context, "Server command is not supported");
                                                             return Command.SINGLE_SUCCESS;
                                                         }
                                                 )

@@ -1,12 +1,12 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.event.fabric.dto.advancement.AdvancementRewardsDTO;
 import com.github.theword.queqiao.event.forge.ForgeServerPlayer;
 import com.github.theword.queqiao.event.forge.dto.advancement.DisplayInfoDTO;
 import com.github.theword.queqiao.event.forge.dto.advancement.ForgeAdvancement;
 import net.minecraft.advancements.Advancement;
 
 // IF > forge-1.16.5
+//import com.github.theword.queqiao.event.fabric.dto.advancement.AdvancementRewardsDTO;
 //import com.github.theword.queqiao.event.forge.dto.advancement.ItemStackDTO;
 //import net.minecraft.resources.ResourceKey;
 //import net.minecraft.resources.ResourceLocation;

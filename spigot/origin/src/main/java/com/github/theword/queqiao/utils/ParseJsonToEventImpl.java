@@ -1,6 +1,7 @@
 package com.github.theword.queqiao.utils;
 
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.handle.ParseJsonToEventService;
 import com.github.theword.queqiao.tool.payload.MessageSegment;
 import com.github.theword.queqiao.tool.payload.modle.component.CommonBaseComponent;
@@ -18,7 +19,6 @@ import net.md_5.bungee.api.chat.*;
 
 import java.util.List;
 
-import static com.github.theword.queqiao.tool.utils.Tool.logger;
 
 
 public class ParseJsonToEventImpl implements ParseJsonToEventService {
@@ -128,7 +128,7 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
             component.addExtra(msgComponent);
             msgLogText.append(messageSegment.getData().getText());
         }
-        logger.info(msgLogText.toString());
+        GlobalContext.getLogger().info(msgLogText.toString());
         return component;
     }
 
