@@ -53,13 +53,16 @@ dependencies {
 
     implementation ("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
 //    implementation embed ("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
-        // 排除 slf4j
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'org.yaml', module: 'snakeyaml'
+        exclude group: 'com.google.code.gson', module: 'gson'
+        exclude group: 'commons-io', module: 'commons-io'
     }
+
     implementation ("org.java-websocket:Java-WebSocket:${java_websocket_version}")
     implementation ("org.slf4j:slf4j-simple:${slf4j_version}")
     implementation ("org.yaml:snakeyaml:${snakeyaml_version}")
+    implementation ("org.glavo:rcon-java:${glavoRconVersion}")
 //    implementation embed("org.java-websocket:Java-WebSocket:${java_websocket_version}")
 //    implementation embed("org.slf4j:slf4j-simple:${slf4j_version}")
 //    implementation embed('org.yaml:snakeyaml:1.33')

@@ -7,11 +7,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 
 public abstract class ForgeSubCommand extends CommandBase {
     public final SubCommand inner;
