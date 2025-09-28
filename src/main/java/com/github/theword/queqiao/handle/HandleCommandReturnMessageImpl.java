@@ -1,14 +1,15 @@
 package com.github.theword.queqiao.handle;
 
 import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
 
-public class HandleCommandReturnMessageImpl implements HandleCommandReturnMessageService {
+public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageService {
 
     @Override
     public void handleCommandReturnMessage(Object object, String message) {
-        // CommandContext<net.minecraft.command.CommandSource> context =
-        // (CommandContext<net.minecraft.command.CommandSource>) object;
-        // context.getSource().sendSuccess(new net.minecraft.util.text.StringTextComponent(message), false);
+        ICommandSender sender = (ICommandSender) object;
+        sender.addChatMessage(new ChatComponentText(message));
     }
 
     @Override

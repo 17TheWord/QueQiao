@@ -1,8 +1,9 @@
 package com.github.theword.queqiao;
 
-import static com.github.theword.queqiao.tool.utils.Tool.*;
+import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.ForgeTool.getForgePlayer;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -18,34 +19,33 @@ public class EventProcessor {
 
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent()
-            .isPlayerChat()) return;
+        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
 
         ForgeServerPlayer player = getForgePlayer(event.player);
 
         ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", player, event.message);
-        sendWebsocketMessage(forgeServerChatEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgeServerChatEvent);
     }
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerLoggedInEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerJoin()) return;
+        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.player);
         ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(player);
-        sendWebsocketMessage(forgePlayerLoggedInEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedInEvent);
     }
 
     @SubscribeEvent
     public void onPlayerQuit(PlayerLoggedOutEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerQuit()) return;
+        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.player);
         ForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new ForgePlayerLoggedOutEvent(player);
-        sendWebsocketMessage(forgePlayerLoggedOutEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedOutEvent);
     }
 
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerCommand()) return;
+        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
         if (!(event.sender instanceof EntityPlayerMP)) return;
 
         String command = isRegisterOrLoginCommand(event.command.toString());
@@ -53,17 +53,17 @@ public class EventProcessor {
 
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.sender);
         ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
-        sendWebsocketMessage(forgeCommandEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
     }
 
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
-        if (event.isCanceled() || !config.getSubscribeEvent().isPlayerDeath()) return;
+        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
         if (!(event.entityLiving instanceof EntityPlayerMP)) return;
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.entityLiving);
         String reason = event.source.func_151519_b(event.entityLiving).getUnformattedText();
         ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, reason);
-        sendWebsocketMessage(forgeCommandEvent);
+        GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
     }
 
 }
