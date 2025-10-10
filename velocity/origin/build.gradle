@@ -35,7 +35,7 @@ repositories {
     maven {
         url = uri(maven_repository_url)
         credentials {
-            username = System.getenv("USERNAME")
+            username = System.getenv("GH_USERNAME")
             password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
         }
     }
