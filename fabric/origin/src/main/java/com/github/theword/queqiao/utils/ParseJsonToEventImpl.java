@@ -77,10 +77,10 @@ public class ParseJsonToEventImpl implements ParseJsonToEventService {
         Style style = Style.EMPTY
                 .withBold(commonBaseComponent.isBold())
                 .withItalic(commonBaseComponent.isItalic())
-                .withUnderline(commonBaseComponent.isUnderlined())
                 .withInsertion(commonBaseComponent.getInsertion())
-                .withFont(identifier)
                 // IF > fabric-1.16.5
+//                .withUnderline(commonBaseComponent.isUnderlined())
+//                .withFont(identifier)
 //                .withObfuscated(commonBaseComponent.isObfuscated())
 //                .withStrikethrough(commonBaseComponent.isStrikethrough())
                 // END IF
