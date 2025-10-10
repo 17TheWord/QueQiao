@@ -47,7 +47,7 @@ public class HandleApiImpl implements HandleApiService {
         mutableText.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
         // IF >= fabric-1.19.2
 //        sendPacket(new GameMessageS2CPacket(mutableText, false));
-        // ELSE IF  fabric-1.18.2
+        // ELSE
 // sendPacket(new GameMessageS2CPacket(mutableText, MessageType.CHAT, UUID.randomUUID()));
         // END IF
     }
