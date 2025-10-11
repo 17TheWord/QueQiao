@@ -26,7 +26,6 @@ import net.minecraft.text.MutableText;
 import java.util.List;
 import java.util.UUID;
 // IF <= fabric-1.18.2
-//import java.util.UUID;
 //import net.minecraft.network.MessageType;
 // END IF
 

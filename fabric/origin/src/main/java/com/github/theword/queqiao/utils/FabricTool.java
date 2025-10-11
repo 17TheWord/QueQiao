@@ -89,7 +89,9 @@ public class FabricTool {
 //            AdvancementDisplayDTO advancementDisplayDTO = new AdvancementDisplayDTO();
 //            advancementDisplayDTO.setTitle(advancement.getDisplay().getTitle().getString());
 //            advancementDisplayDTO.setDescription(advancement.getDisplay().getDescription().getString());
+            // IF > fabric-1.16.5
 //            advancementDisplayDTO.setBackground(advancement.getDisplay().getBackground() != null ? advancement.getDisplay().getBackground().toString() : "");
+            // END IF
 //            advancementDisplayDTO.setFrame(advancement.getDisplay().getFrame().getToastText().getString());
 //            advancementDisplayDTO.setShowToast(advancement.getDisplay().shouldShowToast());
 //            advancementDisplayDTO.setAnnounceToChat(advancement.getDisplay().shouldAnnounceToChat());
