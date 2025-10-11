@@ -31,6 +31,10 @@ repositories {
         url = "https://oss.sonatype.org/content/groups/public/"
     }
     maven {
+        name = "Elmakers"
+        url = 'https://maven.elmakers.com/repository/'
+    }
+    maven {
         url = uri(maven_repository_url)
         credentials {
             username = System.getenv("GH_USERNAME")
