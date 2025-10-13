@@ -33,8 +33,6 @@ public class ServerPlayNetworkHandlerMixin {
     private void onChatMessage(ChatMessageC2SPacket packet, CallbackInfo info) {
         // IF > fabric-1.18.2
 //        String message = packet.chatMessage();
-        // ELSE IF fabric-1.18.2
-//        String message = packet.getChatMessage();
         // ELSE
 //        String message = packet.getChatMessage();
         // END IF
