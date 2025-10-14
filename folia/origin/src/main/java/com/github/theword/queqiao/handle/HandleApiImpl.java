@@ -2,19 +2,16 @@ package com.github.theword.queqiao.handle;
 
 
 import com.github.theword.queqiao.tool.handle.HandleApiService;
-import com.github.theword.queqiao.tool.payload.MessageSegment;
-import com.github.theword.queqiao.tool.payload.TitlePayload;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
 import com.github.theword.queqiao.tool.utils.Tool;
-import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
+import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
-import net.kyori.adventure.text.TextComponent;
 
 
 import java.time.Duration;
-import java.util.List;
 import java.util.UUID;
 
 import static com.github.theword.queqiao.QueQiao.instance;
@@ -23,37 +20,44 @@ import static com.github.theword.queqiao.utils.FoliaTool.getFoliaPlayer;
 
 public class HandleApiImpl implements HandleApiService {
 
-    private final ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
 
+    /**
+     * 广播消息
+     *
+     * @param jsonElement 消息体
+     */
     @Override
-    public void handleBroadcastMessage(List<MessageSegment> messageList) {
-        TextComponent textComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
-        textComponent = textComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
-        for (Player player : instance.getServer().getOnlinePlayers()) {
-            if (player.isOnline()) player.sendMessage(textComponent);
-        }
+    public void handleBroadcastMessage(JsonElement jsonElement) {
+        Component component = GsonComponentSerializer.gson().deserializeFromTree(Tool.getPrefixComponent());
+        component = component.append(GsonComponentSerializer.gson().deserializeFromTree(jsonElement));
+        instance.getServer().broadcast(component);
     }
 
 
+    /**
+     * 标题消息
+     *
+     * @param titleJsonElement    title
+     * @param subtitleJsonElement subtitle
+     * @param fadein              fadein
+     * @param stay                stay
+     * @param fadeout             fadeout
+     */
     @Override
-    public void handleSendTitleMessage(TitlePayload titlePayload) {
-        TextComponent titleComponent = parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle());
-        TextComponent subtitleComponent = Component.empty();
-        if (titlePayload.getSubtitle() != null)
-            subtitleComponent = parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle());
+    public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
+        Component titleComponent = GsonComponentSerializer.gson().deserializeFromTree(titleJsonElement);
+        Component subtitleComponent = GsonComponentSerializer.gson().deserializeFromTree(subtitleJsonElement);
 
         Title title = Title.title(
                 titleComponent,
                 subtitleComponent,
                 Title.Times.times(
-                        Duration.ofMillis(titlePayload.getFadein()),
-                        Duration.ofMillis(titlePayload.getStay()),
-                        Duration.ofMillis(titlePayload.getFadeout())
+                        Duration.ofMillis(fadein),
+                        Duration.ofMillis(stay),
+                        Duration.ofMillis(fadeout)
                 )
         );
-        for (Player player : instance.getServer().getOnlinePlayers()) {
-            if (player.isOnline()) player.showTitle(title);
-        }
+        instance.getServer().showTitle(title);
     }
 
     /**
@@ -61,10 +65,10 @@ public class HandleApiImpl implements HandleApiService {
      *
      * @param nickname    目标玩家名称
      * @param uuid        目标玩家 UUID
-     * @param messageList 消息体
+     * @param jsonElement 消息体
      */
     @Override
-    public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, List<MessageSegment> messageList) {
+    public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, JsonElement jsonElement) {
         Player targetPlayer;
         if (uuid != null)
             targetPlayer = instance.getServer().getPlayer(uuid);
@@ -76,17 +80,20 @@ public class HandleApiImpl implements HandleApiService {
 
         if (!targetPlayer.isOnline()) return PrivateMessageResponse.playerNotOnline();
 
-        TextComponent textComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
-        textComponent = textComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
-        targetPlayer.sendMessage(textComponent);
+        Component component = GsonComponentSerializer.gson().deserializeFromTree(Tool.getPrefixComponent());
+        component = component.append(GsonComponentSerializer.gson().deserializeFromTree(jsonElement));
+        targetPlayer.sendMessage(component);
         return PrivateMessageResponse.sendSuccess(getFoliaPlayer(targetPlayer));
     }
 
+    /**
+     * 动作栏消息
+     *
+     * @param jsonElement 消息体s
+     */
     @Override
-    public void handleSendActionBarMessage(List<MessageSegment> messageList) {
-        TextComponent actionTextComponent = parseJsonToEventImpl.parseMessageListToComponent(messageList);
-        for (Player player : instance.getServer().getOnlinePlayers()) {
-            if (player.isOnline()) player.sendActionBar(actionTextComponent);
-        }
+    public void handleSendActionBarMessage(JsonElement jsonElement) {
+        Component component = GsonComponentSerializer.gson().deserializeFromTree(jsonElement);
+        instance.getServer().sendActionBar(component);
     }
 }
