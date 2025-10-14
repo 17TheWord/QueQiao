@@ -6,18 +6,23 @@ import com.google.gson.JsonElement;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-// IF >= fabric-1.20.4
+
+// IF >= fabric-1.21.6
+//import net.minecraft.text.TextCodecs;
+//import com.mojang.serialization.JsonOps;
+// ELSE
+//import net.minecraft.text.Text;
+//import static com.github.theword.queqiao.QueQiao.minecraftServer;
+// END IF
+
 // IF >= fabric-1.21
 //import net.minecraft.registry.RegistryKey;
 // END IF
-//
+
 // IF <= fabric-1.21.1
 //import net.minecraft.util.Identifier;
 // END IF
-//import java.util.stream.Collectors;
-//
-//import static com.github.theword.queqiao.QueQiao.minecraftServer;
+import java.util.stream.Collectors;
 // END IF
 
 public class FabricTool {
@@ -117,7 +122,9 @@ public class FabricTool {
     }
 
     public static MutableText buildComponent(JsonElement jsonElement) {
-        // IF >= fabric-1.21
+        // IF >= fabric-1.21.6
+//        return TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement).getOrThrow().getFirst().copy();
+        // ELSE IF >= fabric-1.21
 //        return Text.Serialization.fromJsonTree(jsonElement, minecraftServer.getRegistryManager());
         // ELSE IF >= fabric-1.20.4
 //        return Text.Serialization.fromJsonTree(jsonElement);
