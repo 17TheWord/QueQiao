@@ -3,13 +3,12 @@ package com.github.theword.queqiao.handle;
 import com.github.theword.queqiao.tool.handle.HandleApiService;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
 import com.github.theword.queqiao.tool.utils.Tool;
-import com.github.theword.queqiao.utils.ParseJsonImpl;
+import com.github.theword.queqiao.utils.ForgeTool;
 import com.google.gson.JsonElement;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 import java.util.UUID;
 
@@ -25,10 +24,11 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        ITextComponent textComponent = ParseJsonImpl.parseJsonToTextWrapped(jsonElement);
-        if (textComponent != null) {
+        ITextComponent prefixed = ForgeTool.parseJsonToTextWrapped(Tool.getPrefixComponent());
+        ITextComponent message = ForgeTool.parseJsonToTextWrapped(jsonElement);
+        if (message != null && prefixed != null) {
             for (EntityPlayerMP serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-                serverPlayer.sendMessage(textComponent);
+                serverPlayer.sendMessage(prefixed.appendSibling(message));
             }
         }
     }
@@ -46,9 +46,9 @@ public class HandleApiImpl implements HandleApiService {
     @Override
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
 
-        ITextComponent title = ParseJsonImpl.parseJsonToTextWrapped(titleJsonElement);
+        ITextComponent title = ForgeTool.parseJsonToTextWrapped(titleJsonElement);
 
-        ITextComponent subtitle = ParseJsonImpl.parseJsonToTextWrapped(subtitleJsonElement);
+        ITextComponent subtitle = ForgeTool.parseJsonToTextWrapped(subtitleJsonElement);
 
         if(title!=null) {
             sendPacket(new SPacketTitle(
@@ -76,7 +76,7 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public void handleSendActionBarMessage(JsonElement jsonElement) {
-        ITextComponent msg = ParseJsonImpl.parseJsonToTextWrapped(jsonElement);
+        ITextComponent msg = ForgeTool.parseJsonToTextWrapped(jsonElement);
         if(msg!=null) {
             sendPacket(new SPacketTitle(SPacketTitle.Type.ACTIONBAR, msg));
         }
@@ -108,9 +108,10 @@ public class HandleApiImpl implements HandleApiService {
             return PrivateMessageResponse.playerNotOnline();
         }
 
-        ITextComponent textComponent = ParseJsonImpl.parseJsonToTextWrapped(jsonElement);
-        if (textComponent != null) {
-            targetPlayer.sendMessage(textComponent);
+        ITextComponent prefixed = ForgeTool.parseJsonToTextWrapped(Tool.getPrefixComponent());
+        ITextComponent message = ForgeTool.parseJsonToTextWrapped(jsonElement);
+        if (message != null && prefixed != null) {
+            targetPlayer.sendMessage(prefixed.appendSibling(message));
         }
         return PrivateMessageResponse.sendSuccess(getForgePlayer(targetPlayer));
     }
