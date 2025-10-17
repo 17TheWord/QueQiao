@@ -1,0 +1,41 @@
+name: Setup Java & Gradle
+description: Setup Java JDK, validate Gradle wrapper, make gradlew executable, preload dependencies
+
+inputs:
+  java-version:
+    description: JDK version to use
+    required: false
+    default: "8"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ inputs.java-version }}
+        distribution: temurin
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 # v4.4.2
+
+    - name: Make Gradle Wrapper Executable
+      shell: bash
+      run: chmod +x ./gradlew
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-forge-1.7.10-${{ hashFiles('**/*.gradle*', '**/gradle.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-forge-1.7.10-
+
+    - name: Read version.txt and save to variable
+      shell: bash
+      run: |
+        mod_version=$(cat version.txt)
+        echo "Version: $mod_version"
+        echo "MOD_VERSION=$mod_version" >> $GITHUB_ENV
