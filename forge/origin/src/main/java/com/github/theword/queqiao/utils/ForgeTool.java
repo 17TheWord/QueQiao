@@ -5,11 +5,14 @@ import com.github.theword.queqiao.event.forge.dto.advancement.AdvancementRewards
 import com.github.theword.queqiao.event.forge.dto.advancement.DisplayInfoDTO;
 import com.github.theword.queqiao.event.forge.dto.advancement.ForgeAdvancement;
 import com.github.theword.queqiao.event.forge.dto.advancement.ItemStackDTO;
+import com.github.theword.queqiao.tool.GlobalContext;
+import com.google.gson.JsonElement;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -75,4 +78,16 @@ public class ForgeTool {
         return forgeAdvancement;
     }
 
+    /** 调用原版方法反序列化Json文本组件, 并将异常输出到日志
+     * @param jsonElement 消息体
+     * @return 文本组件, 或null如果解析出错
+     */
+    public static ITextComponent parseJsonToTextWrapped(JsonElement jsonElement){
+        try {
+            return ITextComponent.Serializer.fromJsonLenient(jsonElement.toString());
+        } catch (Throwable e) {
+            GlobalContext.getLogger().error("Error handling Broadcast Message {} : ",jsonElement,e);
+        }
+        return null;
+    }
 }
