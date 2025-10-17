@@ -48,13 +48,13 @@
 ## 介绍
 
 - 将服务端**玩家事件**以 `Json` 格式通过 `Websocket` 分发。
-    - 已实现的 [`事件`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`玩家聊天`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`玩家命令`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`玩家死亡`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B) (`Velocity`
-          暂无)
-        - [`玩家加入`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
-        - [`玩家登出`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+  - 已实现的 [`事件`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+    - [`玩家聊天`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+    - [`玩家命令`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+    - [`玩家死亡`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B) (`Velocity`
+      暂无)
+    - [`玩家加入`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
+    - [`玩家登出`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
 - 通过 `Websocket` 接收 `Json` 消息，并转发至游戏玩家。
     - 已实现的接口
         - [`广播消息`](https://github.com/17TheWord/QueQiao/wiki/5.-API#broadcast--send-message)
@@ -89,6 +89,7 @@
       }
       ```
 5. 开始游戏，加入服务器
+6. 参考 [`API文档`](https://queqiao.apifox.cn/)，使用对应接口发送消息，或监听玩家事件
 
 ## 对接
 
@@ -103,7 +104,7 @@
 - [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq)：`ZeroBot` 插件，实现 `OneBot` 协议端
   与 `Minecraft` 互通聊天
 - [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq)：提供 `QQ` <-> `MC` 消息互通的 `AstrBot` 插件。
-- [`kterna/queqiao_mcdr`](https://github.com/kterna/queqiao_mcdr)：鹊桥的 `MCDR` 实现，实现消息收发。
+- [`@kterna/queqiao_mcdr`](https://github.com/kterna/queqiao_mcdr)：鹊桥的 `MCDR` 实现，实现消息收发。
 
 ## 兼容
 
