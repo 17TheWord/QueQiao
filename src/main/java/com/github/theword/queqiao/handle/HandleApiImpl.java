@@ -29,10 +29,10 @@ public class HandleApiImpl implements HandleApiService {
 
     @Override
     public void handleSendTitleMessage(JsonElement titlePayload, JsonElement subTitlePayload, int fadeIn, int stay, int fadeOut) {
-        if (!titlePayload.isJsonNull()) {
+        if (titlePayload != null && !titlePayload.isJsonNull()) {
             sendPacket(new S02PacketChat(ForgeTool.buildComponent(titlePayload), false));
         }
-        if (!subTitlePayload.isJsonNull()) {
+        if (subTitlePayload != null && !subTitlePayload.isJsonNull()) {
             sendPacket(new S02PacketChat(ForgeTool.buildComponent(subTitlePayload), false));
         }
     }
