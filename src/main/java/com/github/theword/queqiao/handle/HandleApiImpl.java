@@ -46,11 +46,8 @@ public class HandleApiImpl implements HandleApiService {
     @Override
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
 
-        ITextComponent title = ForgeTool.parseJsonToTextWrapped(titleJsonElement);
-
-        ITextComponent subtitle = ForgeTool.parseJsonToTextWrapped(subtitleJsonElement);
-
-        if(title!=null) {
+        if (!titleJsonElement.isJsonNull()) {
+            ITextComponent title = ForgeTool.parseJsonToTextWrapped(titleJsonElement);
             sendPacket(new SPacketTitle(
                     SPacketTitle.Type.TITLE,
                     title,
@@ -59,7 +56,9 @@ public class HandleApiImpl implements HandleApiService {
                     fadeout
             ));
         }
-        if (subtitle != null)
+
+        if (!subtitleJsonElement.isJsonNull()) {
+            ITextComponent subtitle = ForgeTool.parseJsonToTextWrapped(subtitleJsonElement);
             sendPacket(new SPacketTitle(
                     SPacketTitle.Type.SUBTITLE,
                     subtitle,
@@ -67,6 +66,7 @@ public class HandleApiImpl implements HandleApiService {
                     stay,
                     fadeout
             ));
+        }
     }
 
     /**
@@ -77,7 +77,7 @@ public class HandleApiImpl implements HandleApiService {
     @Override
     public void handleSendActionBarMessage(JsonElement jsonElement) {
         ITextComponent msg = ForgeTool.parseJsonToTextWrapped(jsonElement);
-        if(msg!=null) {
+        if (msg != null) {
             sendPacket(new SPacketTitle(SPacketTitle.Type.ACTIONBAR, msg));
         }
     }
