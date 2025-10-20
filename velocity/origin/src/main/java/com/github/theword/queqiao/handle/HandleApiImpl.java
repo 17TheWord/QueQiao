@@ -27,9 +27,14 @@ public class HandleApiImpl implements HandleApiService {
 
     @Override
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
-        Component titleComponent = GsonComponentSerializer.gson().deserializeFromTree(titleJsonElement);
-        Component subtitleComponent = GsonComponentSerializer.gson().deserializeFromTree(subtitleJsonElement);
-
+        Component titleComponent = Component.empty();
+        Component subtitleComponent = Component.empty();
+        if (titleJsonElement != null && titleJsonElement.isJsonNull()) {
+            titleComponent = GsonComponentSerializer.gson().deserializeFromTree(titleJsonElement);
+        }
+        if (subtitleJsonElement != null && subtitleJsonElement.isJsonNull()) {
+            subtitleComponent = GsonComponentSerializer.gson().deserializeFromTree(subtitleJsonElement);
+        }
         Title title = Title.title(
                 titleComponent,
                 subtitleComponent,

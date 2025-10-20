@@ -38,12 +38,12 @@ public class HandleApiImpl implements HandleApiService {
     @Override
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
         String titleText = "";
-        if (!titleJsonElement.isJsonNull()) {
+        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
             BaseComponent[] title = SpigotTool.buildComponent(titleJsonElement);
             titleText = TextComponent.toLegacyText(title);
         }
         String subtitleText = "";
-        if (!subtitleJsonElement.isJsonNull()) {
+        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
             BaseComponent[] subtitle = SpigotTool.buildComponent(subtitleJsonElement);
             subtitleText = TextComponent.toLegacyText(subtitle);
         }

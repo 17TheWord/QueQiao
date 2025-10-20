@@ -48,16 +48,16 @@ public class HandleApiImpl implements HandleApiService {
 //        }
 //        sendPacket(new ClientboundSystemChatPacket(mutableComponent, false));
         // ELSE IF >= forge-1.18
-//MutableComponent mutableComponent = Component.Serializer.fromJson(Tool.getPrefixComponent());
-//assert mutableComponent != null;
-//MutableComponent message = Component.Serializer.fromJson(jsonElement);
-//if (message != null) {
-//mutableComponent.append(message);
-//}
+//        MutableComponent mutableComponent = Component.Serializer.fromJson(Tool.getPrefixComponent());
+//        assert mutableComponent != null;
+//        MutableComponent message = Component.Serializer.fromJson(jsonElement);
+//        if (message != null) {
+//            mutableComponent.append(message);
+//        }
         // IF >= forge-1.19
 //        sendPacket(new ClientboundSystemChatPacket(mutableComponent, false));
         // ELSE
-// sendPacket(new ClientboundChatPacket(mutableComponent, ChatType.CHAT, UUID.randomUUID()));
+//        sendPacket(new ClientboundChatPacket(mutableComponent, ChatType.CHAT, UUID.randomUUID()));
         // END IF
         // ELSE
 //        net.minecraft.util.text.IFormattableTextComponent mutableComponent = ITextComponent.Serializer.fromJson(Tool.getPrefixComponent());
@@ -82,33 +82,43 @@ public class HandleApiImpl implements HandleApiService {
     @Override
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
         // IF >= forge-1.21
-//        MutableComponent title = Component.Serializer.fromJson(titleJsonElement, minecraftServer.registryAccess());
-//        MutableComponent subtitle = Component.Serializer.fromJson(subtitleJsonElement, minecraftServer.registryAccess());
 //        sendPacket(new ClientboundSetTitlesAnimationPacket(fadein, stay, fadeout));
-//        if (title != null) {
-//            sendPacket(new ClientboundSetSubtitleTextPacket(title));
+//        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
+//            MutableComponent title = Component.Serializer.fromJson(titleJsonElement, minecraftServer.registryAccess());
+//            if (title != null)
+//                sendPacket(new ClientboundSetSubtitleTextPacket(title));
 //        }
-//        if (subtitle != null) {
-//            sendPacket(new ClientboundSetSubtitleTextPacket(subtitle));
+//        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
+//            MutableComponent subtitle = Component.Serializer.fromJson(subtitleJsonElement, minecraftServer.registryAccess());
+//            if (subtitle != null)
+//                sendPacket(new ClientboundSetSubtitleTextPacket(subtitle));
 //        }
         // ELSE IF >= forge-1.18
-//MutableComponent title = Component.Serializer.fromJson(titleJsonElement);
-//MutableComponent subtitle = Component.Serializer.fromJson(subtitleJsonElement);
-//sendPacket(new ClientboundSetTitlesAnimationPacket(fadein, stay, fadeout));
-//if (title != null) {
-//sendPacket(new ClientboundSetSubtitleTextPacket(title));
-//}
-//if (subtitle != null) {
-//sendPacket(new ClientboundSetSubtitleTextPacket(subtitle));
-//}
+//        sendPacket(new ClientboundSetTitlesAnimationPacket(fadein, stay, fadeout));
+//        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
+//            MutableComponent title = Component.Serializer.fromJson(titleJsonElement);
+//            if (title != null)
+//                sendPacket(new ClientboundSetSubtitleTextPacket(title));
+//        }
+//
+//        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
+//            MutableComponent subtitle = Component.Serializer.fromJson(subtitleJsonElement);
+//            if (subtitle != null)
+//                sendPacket(new ClientboundSetSubtitleTextPacket(subtitle));
+//        }
         // ELSE
-//        net.minecraft.util.text.IFormattableTextComponent title = ITextComponent.Serializer.fromJson(titleJsonElement);
-//        net.minecraft.util.text.IFormattableTextComponent subtitle = ITextComponent.Serializer.fromJson(subtitleJsonElement);
 //        sendPacket(new STitlePacket(fadein, stay, fadeout));
-//        if (title != null)
-//            sendPacket(new STitlePacket(STitlePacket.Type.TITLE, title));
-//        if (subtitle != null)
-//            sendPacket(new STitlePacket(STitlePacket.Type.SUBTITLE, subtitle));
+//        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
+//            net.minecraft.util.text.IFormattableTextComponent title = ITextComponent.Serializer.fromJson(titleJsonElement);
+//            if (title != null)
+//                sendPacket(new STitlePacket(STitlePacket.Type.TITLE, title));
+//        }
+//
+//        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
+//            net.minecraft.util.text.IFormattableTextComponent subtitle = ITextComponent.Serializer.fromJson(subtitleJsonElement);
+//            if (subtitle != null)
+//                sendPacket(new STitlePacket(STitlePacket.Type.SUBTITLE, subtitle));
+//        }
         // END IF
     }
 

@@ -47,13 +47,15 @@ public class HandleApiImpl implements HandleApiService {
     @Override
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
         sendPacket(new ClientboundSetTitlesAnimationPacket(fadein, stay, fadeout));
-        MutableComponent title = Component.Serializer.fromJson(titleJsonElement, minecraftServer.registryAccess());
-        if (title != null) {
-            sendPacket(new ClientboundSetTitleTextPacket(title));
+        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
+            MutableComponent title = Component.Serializer.fromJson(titleJsonElement, minecraftServer.registryAccess());
+            if (title != null)
+                sendPacket(new ClientboundSetTitleTextPacket(title));
         }
-        MutableComponent subtitle = Component.Serializer.fromJson(subtitleJsonElement, minecraftServer.registryAccess());
-        if (subtitle != null) {
-            sendPacket(new ClientboundSetSubtitleTextPacket(subtitle));
+        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
+            MutableComponent subtitle = Component.Serializer.fromJson(subtitleJsonElement, minecraftServer.registryAccess());
+            if (subtitle != null)
+                sendPacket(new ClientboundSetSubtitleTextPacket(subtitle));
         }
     }
 

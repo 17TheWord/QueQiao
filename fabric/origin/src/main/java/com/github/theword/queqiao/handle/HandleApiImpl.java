@@ -50,23 +50,20 @@ public class HandleApiImpl implements HandleApiService {
 
     @Override
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
-        MutableText title = FabricTool.buildComponent(titleJsonElement);
-        MutableText subtitle = FabricTool.buildComponent(subtitleJsonElement);
-
         // IF fabric-1.16.5
-//        if (title != null) {
-//            sendPacket(new TitleS2CPacket(TitleS2CPacket.Action.TITLE, title, fadein, stay, fadeout));
+//        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
+//            sendPacket(new TitleS2CPacket(TitleS2CPacket.Action.TITLE, FabricTool.buildComponent(titleJsonElement), fadein, stay, fadeout));
 //        }
-//        if (subtitle != null) {
-//            sendPacket(new TitleS2CPacket(TitleS2CPacket.Action.SUBTITLE, subtitle, fadein, stay, fadeout));
+//        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
+//            sendPacket(new TitleS2CPacket(TitleS2CPacket.Action.SUBTITLE, FabricTool.buildComponent(subtitleJsonElement), fadein, stay, fadeout));
 //        }
         // ELSE
 //        sendPacket(new TitleFadeS2CPacket(fadein, stay, fadeout));
-//        if (title != null) {
-//            sendPacket(new TitleS2CPacket(title));
+//        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
+//            sendPacket(new TitleS2CPacket(FabricTool.buildComponent(titleJsonElement)));
 //        }
-//        if (subtitle != null) {
-//            sendPacket(new SubtitleS2CPacket(subtitle));
+//        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
+//            sendPacket(new SubtitleS2CPacket(FabricTool.buildComponent(subtitleJsonElement)));
 //        }
         // END IF
     }
