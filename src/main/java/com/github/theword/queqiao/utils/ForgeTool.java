@@ -1,8 +1,10 @@
 package com.github.theword.queqiao.utils;
 
+import com.google.gson.JsonElement;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import com.github.theword.queqiao.event.forge.ForgeServerPlayer;
+import net.minecraft.util.IChatComponent;
 
 public class ForgeTool {
 
@@ -28,4 +30,9 @@ public class ForgeTool {
         forgeServerPlayer.setBlockZ((int) player.posZ);
         return forgeServerPlayer;
     }
+
+    public static IChatComponent buildComponent(JsonElement jsonElement) {
+        return IChatComponent.Serializer.func_150699_a(jsonElement.toString());
+    }
+
 }

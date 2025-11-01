@@ -56,11 +56,11 @@
     - [`玩家加入`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
     - [`玩家登出`](https://github.com/17TheWord/QueQiao/wiki/4.-%E5%9F%BA%E6%9C%AC%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B)
 - 通过 `Websocket` 接收 `Json` 消息，并转发至游戏玩家。
-  - 已实现的接口
-    - [`广播消息`](https://github.com/17TheWord/QueQiao/wiki/5.-API#broadcast--send-message)
-    - [`私聊消息`](https://github.com/17TheWord/QueQiao/wiki/5.-API#privatemessage)
-    - [`标题 & 子标题`](https://github.com/17TheWord/QueQiao/wiki/5.-API#title)
-    - [`动画栏`](https://github.com/17TheWord/QueQiao/wiki/5.-API#actionbar)
+    - 已实现的接口
+        - [`广播消息`](https://github.com/17TheWord/QueQiao/wiki/5.-API#broadcast--send-message)
+        - [`私聊消息`](https://github.com/17TheWord/QueQiao/wiki/5.-API#privatemessage)
+        - [`标题 & 子标题`](https://github.com/17TheWord/QueQiao/wiki/5.-API#title)
+        - [`动画栏`](https://github.com/17TheWord/QueQiao/wiki/5.-API#actionbar)
 
 ## 帮助与下载
 
@@ -72,23 +72,24 @@
 
 1. 安装服务端对应的 `插件/Mod`
 2. 配置 `config.yml` 中的 `websocket_server`
-  - `enable: true` # 是否启用
-  - `host: "127.0.0.1"`     # WebSocket Server 地址
-  - `port: 8080` # WebSocket Server 端口
+    - `enable: true` # 是否启用
+    - `host: "127.0.0.1"`     # WebSocket Server 地址
+    - `port: 8080` # WebSocket Server 端口
 3. 启动服务器，等待开启 `Websocket Server`
 4. 使用 [`ApiFox`](https://apifox.com/) 或其他API测试工具，或连接 [对接](#对接) 项目
-  - 配置全局 `Request Header`
-    ```json5
-    {
-      // 必填
-      // 服务器名称，必须与 config.yml 中的 'server_name' 一致
-      "x-self-name": "TestServer",
-      // 选填
-      // 鉴权，必须与 config.yml 中的 'access_token' 一致,如果 config.yml 中的 'auth_token' 为空，则可不设置此项
-      "Authorization": "Bearer 123"
-    }
-    ```
+    - 配置全局 `Request Header`
+      ```json5
+      {
+        // 必填
+        // 服务器名称，必须与 config.yml 中的 'server_name' 一致
+        "x-self-name": "TestServer",
+        // 选填
+        // 鉴权，必须与 config.yml 中的 'access_token' 一致,如果 config.yml 中的 'auth_token' 为空，则可不设置此项
+        "Authorization": "Bearer 123"
+      }
+      ```
 5. 开始游戏，加入服务器
+6. 参考 [`API文档`](https://queqiao.apifox.cn/)，使用对应接口发送消息，或监听玩家事件
 
 ## 对接
 
@@ -103,7 +104,7 @@
 - [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq)：`ZeroBot` 插件，实现 `OneBot` 协议端
   与 `Minecraft` 互通聊天
 - [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq)：提供 `QQ` <-> `MC` 消息互通的 `AstrBot` 插件。
-- [`kterna/queqiao_mcdr`](https://github.com/kterna/queqiao_mcdr)：鹊桥的 `MCDR` 实现，实现消息收发。
+- [`@kterna/queqiao_mcdr`](https://github.com/kterna/queqiao_mcdr)：鹊桥的 `MCDR` 实现，实现消息收发。
 
 ## 兼容
 
