@@ -1,0 +1,71 @@
+apply from: 'gradle/scripts/helpers.gradle'
+
+def tool_version = getVersionFromFile('./tool_version.txt')
+def mod_version = getVersionFromFile('./version.txt')
+
+repositories {
+    // Other repositories described by default:
+    // CleanroomMC: https://maven.cleanroommc.com
+    exclusiveContent {
+        forRepository {
+            maven {
+                name 'CurseMaven'
+                url 'https://cursemaven.com'
+            }
+        }
+        filter {
+            includeGroup 'curse.maven'
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name 'Modrinth'
+                url 'https://api.modrinth.com/maven'
+            }
+        }
+        filter {
+            includeGroup 'maven.modrinth'
+        }
+    }
+    maven {
+        name 'GitHub Packages'
+        url 'https://maven.pkg.github.com/17TheWord/QueQiaoTool'
+        credentials {
+            username = System.getenv("GH_USERNAME")
+            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
+        }
+    }
+    flatDir {
+        dirs 'libs'
+    }
+    mavenLocal() // Must be last for caching to work
+}
+
+dependencies {
+    // Include StripLatestForgeRequirements by default for the dev env, saves everyone a hassle
+    runtimeOnly 'com.cleanroommc:strip-latest-forge-requirements:1.0'
+
+    // For easier testing
+    runtimeOnly rfg.deobf('curse.maven:had-enough-items-557549:4543375')
+    runtimeOnly rfg.deobf('curse.maven:ftb-library-legacy-forge-237167:2985811')
+    runtimeOnly rfg.deobf('curse.maven:ftb-utilities-forge-237102:3157548')
+
+    implementation ("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
+//    implementation embed ("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'org.yaml', module: 'snakeyaml'
+        exclude group: 'com.google.code.gson', module: 'gson'
+        exclude group: 'commons-io', module: 'commons-io'
+    }
+
+    implementation ("org.java-websocket:Java-WebSocket:${java_websocket_version}")
+    implementation ("org.slf4j:slf4j-simple:${slf4j_version}")
+    implementation ("org.yaml:snakeyaml:${snakeyaml_version}")
+    implementation ("org.glavo:rcon-java:${glavoRconVersion}")
+//    implementation embed("org.java-websocket:Java-WebSocket:${java_websocket_version}")
+//    implementation embed("org.slf4j:slf4j-simple:${slf4j_version}")
+//    implementation embed('org.yaml:snakeyaml:1.33')
+    compileOnly "org.projectlombok:lombok:${lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+}
