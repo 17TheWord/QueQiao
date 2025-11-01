@@ -2,17 +2,27 @@ package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.event.fabric.FabricServerPlayer;
 import com.github.theword.queqiao.event.fabric.dto.advancement.*;
+import com.google.gson.JsonElement;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.server.network.ServerPlayerEntity;
-// IF >= fabric-1.20.4
+import net.minecraft.text.MutableText;
+
+// IF >= fabric-1.21.6
+//import net.minecraft.text.TextCodecs;
+//import com.mojang.serialization.JsonOps;
+// ELSE
+//import net.minecraft.text.Text;
+//import static com.github.theword.queqiao.QueQiao.minecraftServer;
+// END IF
+
 // IF >= fabric-1.21
 //import net.minecraft.registry.RegistryKey;
 // END IF
-//
+
 // IF <= fabric-1.21.1
 //import net.minecraft.util.Identifier;
 // END IF
-//import java.util.stream.Collectors;
+import java.util.stream.Collectors;
 // END IF
 
 public class FabricTool {
@@ -89,9 +99,9 @@ public class FabricTool {
 //            AdvancementDisplayDTO advancementDisplayDTO = new AdvancementDisplayDTO();
 //            advancementDisplayDTO.setTitle(advancement.getDisplay().getTitle().getString());
 //            advancementDisplayDTO.setDescription(advancement.getDisplay().getDescription().getString());
-            // IF > fabric-1.16.5
+        // IF > fabric-1.16.5
 //            advancementDisplayDTO.setBackground(advancement.getDisplay().getBackground() != null ? advancement.getDisplay().getBackground().toString() : "");
-            // END IF
+        // END IF
 //            advancementDisplayDTO.setFrame(advancement.getDisplay().getFrame().getToastText().getString());
 //            advancementDisplayDTO.setShowToast(advancement.getDisplay().shouldShowToast());
 //            advancementDisplayDTO.setAnnounceToChat(advancement.getDisplay().shouldAnnounceToChat());
@@ -109,5 +119,17 @@ public class FabricTool {
 //        fabricAdvancement.setId(advancement.getId().toString());
         // END IF
         return fabricAdvancement;
+    }
+
+    public static MutableText buildComponent(JsonElement jsonElement) {
+        // IF >= fabric-1.21.6
+//        return TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement).getOrThrow().getFirst().copy();
+        // ELSE IF >= fabric-1.21
+//        return Text.Serialization.fromJsonTree(jsonElement, minecraftServer.getRegistryManager());
+        // ELSE IF >= fabric-1.20.4
+//        return Text.Serialization.fromJsonTree(jsonElement);
+        // ELSE
+//        return Text.Serializer.fromJson(jsonElement);
+        // END IF
     }
 }

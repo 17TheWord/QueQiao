@@ -2,16 +2,15 @@ package com.github.theword.queqiao.handle;
 
 
 import com.github.theword.queqiao.tool.handle.HandleApiService;
-import com.github.theword.queqiao.tool.payload.MessageSegment;
-import com.github.theword.queqiao.tool.payload.TitlePayload;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
 import com.github.theword.queqiao.tool.utils.Tool;
-import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
+import com.github.theword.queqiao.utils.SpigotTool;
+import com.google.gson.JsonElement;
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.UUID;
 
 import static com.github.theword.queqiao.QueQiao.instance;
@@ -20,29 +19,41 @@ import static com.github.theword.queqiao.utils.SpigotTool.getSpigotPlayer;
 
 public class HandleApiImpl implements HandleApiService {
 
-    private final ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
 
     @Override
-    public void handleBroadcastMessage(List<MessageSegment> messageList) {
-        TextComponent textComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
-        textComponent.addExtra(parseJsonToEventImpl.parseMessageListToComponent(messageList));
+    public void handleBroadcastMessage(JsonElement jsonElement) {
+        BaseComponent[] prefix = SpigotTool.buildComponent(Tool.getPrefixComponent());
+        BaseComponent[] message = SpigotTool.buildComponent(jsonElement);
+
+        BaseComponent textComponent = new TextComponent();
+        textComponent.addExtra(prefix[0]);
+
+        for (BaseComponent base : message) {
+            textComponent.addExtra(base);
+        }
+
         instance.getServer().spigot().broadcast(textComponent);
     }
 
     @Override
-    public void handleSendTitleMessage(TitlePayload titlePayload) {
-        TextComponent title = parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle());
+    public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
+        String titleText = "";
+        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
+            BaseComponent[] title = SpigotTool.buildComponent(titleJsonElement);
+            titleText = TextComponent.toLegacyText(title);
+        }
         String subtitleText = "";
-        if (titlePayload.getSubtitle() != null) {
-            subtitleText = parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle()).toLegacyText();
+        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
+            BaseComponent[] subtitle = SpigotTool.buildComponent(subtitleJsonElement);
+            subtitleText = TextComponent.toLegacyText(subtitle);
         }
         for (Player player : instance.getServer().getOnlinePlayers()) {
             player.sendTitle(
-                    title.toLegacyText(),
+                    titleText,
                     subtitleText,
-                    titlePayload.getFadein(),
-                    titlePayload.getStay(),
-                    titlePayload.getFadeout()
+                    fadein,
+                    stay,
+                    fadeout
             );
         }
     }
@@ -52,10 +63,10 @@ public class HandleApiImpl implements HandleApiService {
      *
      * @param nickname    目标玩家名称
      * @param uuid        目标玩家 UUID
-     * @param messageList 消息体
+     * @param jsonElement 消息体
      */
     @Override
-    public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, List<MessageSegment> messageList) {
+    public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, JsonElement jsonElement) {
         Player targetPlayer;
         if (uuid != null)
             targetPlayer = instance.getServer().getPlayer(uuid);
@@ -73,17 +84,25 @@ public class HandleApiImpl implements HandleApiService {
             return PrivateMessageResponse.playerNotOnline();
         }
 
-        TextComponent textComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
-        textComponent.addExtra(parseJsonToEventImpl.parseMessageListToComponent(messageList));
-        targetPlayer.sendMessage(textComponent.toLegacyText());
+        BaseComponent[] prefix = SpigotTool.buildComponent(Tool.getPrefixComponent());
+        BaseComponent[] message = SpigotTool.buildComponent(jsonElement);
+
+        BaseComponent textComponent = new TextComponent();
+        textComponent.addExtra(prefix[0]);
+
+        for (BaseComponent base : message) {
+            textComponent.addExtra(base);
+        }
+
+        targetPlayer.sendMessage(TextComponent.toLegacyText(textComponent));
         return PrivateMessageResponse.sendSuccess(getSpigotPlayer(targetPlayer));
     }
 
     @Override
-    public void handleSendActionBarMessage(List<MessageSegment> messageList) {
-        TextComponent actionTextComponent = parseJsonToEventImpl.parseMessageListToComponent(messageList);
+    public void handleSendActionBarMessage(JsonElement jsonElement) {
+        BaseComponent[] message = SpigotTool.buildComponent(jsonElement);
         for (Player player : instance.getServer().getOnlinePlayers()) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, actionTextComponent);
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, message);
         }
     }
 }

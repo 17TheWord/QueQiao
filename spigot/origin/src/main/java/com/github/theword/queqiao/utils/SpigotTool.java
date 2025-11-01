@@ -2,6 +2,9 @@ package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.event.spigot.SpigotPlayer;
 import com.github.theword.queqiao.event.spigot.dto.advancement.SpigotAdvancement;
+import com.google.gson.JsonElement;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 
@@ -108,5 +111,9 @@ public class SpigotTool {
 //        spigotAdvancement.setText(advancementDisplay != null ? advancementDisplay.getTitle() : "");
 //        return spigotAdvancement;
         // END IF
+    }
+
+    public static BaseComponent[] buildComponent(JsonElement jsonElement) {
+        return ComponentSerializer.parse(jsonElement.toString());
     }
 }

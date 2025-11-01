@@ -1,21 +1,21 @@
 {
   "name": "Java21 Development",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",  // 基础镜像[1](@ref)
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
       "version": "21",
-      "jdkDistro": "temurin"  // 使用Eclipse Temurin发行版[2](@ref)
+      "jdkDistro": "temurin"
     }
   },
   "customizations": {
     "vscode": {
       "extensions": [
-        "redhat.java",  // Java语言支持[2](@ref)
-        "vscjava.vscode-java-pack",  // 开发全家桶
-        "vscjava.vscode-java-test"  // 测试框架支持
+        "redhat.java",
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-java-test"
       ]
     }
   },
-  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y maven gradle",  // 构建工具[1](@ref)
-  "forwardPorts": [8080]  // 常用Web端口[1](@ref)
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y maven gradle",
+  "forwardPorts": [8080]
 }

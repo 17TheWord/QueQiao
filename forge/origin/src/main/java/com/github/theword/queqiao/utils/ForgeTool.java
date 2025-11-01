@@ -8,13 +8,11 @@ import net.minecraft.advancements.Advancement;
 // IF > forge-1.16.5
 //import com.github.theword.queqiao.event.fabric.dto.advancement.AdvancementRewardsDTO;
 //import com.github.theword.queqiao.event.forge.dto.advancement.ItemStackDTO;
-//import net.minecraft.resources.ResourceKey;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.network.chat.Component;
 //import net.minecraft.world.item.ItemStack;
 //import net.minecraft.server.level.ServerPlayer;
-//
-//import java.util.stream.Collectors;
 // ELSE
+//import net.minecraft.util.text.IFormattableTextComponent;
 //import net.minecraft.entity.player.ServerPlayerEntity;
 // END IF
 
@@ -74,8 +72,8 @@ public class ForgeTool {
 //        });
 //        AdvancementRewardsDTO advancementRewardsDTO = new AdvancementRewardsDTO();
 //        advancementRewardsDTO.setExperience(advancement.rewards().experience());
-//        advancementRewardsDTO.setLoot(advancement.rewards().loot().stream().map(ResourceKey::toString).collect(Collectors.toList()));
-//        advancementRewardsDTO.setRecipes(advancement.rewards().recipes().stream().map(ResourceLocation::toString).collect(Collectors.toList()));
+////        advancementRewardsDTO.setLoot(advancement.rewards().loot().stream().map(ResourceKey::toString).collect(Collectors.toList()));
+////        advancementRewardsDTO.setRecipes(advancement.rewards().recipes().stream().map(ResourceLocation::toString).collect(Collectors.toList()));
 //        forgeAdvancement.setRewards(advancementRewardsDTO);
         // ELSE
 //        forgeAdvancement.setId(advancement.getId().toString());
@@ -84,14 +82,14 @@ public class ForgeTool {
 //            DisplayInfoDTO displayInfoDTO = new DisplayInfoDTO();
 //            displayInfoDTO.setTitle(advancement.getDisplay().getTitle().getString());
 //            displayInfoDTO.setDescription(advancement.getDisplay().getDescription().getString());
-        // IF > forge-1.16.5
+            // IF > forge-1.16.5
 //            ItemStack icon = advancement.getDisplay().getIcon();
 //            ItemStackDTO itemStackDTO = new ItemStackDTO();
 //            itemStackDTO.setCount(icon.getCount());
 //            itemStackDTO.setPopTime(icon.getPopTime());
 //            itemStackDTO.setItem(icon.getItem().toString());
 //            displayInfoDTO.setIcon(itemStackDTO);
-        // END IF
+            // END IF
 //            forgeAdvancement.setDisplay(displayInfoDTO);
 //        }
 //        forgeAdvancement.setRewards(advancement.getRewards().serializeToJson());

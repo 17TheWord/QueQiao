@@ -40,7 +40,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Chose JDK 21
         uses: actions/setup-java@v4

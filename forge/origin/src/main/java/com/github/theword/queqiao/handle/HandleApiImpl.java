@@ -1,18 +1,17 @@
 package com.github.theword.queqiao.handle;
 
 import com.github.theword.queqiao.tool.handle.HandleApiService;
-import com.github.theword.queqiao.tool.payload.MessageSegment;
-import com.github.theword.queqiao.tool.payload.TitlePayload;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
 import com.github.theword.queqiao.tool.utils.Tool;
-import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
+import com.google.gson.JsonElement;
+
+import java.util.UUID;
+
 // IF > forge-1.16.5
+//import net.minecraft.network.chat.Component;
 //import net.minecraft.network.chat.MutableComponent;
 //import net.minecraft.network.protocol.Packet;
-//import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
-//import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
-//import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
-//import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
+//import net.minecraft.network.protocol.game.*;
 //import net.minecraft.server.level.ServerPlayer;
 // ELSE
 //import net.minecraft.entity.player.ServerPlayerEntity;
@@ -20,95 +19,131 @@ import com.github.theword.queqiao.utils.ParseJsonToEventImpl;
 //import net.minecraft.network.play.server.SChatPacket;
 //import net.minecraft.network.play.server.STitlePacket;
 //import net.minecraft.util.text.ChatType;
-//import net.minecraft.util.text.StringTextComponent;
+//import net.minecraft.util.text.ITextComponent;
 // END IF
 
-import java.util.List;
-import java.util.UUID;
+// IF forge-1.18.2
+//import net.minecraft.network.chat.ChatType;
+// END IF
 
 import static com.github.theword.queqiao.QueQiao.minecraftServer;
 import static com.github.theword.queqiao.utils.ForgeTool.getForgePlayer;
 
 
 public class HandleApiImpl implements HandleApiService {
-    private final ParseJsonToEventImpl parseJsonToEventImpl = new ParseJsonToEventImpl();
 
     /**
      * 广播消息
      *
-     * @param messageList 消息体
+     * @param jsonElement 消息体
      */
     @Override
-    public void handleBroadcastMessage(List<MessageSegment> messageList) {
-        // IF > forge-1.16.5
-//        MutableComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
+    public void handleBroadcastMessage(JsonElement jsonElement) {
+        // IF >= forge-1.21
+//        MutableComponent mutableComponent = Component.Serializer.fromJson(Tool.getPrefixComponent(), minecraftServer.registryAccess());
+//        assert mutableComponent != null;
+//        MutableComponent message = Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
+//        if (message != null) {
+//            mutableComponent.append(message);
+//        }
+//        sendPacket(new ClientboundSystemChatPacket(mutableComponent, false));
+        // ELSE IF >= forge-1.18
+//        MutableComponent mutableComponent = Component.Serializer.fromJson(Tool.getPrefixComponent());
+//        assert mutableComponent != null;
+//        MutableComponent message = Component.Serializer.fromJson(jsonElement);
+//        if (message != null) {
+//            mutableComponent.append(message);
+//        }
+        // IF >= forge-1.19
+//        sendPacket(new ClientboundSystemChatPacket(mutableComponent, false));
         // ELSE
-//        StringTextComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
+//        sendPacket(new ClientboundChatPacket(mutableComponent, ChatType.CHAT, UUID.randomUUID()));
         // END IF
-
-        mutableComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
-
-        // IF < forge-1.19
-//        UUID uuid = UUID.randomUUID();
+        // ELSE
+//        net.minecraft.util.text.IFormattableTextComponent mutableComponent = ITextComponent.Serializer.fromJson(Tool.getPrefixComponent());
+//        assert mutableComponent != null;
+//        net.minecraft.util.text.IFormattableTextComponent messageComponent = ITextComponent.Serializer.fromJson(jsonElement);
+//        if (messageComponent != null) {
+//            mutableComponent.append(messageComponent);
+//        }
+//        sendPacket(new SChatPacket(mutableComponent, ChatType.CHAT, UUID.randomUUID()));
         // END IF
-
-        // IF > forge-1.16.5
-//        for (ServerPlayer serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-            // ELSE
-//        for (ServerPlayerEntity serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-            // END IF
-
-            // IF >= forge-1.19
-//            serverPlayer.sendSystemMessage(mutableComponent);
-            // ELSE
-//            serverPlayer.sendMessage(mutableComponent, uuid);
-            // END IF
-        }
     }
 
     /**
      * 广播 Send Title 消息
      *
-     * @param titlePayload Send Title 消息体
+     * @param titleJsonElement    Title 消息体
+     * @param subtitleJsonElement Subtitle 消息体
+     * @param fadein              Title 淡入时间
+     * @param stay                Title 停留时间
+     * @param fadeout             Title 淡出时间
      */
     @Override
-    public void handleSendTitleMessage(TitlePayload titlePayload) {
-        // IF > forge-1.16.5
-//        sendPacket(new ClientboundSetTitleTextPacket(parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle())));
-//        if (titlePayload.getSubtitle() != null)
-//            sendPacket(new ClientboundSetSubtitleTextPacket(parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle())));
-//        sendPacket(new ClientboundSetTitlesAnimationPacket(titlePayload.getFadein(), titlePayload.getStay(), titlePayload.getFadeout()));
+    public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
+        // IF >= forge-1.21
+//        sendPacket(new ClientboundSetTitlesAnimationPacket(fadein, stay, fadeout));
+//        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
+//            MutableComponent title = Component.Serializer.fromJson(titleJsonElement, minecraftServer.registryAccess());
+//            if (title != null)
+//                sendPacket(new ClientboundSetSubtitleTextPacket(title));
+//        }
+//        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
+//            MutableComponent subtitle = Component.Serializer.fromJson(subtitleJsonElement, minecraftServer.registryAccess());
+//            if (subtitle != null)
+//                sendPacket(new ClientboundSetSubtitleTextPacket(subtitle));
+//        }
+        // ELSE IF >= forge-1.18
+//        sendPacket(new ClientboundSetTitlesAnimationPacket(fadein, stay, fadeout));
+//        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
+//            MutableComponent title = Component.Serializer.fromJson(titleJsonElement);
+//            if (title != null)
+//                sendPacket(new ClientboundSetSubtitleTextPacket(title));
+//        }
+//
+//        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
+//            MutableComponent subtitle = Component.Serializer.fromJson(subtitleJsonElement);
+//            if (subtitle != null)
+//                sendPacket(new ClientboundSetSubtitleTextPacket(subtitle));
+//        }
         // ELSE
-//        sendPacket(new STitlePacket(STitlePacket.Type.TITLE, parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getTitle())));
-//        if (titlePayload.getSubtitle() != null)
-//            sendPacket(new STitlePacket(STitlePacket.Type.SUBTITLE, parseJsonToEventImpl.parseMessageListToComponent(titlePayload.getSubtitle())));
-//        sendPacket(new STitlePacket(titlePayload.getFadein(), titlePayload.getStay(), titlePayload.getFadeout()));
+//        sendPacket(new STitlePacket(fadein, stay, fadeout));
+//        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
+//            net.minecraft.util.text.IFormattableTextComponent title = ITextComponent.Serializer.fromJson(titleJsonElement);
+//            if (title != null)
+//                sendPacket(new STitlePacket(STitlePacket.Type.TITLE, title));
+//        }
+//
+//        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
+//            net.minecraft.util.text.IFormattableTextComponent subtitle = ITextComponent.Serializer.fromJson(subtitleJsonElement);
+//            if (subtitle != null)
+//                sendPacket(new STitlePacket(STitlePacket.Type.SUBTITLE, subtitle));
+//        }
         // END IF
     }
 
-    /**
-     * 广播 Action Bar 消息
-     *
-     * @param messageList Action Bar 消息体
-     */
     @Override
-    public void handleSendActionBarMessage(List<MessageSegment> messageList) {
-        // IF > forge-1.16.5
-//        sendPacket(new ClientboundSetActionBarTextPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList)));
+    public void handleSendActionBarMessage(JsonElement jsonElement) {
+        // IF >= forge-1.21
+//        MutableComponent actionBar = Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
+//        if (actionBar != null) {
+//            sendPacket(new ClientboundSetActionBarTextPacket(actionBar));
+//        }
+        // ELSE IF >= forge-1.18
+//        MutableComponent actionBar = Component.Serializer.fromJson(jsonElement);
+//        if (actionBar != null) {
+//            sendPacket(new ClientboundSetActionBarTextPacket(actionBar));
+//        }
         // ELSE
-//        sendPacket(new SChatPacket(parseJsonToEventImpl.parseMessageListToComponent(messageList), ChatType.GAME_INFO, UUID.randomUUID()));
+//        ITextComponent actionBar = ITextComponent.Serializer.fromJson(jsonElement);
+//        if (actionBar != null) {
+//            sendPacket(new SChatPacket(actionBar, ChatType.GAME_INFO, UUID.randomUUID()));
+//        }
         // END IF
     }
 
-    /**
-     * 私聊消息
-     *
-     * @param nickname    目标玩家名称
-     * @param uuid        目标玩家 UUID
-     * @param messageList 消息体
-     */
     @Override
-    public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, List<MessageSegment> messageList) {
+    public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, JsonElement jsonElement) {
         // IF > forge-1.16.5
 //        ServerPlayer targetPlayer;
         // ELSE
@@ -129,13 +164,17 @@ public class HandleApiImpl implements HandleApiService {
         if (targetPlayer.hasDisconnected()) {
             return PrivateMessageResponse.playerNotOnline();
         }
-        // IF > forge-1.16.5
-//        MutableComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
-//        mutableComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
+        // IF >= forge-1.21
+//        MutableComponent mutableComponent = Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
+        // ELSE IF >= forge-1.18
+//        MutableComponent mutableComponent = Component.Serializer.fromJson(jsonElement);
         // ELSE
-//        StringTextComponent mutableComponent = parseJsonToEventImpl.parsePerMessageToComponent(Tool.getPrefixComponent());
-//        mutableComponent.append(parseJsonToEventImpl.parseMessageListToComponent(messageList));
+//        ITextComponent mutableComponent = ITextComponent.Serializer.fromJson(jsonElement);
         // END IF
+
+        if (mutableComponent == null) {
+            return PrivateMessageResponse.of(getForgePlayer(targetPlayer), "消息内容错误");
+        }
 
         // IF >= forge-1.19
 //        targetPlayer.sendSystemMessage(mutableComponent);
