@@ -21,7 +21,7 @@ public class EventProcessor {
         VelocityPlayer player = getVelocityPlayer(event.getPlayer());
         String message = event.getMessage();
         VelocityPlayerChatEvent velocityPlayerChatEvent = new VelocityPlayerChatEvent(player, message);
-        GlobalContext.getWebsocketManager().sendEvent(velocityPlayerChatEvent);
+        GlobalContext.sendEvent(velocityPlayerChatEvent);
     }
 
     @Subscribe
@@ -30,7 +30,7 @@ public class EventProcessor {
 
         VelocityPlayer player = getVelocityPlayer(event.getPlayer());
         VelocityLoginEvent velocityLoginEvent = new VelocityLoginEvent(player);
-        GlobalContext.getWebsocketManager().sendEvent(velocityLoginEvent);
+        GlobalContext.sendEvent(velocityLoginEvent);
     }
 
     @Subscribe
@@ -39,7 +39,7 @@ public class EventProcessor {
 
         VelocityPlayer player = getVelocityPlayer(event.getPlayer());
         VelocityDisconnectEvent velocityDisconnectEvent = new VelocityDisconnectEvent(player);
-        GlobalContext.getWebsocketManager().sendEvent(velocityDisconnectEvent);
+        GlobalContext.sendEvent(velocityDisconnectEvent);
     }
 
     @Subscribe
@@ -49,6 +49,6 @@ public class EventProcessor {
         String command = event.getCommand();
 
         VelocityCommandExecuteEvent velocityCommandExecuteEvent = new VelocityCommandExecuteEvent(getVelocityPlayer(player), command);
-        GlobalContext.getWebsocketManager().sendEvent(velocityCommandExecuteEvent);
+        GlobalContext.sendEvent(velocityCommandExecuteEvent);
     }
 }

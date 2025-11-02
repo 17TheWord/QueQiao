@@ -44,7 +44,7 @@ class EventProcessor implements Listener {
         if (event.isCancelled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
 
         FoliaAsyncPlayerChatEvent foliaAsyncPlayerChatEvent = new FoliaAsyncPlayerChatEvent(getFoliaPlayer(event.getPlayer()), getComponentText(event.message()));
-        GlobalContext.getWebsocketManager().sendEvent(foliaAsyncPlayerChatEvent);
+        GlobalContext.sendEvent(foliaAsyncPlayerChatEvent);
     }
 
     /**
@@ -60,7 +60,7 @@ class EventProcessor implements Listener {
 
         String string = getComponentText(component);
         FoliaPlayerDeathEvent foliaPlayerDeathEvent = new FoliaPlayerDeathEvent(getFoliaPlayer(event.getEntity()), string);
-        GlobalContext.getWebsocketManager().sendEvent(foliaPlayerDeathEvent);
+        GlobalContext.sendEvent(foliaPlayerDeathEvent);
     }
 
     /**
@@ -73,7 +73,7 @@ class EventProcessor implements Listener {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
 
         FoliaPlayerJoinEvent foliaPlayerJoinEvent = new FoliaPlayerJoinEvent(getFoliaPlayer(event.getPlayer()));
-        GlobalContext.getWebsocketManager().sendEvent(foliaPlayerJoinEvent);
+        GlobalContext.sendEvent(foliaPlayerJoinEvent);
     }
 
     /**
@@ -86,7 +86,7 @@ class EventProcessor implements Listener {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
 
         FoliaPlayerQuitEvent foliaPlayerQuitEvent = new FoliaPlayerQuitEvent(getFoliaPlayer(event.getPlayer()));
-        GlobalContext.getWebsocketManager().sendEvent(foliaPlayerQuitEvent);
+        GlobalContext.sendEvent(foliaPlayerQuitEvent);
     }
 
     /**
@@ -103,7 +103,7 @@ class EventProcessor implements Listener {
         if (command.isEmpty()) return;
 
         FoliaPlayerCommandPreprocessEvent foliaPlayerCommandPreprocessEvent = new FoliaPlayerCommandPreprocessEvent(getFoliaPlayer(event.getPlayer()), command);
-        GlobalContext.getWebsocketManager().sendEvent(foliaPlayerCommandPreprocessEvent);
+        GlobalContext.sendEvent(foliaPlayerCommandPreprocessEvent);
     }
 
     @EventHandler
@@ -114,7 +114,7 @@ class EventProcessor implements Listener {
         FoliaAdvancement foliaAdvancement = getFoliaAdvancement(advancement);
 
         FoliaPlayerAdvancementDoneEvent foliaPlayerAdvancementDoneEvent = new FoliaPlayerAdvancementDoneEvent(getFoliaPlayer(event.getPlayer()), foliaAdvancement);
-        GlobalContext.getWebsocketManager().sendEvent(foliaPlayerAdvancementDoneEvent);
+        GlobalContext.sendEvent(foliaPlayerAdvancementDoneEvent);
     }
 
 

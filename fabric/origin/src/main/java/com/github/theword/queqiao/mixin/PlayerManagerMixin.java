@@ -29,6 +29,6 @@ public class PlayerManagerMixin {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
 
         FabricServerPlayConnectionJoinEvent event = new FabricServerPlayConnectionJoinEvent(getFabricPlayer(player));
-        GlobalContext.getWebsocketManager().sendEvent(event);
+        GlobalContext.sendEvent(event);
     }
 }

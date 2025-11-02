@@ -41,7 +41,7 @@ public class ServerPlayNetworkHandlerMixin {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
 
         FabricServerMessageEvent event = new FabricServerMessageEvent("", getFabricPlayer(player), message);
-        GlobalContext.getWebsocketManager().sendEvent(event);
+        GlobalContext.sendEvent(event);
     }
 
     // IF > fabric-1.18.2
@@ -62,6 +62,6 @@ public class ServerPlayNetworkHandlerMixin {
         if (registerOrLoginCommand.isEmpty()) return;
 
         FabricServerCommandMessageEvent event = new FabricServerCommandMessageEvent("", getFabricPlayer(Objects.requireNonNull(player)), registerOrLoginCommand);
-        GlobalContext.getWebsocketManager().sendEvent(event);
+        GlobalContext.sendEvent(event);
     }
 }

@@ -42,7 +42,7 @@ public class EventProcessor {
         // END IF
 
         ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", player, message);
-        GlobalContext.getWebsocketManager().sendEvent(forgeServerChatEvent);
+        GlobalContext.sendEvent(forgeServerChatEvent);
     }
 
     @SubscribeEvent
@@ -56,7 +56,7 @@ public class EventProcessor {
         // END IF
 
         ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(player);
-        GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedInEvent);
+        GlobalContext.sendEvent(forgePlayerLoggedInEvent);
     }
 
     @SubscribeEvent
@@ -70,7 +70,7 @@ public class EventProcessor {
         // END IF
 
         ForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new ForgePlayerLoggedOutEvent(player);
-        GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedOutEvent);
+        GlobalContext.sendEvent(forgePlayerLoggedOutEvent);
     }
 
     @SubscribeEvent
@@ -97,7 +97,7 @@ public class EventProcessor {
             return;
         }
         ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
-        GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
+        GlobalContext.sendEvent(forgeCommandEvent);
 
     }
 
@@ -122,7 +122,7 @@ public class EventProcessor {
         String message = event.getSource().getLocalizedDeathMessage(entity).getString();
 
         ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, message);
-        GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
+        GlobalContext.sendEvent(forgeCommandEvent);
     }
 
     @SubscribeEvent
@@ -143,6 +143,6 @@ public class EventProcessor {
         ForgeAdvancement forgeAdvancement = getForgeAdvancement(advancement);
 
         ForgeAdvancementEvent forgeAdvancementEvent = new ForgeAdvancementEvent(player, forgeAdvancement);
-        GlobalContext.getWebsocketManager().sendEvent(forgeAdvancementEvent);
+        GlobalContext.sendEvent(forgeAdvancementEvent);
     }
 }

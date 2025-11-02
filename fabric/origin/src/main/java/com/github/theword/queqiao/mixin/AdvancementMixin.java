@@ -37,6 +37,6 @@ public abstract class AdvancementMixin {
 //        fabricAdvancement.setId(advancementEntry.id().toString());
         // END IF
         FabricAdvancementCriterionEvent fabricAdvancementCriterionEvent = new FabricAdvancementCriterionEvent(getFabricPlayer(owner), fabricAdvancement);
-        GlobalContext.getWebsocketManager().sendEvent(fabricAdvancementCriterionEvent);
+        GlobalContext.sendEvent(fabricAdvancementCriterionEvent);
     }
 }
