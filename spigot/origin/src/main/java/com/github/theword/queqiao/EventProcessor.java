@@ -28,7 +28,7 @@ class EventProcessor implements Listener {
         if (event.isCancelled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
 
         SpigotAsyncPlayerChatEvent spigotAsyncPlayerChatEvent = new SpigotAsyncPlayerChatEvent(getSpigotPlayer(event.getPlayer()), event.getMessage());
-        GlobalContext.getWebsocketManager().sendEvent(spigotAsyncPlayerChatEvent);
+        GlobalContext.sendEvent(spigotAsyncPlayerChatEvent);
     }
 
     /**
@@ -41,7 +41,7 @@ class EventProcessor implements Listener {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
 
         SpigotPlayerDeathEvent spigotPlayerDeathEvent = new SpigotPlayerDeathEvent(getSpigotPlayer(event.getEntity()), event.getDeathMessage());
-        GlobalContext.getWebsocketManager().sendEvent(spigotPlayerDeathEvent);
+        GlobalContext.sendEvent(spigotPlayerDeathEvent);
     }
 
     /**
@@ -54,7 +54,7 @@ class EventProcessor implements Listener {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
 
         SpigotPlayerJoinEvent spigotPlayerJoinEvent = new SpigotPlayerJoinEvent(getSpigotPlayer(event.getPlayer()));
-        GlobalContext.getWebsocketManager().sendEvent(spigotPlayerJoinEvent);
+        GlobalContext.sendEvent(spigotPlayerJoinEvent);
     }
 
     /**
@@ -67,7 +67,7 @@ class EventProcessor implements Listener {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
 
         SpigotPlayerQuitEvent spigotPlayerQuitEvent = new SpigotPlayerQuitEvent(getSpigotPlayer(event.getPlayer()));
-        GlobalContext.getWebsocketManager().sendEvent(spigotPlayerQuitEvent);
+        GlobalContext.sendEvent(spigotPlayerQuitEvent);
     }
 
     /**
@@ -84,7 +84,7 @@ class EventProcessor implements Listener {
         if (command.isEmpty()) return;
 
         SpigotPlayerCommandPreprocessEvent spigotPlayerCommandPreprocessEvent = new SpigotPlayerCommandPreprocessEvent(getSpigotPlayer(event.getPlayer()), command);
-        GlobalContext.getWebsocketManager().sendEvent(spigotPlayerCommandPreprocessEvent);
+        GlobalContext.sendEvent(spigotPlayerCommandPreprocessEvent);
     }
 
     @EventHandler
@@ -95,7 +95,7 @@ class EventProcessor implements Listener {
         SpigotAdvancement spigotAdvancement = getSpigotAdvancement(advancement);
 
         SpigotPlayerAdvancementDoneEvent spigotPlayerAdvancementDoneEvent = new SpigotPlayerAdvancementDoneEvent(getSpigotPlayer(event.getPlayer()), spigotAdvancement);
-        GlobalContext.getWebsocketManager().sendEvent(spigotPlayerAdvancementDoneEvent);
+        GlobalContext.sendEvent(spigotPlayerAdvancementDoneEvent);
     }
 
 

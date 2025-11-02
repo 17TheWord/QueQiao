@@ -22,7 +22,7 @@ public abstract class ServerPlayerEntityMixin {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         String message = player.getDamageTracker().getDeathMessage().getString();
         FabricServerLivingEntityAfterDeathEvent event = new FabricServerLivingEntityAfterDeathEvent("", getFabricPlayer(player), message);
-        GlobalContext.getWebsocketManager().sendEvent(event);
+        GlobalContext.sendEvent(event);
     }
 
     @Inject(method = "onDisconnect", at = @At("HEAD"))
@@ -31,7 +31,7 @@ public abstract class ServerPlayerEntityMixin {
 
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         FabricServerPlayConnectionDisconnectEvent event = new FabricServerPlayConnectionDisconnectEvent(getFabricPlayer(player));
-        GlobalContext.getWebsocketManager().sendEvent(event);
+        GlobalContext.sendEvent(event);
     }
 
 }

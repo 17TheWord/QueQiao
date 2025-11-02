@@ -29,7 +29,7 @@ public class EventProcessor {
         String message = event.getMessage().getString();
 
         NeoForgeServerChatEvent NeoForgeServerChatEvent = new NeoForgeServerChatEvent("", player, message);
-        GlobalContext.getWebsocketManager().sendEvent(NeoForgeServerChatEvent);
+        GlobalContext.sendEvent(NeoForgeServerChatEvent);
     }
 
     @SubscribeEvent
@@ -39,7 +39,7 @@ public class EventProcessor {
         NeoForgeServerPlayer player = getNeoForgePlayer((ServerPlayer) event.getEntity());
 
         NeoForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new NeoForgePlayerLoggedInEvent(player);
-        GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedInEvent);
+        GlobalContext.sendEvent(forgePlayerLoggedInEvent);
     }
 
     @SubscribeEvent
@@ -49,7 +49,7 @@ public class EventProcessor {
         NeoForgeServerPlayer player = getNeoForgePlayer((ServerPlayer) event.getEntity());
 
         NeoForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new NeoForgePlayerLoggedOutEvent(player);
-        GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedOutEvent);
+        GlobalContext.sendEvent(forgePlayerLoggedOutEvent);
     }
 
     @SubscribeEvent
@@ -70,7 +70,7 @@ public class EventProcessor {
             return;
         }
         NeoForgeCommandEvent forgeCommandEvent = new NeoForgeCommandEvent("", player, command);
-        GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
+        GlobalContext.sendEvent(forgeCommandEvent);
     }
 
     @SubscribeEvent
@@ -85,7 +85,7 @@ public class EventProcessor {
         String message = event.getSource().getLocalizedDeathMessage(entity).getString();
 
         NeoForgePlayerDeathEvent forgeCommandEvent = new NeoForgePlayerDeathEvent("", player, message);
-        GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
+        GlobalContext.sendEvent(forgeCommandEvent);
     }
 
     @SubscribeEvent
@@ -94,6 +94,6 @@ public class EventProcessor {
         Advancement advancement = event.getAdvancement().value();
         NeoForgeAdvancement neoForgeAdvancement = getNeoForgeAdvancement(advancement);
         NeoForgeAdvancementEvent forgeAdvancementEvent = new NeoForgeAdvancementEvent(getNeoForgePlayer((ServerPlayer) event.getEntity()), neoForgeAdvancement);
-        GlobalContext.getWebsocketManager().sendEvent(forgeAdvancementEvent);
+        GlobalContext.sendEvent(forgeAdvancementEvent);
     }
 }

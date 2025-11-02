@@ -14,6 +14,7 @@ public final class QueQiao extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Folia 中，工具包初始化位于 EventProcessor 的 ServerLoadEvent 事件
         instance = this;
 
         Bukkit.getPluginManager().registerEvents(new EventProcessor(), this);

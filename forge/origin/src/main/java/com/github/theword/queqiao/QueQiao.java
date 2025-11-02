@@ -31,7 +31,6 @@ public class QueQiao {
         // END IF
         minecraftServer = event.getServer();
         GlobalContext.init(true, minecraftServer.getServerVersion(), ServerTypeConstant.FORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
-        GlobalContext.getWebsocketManager().startWebsocketOnServerStart();
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)

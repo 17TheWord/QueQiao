@@ -14,7 +14,7 @@ class EventProcessor {
         if (!GlobalContext.getConfig().subscribeEvent.isPlayerChat) return
         val player = MinecraftPlayer(playerName)
         val event = MinecraftPlayerChatEvent("", player, message)
-        GlobalContext.getWebsocketManager().sendEvent(event)
+        GlobalContext.sendEvent(event)
     }
 
 
@@ -25,7 +25,7 @@ class EventProcessor {
         if (!GlobalContext.getConfig().subscribeEvent.isPlayerJoin) return
         val player = MinecraftPlayer(playerName)
         val event = MinecraftPlayerJoinEvent(player)
-        GlobalContext.getWebsocketManager().sendEvent(event)
+        GlobalContext.sendEvent(event)
     }
 
     /**
@@ -35,6 +35,6 @@ class EventProcessor {
         if (!GlobalContext.getConfig().subscribeEvent.isPlayerQuit) return
         val player = MinecraftPlayer(playerName)
         val event = MinecraftPlayerQuitEvent(player)
-        GlobalContext.getWebsocketManager().sendEvent(event)
+        GlobalContext.sendEvent(event)
     }
 }
