@@ -25,7 +25,7 @@ public class EventProcessor {
             if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
             ForgeServerPlayer player = getForgePlayer(event.getPlayer());
             ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", player, event.getMessage());
-            GlobalContext.getWebsocketManager().sendEvent(forgeServerChatEvent);
+            GlobalContext.sendEvent(forgeServerChatEvent);
         }catch (Exception e){
             GlobalContext.getLogger().error("Error processing ServerChatEvent: ",e);
         }
@@ -37,7 +37,7 @@ public class EventProcessor {
             if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
             ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.player);
             ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(player);
-            GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedInEvent);
+            GlobalContext.sendEvent(forgePlayerLoggedInEvent);
         }catch (Exception e){
             GlobalContext.getLogger().error("Error processing PlayerLoggedInEvent: ",e);
         }
@@ -50,7 +50,7 @@ public class EventProcessor {
             EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player;
             ForgeServerPlayer player = getForgePlayer(entityPlayerMP);
             ForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new ForgePlayerLoggedOutEvent(player);
-            GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedOutEvent);
+            GlobalContext.sendEvent(forgePlayerLoggedOutEvent);
         }catch (Exception e){
             GlobalContext.getLogger().error("Error processing PlayerLoggedOutEvent: ",e);
         }
@@ -71,7 +71,7 @@ public class EventProcessor {
 
             ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getSender());
             ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
-            GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
+            GlobalContext.sendEvent(forgeCommandEvent);
         }catch (Exception e){
             GlobalContext.getLogger().error("Error processing CommandEvent: ",e);
         }
@@ -85,7 +85,7 @@ public class EventProcessor {
             ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.getEntity());
             String message = event.getEntityLiving().getCombatTracker().getDeathMessage().getUnformattedText();
             ForgePlayerDeathEvent forgePlayerDeathEvent = new ForgePlayerDeathEvent("", player, message);
-            GlobalContext.getWebsocketManager().sendEvent(forgePlayerDeathEvent);
+            GlobalContext.sendEvent(forgePlayerDeathEvent);
         }catch (Exception e){
             GlobalContext.getLogger().error("Error processing LivingDeathEvent: ",e);
         }
@@ -102,7 +102,7 @@ public class EventProcessor {
             ForgeAdvancement forgeAdvancement = getForgeAdvancement(advancement);
 
             ForgeAdvancementEvent forgeAdvancementEvent = new ForgeAdvancementEvent(player, forgeAdvancement);
-            GlobalContext.getWebsocketManager().sendEvent(forgeAdvancementEvent);
+            GlobalContext.sendEvent(forgeAdvancementEvent);
         }catch (Exception e){
             GlobalContext.getLogger().error("Error processing AdvancementEvent: ",e);
         }
