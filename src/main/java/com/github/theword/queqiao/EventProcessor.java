@@ -24,7 +24,7 @@ public class EventProcessor {
         ForgeServerPlayer player = getForgePlayer(event.player);
 
         ForgeServerChatEvent forgeServerChatEvent = new ForgeServerChatEvent("", player, event.message);
-        GlobalContext.getWebsocketManager().sendEvent(forgeServerChatEvent);
+        GlobalContext.sendEvent(forgeServerChatEvent);
     }
 
     @SubscribeEvent
@@ -32,7 +32,7 @@ public class EventProcessor {
         if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.player);
         ForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new ForgePlayerLoggedInEvent(player);
-        GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedInEvent);
+        GlobalContext.sendEvent(forgePlayerLoggedInEvent);
     }
 
     @SubscribeEvent
@@ -40,7 +40,7 @@ public class EventProcessor {
         if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.player);
         ForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new ForgePlayerLoggedOutEvent(player);
-        GlobalContext.getWebsocketManager().sendEvent(forgePlayerLoggedOutEvent);
+        GlobalContext.sendEvent(forgePlayerLoggedOutEvent);
     }
 
     @SubscribeEvent
@@ -53,7 +53,7 @@ public class EventProcessor {
 
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.sender);
         ForgeCommandEvent forgeCommandEvent = new ForgeCommandEvent("", player, command);
-        GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
+        GlobalContext.sendEvent(forgeCommandEvent);
     }
 
     @SubscribeEvent
@@ -63,7 +63,7 @@ public class EventProcessor {
         ForgeServerPlayer player = getForgePlayer((EntityPlayerMP) event.entityLiving);
         String reason = event.source.func_151519_b(event.entityLiving).getUnformattedText();
         ForgePlayerDeathEvent forgeCommandEvent = new ForgePlayerDeathEvent("", player, reason);
-        GlobalContext.getWebsocketManager().sendEvent(forgeCommandEvent);
+        GlobalContext.sendEvent(forgeCommandEvent);
     }
 
 }
