@@ -1,10 +1,10 @@
 package com.github.theword.queqiao
 
-import com.github.theword.queqiao.event.minecraft.MinecraftPlayer
-import com.github.theword.queqiao.event.minecraft.MinecraftPlayerChatEvent
-import com.github.theword.queqiao.event.minecraft.MinecraftPlayerJoinEvent
-import com.github.theword.queqiao.event.minecraft.MinecraftPlayerQuitEvent
 import com.github.theword.queqiao.tool.GlobalContext
+import com.github.theword.queqiao.tool.event.PlayerChatEvent
+import com.github.theword.queqiao.tool.event.PlayerJoinEvent
+import com.github.theword.queqiao.tool.event.PlayerQuitEvent
+import com.github.theword.queqiao.tool.event.model.PlayerModel
 
 class EventProcessor {
     /**
@@ -12,8 +12,8 @@ class EventProcessor {
      */
     fun onPlayerChat(playerName: String, message: String) {
         if (!GlobalContext.getConfig().subscribeEvent.isPlayerChat) return
-        val player = MinecraftPlayer(playerName)
-        val event = MinecraftPlayerChatEvent("", player, message)
+        val player = PlayerModel(playerName)
+        val event = PlayerChatEvent(player, "", message, message)
         GlobalContext.sendEvent(event)
     }
 
@@ -23,8 +23,8 @@ class EventProcessor {
      */
     fun onPlayerJoin(playerName: String) {
         if (!GlobalContext.getConfig().subscribeEvent.isPlayerJoin) return
-        val player = MinecraftPlayer(playerName)
-        val event = MinecraftPlayerJoinEvent(player)
+        val player = PlayerModel(playerName)
+        val event = PlayerJoinEvent(player)
         GlobalContext.sendEvent(event)
     }
 
@@ -33,8 +33,8 @@ class EventProcessor {
      */
     fun onPlayerQuit(playerName: String) {
         if (!GlobalContext.getConfig().subscribeEvent.isPlayerQuit) return
-        val player = MinecraftPlayer(playerName)
-        val event = MinecraftPlayerQuitEvent(player)
+        val player = PlayerModel(playerName)
+        val event = PlayerQuitEvent(player)
         GlobalContext.sendEvent(event)
     }
 }
