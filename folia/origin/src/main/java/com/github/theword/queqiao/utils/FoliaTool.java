@@ -1,22 +1,14 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.event.folia.FoliaPlayer;
-import com.github.theword.queqiao.event.folia.dto.advancement.FoliaAdvancement;
+import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
+import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 
-import com.github.theword.queqiao.event.folia.dto.advancement.ItemMetaDTO;
-import com.github.theword.queqiao.event.folia.dto.advancement.ItemStackDTO;
-import com.github.theword.queqiao.event.folia.dto.advancement.AdvancementDisplayDTO;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class FoliaTool {
 
@@ -28,83 +20,50 @@ public class FoliaTool {
     /**
      * 获取SpigotPlayer
      *
-     * @param player 玩家
+     * @param foliaPlayer 玩家
      * @return FoliaPlayer
      */
-    public static FoliaPlayer getFoliaPlayer(Player player) {
-        FoliaPlayer foliaPlayer = new FoliaPlayer();
-        foliaPlayer.setUuid(player.getUniqueId());
-        foliaPlayer.setNickname(getComponentText(player.displayName()));
-        foliaPlayer.setDisplayName(getComponentText(player.displayName()));
-        foliaPlayer.setPlayerListName(getComponentText(player.playerListName()));
-        foliaPlayer.setAddress((Objects.requireNonNull(player.getAddress()).toString()));
-        foliaPlayer.setHealthScale(player.getHealthScale());
-        foliaPlayer.setExp(player.getExp());
-        foliaPlayer.setTotalExp(player.getTotalExperience());
-        foliaPlayer.setLevel(player.getLevel());
-        foliaPlayer.setLocale(player.locale().toString());
-        foliaPlayer.setPing(player.getPing());
-        foliaPlayer.setPlayerTime(player.getPlayerTime());
-        foliaPlayer.setPlayerTimeRelative(player.isPlayerTimeRelative());
-        foliaPlayer.setPlayerTimeOffset(player.getPlayerTimeOffset());
-        foliaPlayer.setWalkSpeed(player.getWalkSpeed());
-        foliaPlayer.setFlySpeed(player.getFlySpeed());
-        foliaPlayer.setAllowFlight(player.getAllowFlight());
-        foliaPlayer.setSprinting(player.isSprinting());
-        foliaPlayer.setSneaking(player.isSneaking());
-        foliaPlayer.setFlying(player.isFlying());
-        foliaPlayer.setOp(player.isOp());
-        return foliaPlayer;
-    }
+    public static PlayerModel getFoliaPlayer(Player foliaPlayer) {
+        PlayerModel playerModel = new PlayerModel();
+        playerModel.setNickname(foliaPlayer.getName());
+        playerModel.setUuid(foliaPlayer.getUniqueId());
 
-    public static ItemMetaDTO getItemMetaDTO(ItemMeta itemMeta) {
-        ItemMetaDTO itemMetaDTO = new ItemMetaDTO();
-        if (itemMeta.hasCustomName()) itemMetaDTO.setCustomName(itemMeta.customName().toString());
-        if (itemMeta.hasLore()) {
-            List<String> collect = itemMeta.lore().stream().map(Component::toString).collect(Collectors.toList());
-            itemMetaDTO.setLore(collect);
-        }
-        if (itemMeta.hasCustomModelData()) itemMetaDTO.setCustomModelData(itemMeta.getCustomModelData());
-        if (itemMeta.hasEnchants()) itemMetaDTO.setEnchants(itemMeta.getEnchants());
-        itemMetaDTO.setItemFlags(itemMeta.getItemFlags());
-        itemMetaDTO.setUnbreakable(itemMeta.isUnbreakable());
-        if (itemMeta.hasAttributeModifiers()) itemMetaDTO.setAttributeModifiers(itemMeta.getAttributeModifiers());
-        return itemMetaDTO;
-    }
+        if (foliaPlayer.getAddress() != null)
+            playerModel.setAddress(foliaPlayer.getAddress().getHostString());
 
-    public static ItemStackDTO getItemStackDTO(ItemStack itemStack) {
-        ItemStackDTO itemStackDTO = new ItemStackDTO();
+        playerModel.setHealth(foliaPlayer.getHealth());
+//        playerModel.setMaxHealth(foliaPlayer.getMaxHealth()); // Deprecated
+        playerModel.setExperienceLevel(foliaPlayer.getLevel());
+        playerModel.setExperienceProgress((double) foliaPlayer.getExp());
+        playerModel.setTotalExperience(foliaPlayer.getTotalExperience());
 
-        itemStackDTO.setAmount(itemStack.getAmount());
-        itemStackDTO.setMaterial(itemStack.getType().name());
+        playerModel.setOp(foliaPlayer.isOp());
+        playerModel.setWalkSpeed((double) foliaPlayer.getWalkSpeed());
+        playerModel.setX(foliaPlayer.getLocation().getX());
+        playerModel.setY(foliaPlayer.getLocation().getY());
+        playerModel.setZ(foliaPlayer.getLocation().getZ());
 
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta != null) {
-            ItemMetaDTO itemMetaDTO = getItemMetaDTO(itemMeta);
-            itemStackDTO.setMeta(itemMetaDTO);
-        }
-        return itemStackDTO;
+        return playerModel;
     }
 
 
-    public static FoliaAdvancement getFoliaAdvancement(Advancement advancement) {
+    public static AchievementModel getFoliaAchievement(Advancement advancement) {
+        AchievementModel achievementModel = new AchievementModel();
+        DisplayModel displayModel = new DisplayModel();
+
         AdvancementDisplay advancementDisplay = advancement.getDisplay();
-
-        AdvancementDisplayDTO advancementDisplayDTO;
-        if (advancementDisplay != null) {
-            ItemStackDTO itemStackDTO = getItemStackDTO(advancementDisplay.icon());
-            advancementDisplayDTO = new AdvancementDisplayDTO();
-            advancementDisplayDTO.setTitle(getComponentText(advancementDisplay.title()));
-            advancementDisplayDTO.setDescription(getComponentText(advancementDisplay.description()));
-            advancementDisplayDTO.setIcon(itemStackDTO);
-            advancementDisplayDTO.setDoesShowToast(advancementDisplay.doesShowToast());
-            advancementDisplayDTO.setDoesAnnounceToChat(advancementDisplay.doesAnnounceToChat());
-            advancementDisplayDTO.setIsHidden(advancementDisplay.isHidden());
-            advancementDisplayDTO.setFrame(advancementDisplay.frame());
-        } else advancementDisplayDTO = null;
-
-        FoliaAdvancement foliaAdvancement = new FoliaAdvancement(advancement.getCriteria(), advancementDisplayDTO);
-        foliaAdvancement.setText(advancementDisplay != null ? getComponentText(advancementDisplay.title()) : "");
-        return foliaAdvancement;
+        if (advancementDisplay == null) {
+            return achievementModel;
+        }
+        displayModel.setAnnounceChat(advancementDisplay.doesAnnounceToChat());
+        if (advancementDisplay.backgroundPath() != null)
+            displayModel.setBackground(advancementDisplay.backgroundPath().toString());
+        displayModel.setDescription(getComponentText(advancementDisplay.description()));
+        displayModel.setFrame(advancementDisplay.frame().toString());
+        displayModel.setHidden(advancementDisplay.isHidden());
+        displayModel.setIcon(advancementDisplay.icon().translationKey());
+        displayModel.setShowToast(advancementDisplay.doesShowToast());
+        displayModel.setTitle(getComponentText(advancementDisplay.title()));
+        return achievementModel;
     }
 }
