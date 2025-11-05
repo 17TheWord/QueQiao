@@ -1,89 +1,53 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.event.neoforge.NeoForgeServerPlayer;
-import com.github.theword.queqiao.event.neoforge.dto.advancement.AdvancementRewardsDTO;
-import com.github.theword.queqiao.event.neoforge.dto.advancement.DisplayInfoDTO;
-import com.github.theword.queqiao.event.neoforge.dto.advancement.ItemStackDTO;
-import com.github.theword.queqiao.event.neoforge.dto.advancement.NeoForgeAdvancement;
+import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
+import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.stream.Collectors;
 
 public class NeoForgeTool {
-    public static NeoForgeServerPlayer getNeoForgePlayer(ServerPlayer player) {
-        NeoForgeServerPlayer neoForgeServerPlayer = new NeoForgeServerPlayer();
-        neoForgeServerPlayer.setNickname(player.getName().getString());
-
-        Component playerDisplayName = player.getDisplayName();
-        neoForgeServerPlayer.setDisplayName(playerDisplayName == null ? "" : playerDisplayName.getString());
-
-        neoForgeServerPlayer.setUuid(player.getUUID());
-        neoForgeServerPlayer.setIpAddress(player.getIpAddress());
-
-        neoForgeServerPlayer.setSpeed(player.getSpeed());
-        neoForgeServerPlayer.setGameMode(player.gameMode.getGameModeForPlayer().toString());
-
-        neoForgeServerPlayer.setBlockX((int) player.getX());
-        neoForgeServerPlayer.setBlockY((int) player.getY());
-        neoForgeServerPlayer.setBlockZ((int) player.getZ());
-
-        neoForgeServerPlayer.setSwimming(player.isSwimming());
-        neoForgeServerPlayer.setSleeping(player.isSleeping());
-        neoForgeServerPlayer.setBlocking(player.isBlocking());
-
-        neoForgeServerPlayer.setFlying(player.getAbilities().flying);
-        neoForgeServerPlayer.setFlyingSpeed(player.getAbilities().getFlyingSpeed());
-
-        return neoForgeServerPlayer;
+    public static PlayerModel getNeoForgePlayer(ServerPlayer neoForgePlayer) {
+        PlayerModel player = new PlayerModel();
+        player.setNickname(neoForgePlayer.getName().getString());
+        player.setUuid(neoForgePlayer.getUUID());
+        player.setAddress(neoForgePlayer.getIpAddress());
+        player.setHealth((double) neoForgePlayer.getHealth());
+        player.setMaxHealth((double) neoForgePlayer.getMaxHealth());
+        player.setExperienceLevel(neoForgePlayer.experienceLevel);
+        player.setExperienceProgress((double) neoForgePlayer.experienceProgress);
+        player.setTotalExperience(neoForgePlayer.totalExperience);
+        player.setOp(neoForgePlayer.hasPermissions(2));
+        player.setWalkSpeed((double) neoForgePlayer.getAbilities().getWalkingSpeed());
+        player.setX(neoForgePlayer.getX());
+        player.setY(neoForgePlayer.getY());
+        player.setZ(neoForgePlayer.getZ());
+        return player;
     }
 
-    public static NeoForgeAdvancement getNeoForgeAdvancement(Advancement advancement) {
-        NeoForgeAdvancement neoForgeAdvancement = new NeoForgeAdvancement();
-        if (advancement.name().isPresent()) neoForgeAdvancement.setName(advancement.name().get().getString());
-        if (advancement.parent().isPresent()) neoForgeAdvancement.setParent(advancement.parent().get().toString());
-
-        if (advancement.display().isPresent()) {
-            DisplayInfoDTO displayInfoDTO = new DisplayInfoDTO();
-            displayInfoDTO.setTitle(advancement.display().get().getTitle().getString());
-            displayInfoDTO.setDescription(advancement.display().get().getDescription().getString());
-
-            ItemStack icon = advancement.display().get().getIcon();
-            ItemStackDTO itemStackDTO = new ItemStackDTO();
-            itemStackDTO.setCount(icon.getCount());
-            itemStackDTO.setPopTime(icon.getPopTime());
-            itemStackDTO.setItem(icon.getItem().toString());
-            displayInfoDTO.setIcon(itemStackDTO);
-
-            neoForgeAdvancement.setDisplay(displayInfoDTO);
+    public static AchievementModel getNeoForgeAchievement(Advancement advancement) {
+        AchievementModel achievement = new AchievementModel();
+        if (advancement.display().isEmpty()) {
+            return achievement;
         }
+        DisplayInfo displayInfo = advancement.display().get();
 
-        AdvancementRewards rewards = advancement.rewards();
-        AdvancementRewardsDTO advancementRewardsDTO = new AdvancementRewardsDTO();
+        DisplayModel display = new DisplayModel();
+        display.setAnnounceChat(displayInfo.shouldAnnounceChat());
 
-        advancementRewardsDTO.setExperience(rewards.experience());
+        if (displayInfo.getBackground().isPresent())
+            display.setBackground(displayInfo.getBackground().toString());
 
-        advancementRewardsDTO.setLoot(
-                rewards.loot().stream()
-                        .map(ResourceKey::location)
-                        .map(Object::toString)
-                        .collect(Collectors.toList())
-        );
-
-        advancementRewardsDTO.setRecipes(
-                rewards.recipes().stream()
-                        .map(ResourceLocation::toString)
-                        .collect(Collectors.toList())
-        );
-
-        neoForgeAdvancement.setRewards(advancementRewardsDTO);
-        neoForgeAdvancement.setSendsTelemetryEvent(advancement.sendsTelemetryEvent());
-
-        return neoForgeAdvancement;
+        display.setDescription(displayInfo.getDescription().getString());
+        display.setFrame(displayInfo.getType().toString());
+        display.setHidden(displayInfo.isHidden());
+        display.setIcon(displayInfo.getIcon().toString());
+        display.setShowToast(displayInfo.shouldShowToast());
+        display.setTitle(displayInfo.getTitle().getString());
+        display.setX((double) displayInfo.getX());
+        display.setY((double) displayInfo.getY());
+        achievement.setDisplay(display);
+        return achievement;
     }
 }
