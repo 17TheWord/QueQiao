@@ -1,10 +1,17 @@
 package com.github.theword.queqiao.mixin;
 
-import com.github.theword.queqiao.event.fabric.FabricServerLivingEntityAfterDeathEvent;
-import com.github.theword.queqiao.event.fabric.FabricServerPlayConnectionDisconnectEvent;
 import com.github.theword.queqiao.tool.GlobalContext;
+import com.github.theword.queqiao.tool.event.PlayerDeathEvent;
+import com.github.theword.queqiao.tool.event.PlayerQuitEvent;
+import com.github.theword.queqiao.tool.event.model.death.DeathModel;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+// IF < fabric-1.19.0
+//import net.minecraft.text.TranslatableText;
+// ELSE
+//import net.minecraft.text.TranslatableTextContent;
+// END IF
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,10 +25,28 @@ public abstract class ServerPlayerEntityMixin {
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void onDeath(DamageSource source, CallbackInfo ci) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
-
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        String message = player.getDamageTracker().getDeathMessage().getString();
-        FabricServerLivingEntityAfterDeathEvent event = new FabricServerLivingEntityAfterDeathEvent("", getFabricPlayer(player), message);
+
+        DeathModel deathModel = new DeathModel();
+
+        Text deathMessage = player.getDamageTracker().getDeathMessage();
+
+        // IF < fabric-1.19.0
+//        if (deathMessage instanceof TranslatableText) {
+//            TranslatableText translatableText = (TranslatableText) deathMessage;
+//            deathModel.setKey(translatableText.getKey());
+//            deathModel.setArgs(translatableText.getArgs());
+//        }
+        // ELSE
+//        if (deathMessage instanceof TranslatableTextContent) {
+//            TranslatableTextContent translatableText = (TranslatableTextContent) deathMessage;
+//            deathModel.setKey(translatableText.getKey());
+//            deathModel.setArgs(translatableText.getArgs());
+//        }
+        // END IF
+        deathModel.setDeathMessage(deathMessage.getString());
+
+        PlayerDeathEvent event = new PlayerDeathEvent(getFabricPlayer(player), deathModel);
         GlobalContext.sendEvent(event);
     }
 
@@ -30,7 +55,7 @@ public abstract class ServerPlayerEntityMixin {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
 
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        FabricServerPlayConnectionDisconnectEvent event = new FabricServerPlayConnectionDisconnectEvent(getFabricPlayer(player));
+        PlayerQuitEvent event = new PlayerQuitEvent(getFabricPlayer(player));
         GlobalContext.sendEvent(event);
     }
 

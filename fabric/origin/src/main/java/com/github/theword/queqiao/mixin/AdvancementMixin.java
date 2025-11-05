@@ -1,8 +1,8 @@
 package com.github.theword.queqiao.mixin;
 
 import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.event.fabric.FabricAdvancementCriterionEvent;
-import com.github.theword.queqiao.event.fabric.dto.advancement.FabricAdvancement;
+import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
+import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 // IF < fabric-1.20.4
 //import net.minecraft.advancement.Advancement;
 // ELSE
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.github.theword.queqiao.utils.FabricTool.getFabricAdvancement;
+import static com.github.theword.queqiao.utils.FabricTool.getFabricAchievement;
 import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
 
 @Mixin(PlayerAdvancementTracker.class)
@@ -29,14 +29,13 @@ public abstract class AdvancementMixin {
     // IF < fabric-1.20.4
 //    private void onGrantCriterion(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
 //        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
-//        FabricAdvancement fabricAdvancement = getFabricAdvancement(advancement);
+//        AchievementModel achievementModel = getFabricAchievement(advancement);
     // ELSE
 //    private void onGrantCriterion(AdvancementEntry advancementEntry, String criterionName, CallbackInfoReturnable<Boolean> cir) {
 //        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
-//        FabricAdvancement fabricAdvancement = getFabricAdvancement(advancementEntry.value());
-//        fabricAdvancement.setId(advancementEntry.id().toString());
+//        AchievementModel achievementModel = getFabricAchievement(advancementEntry.value());
         // END IF
-        FabricAdvancementCriterionEvent fabricAdvancementCriterionEvent = new FabricAdvancementCriterionEvent(getFabricPlayer(owner), fabricAdvancement);
-        GlobalContext.sendEvent(fabricAdvancementCriterionEvent);
+        PlayerAchievementEvent event = new PlayerAchievementEvent(getFabricPlayer(owner), achievementModel);
+        GlobalContext.sendEvent(event);
     }
 }
