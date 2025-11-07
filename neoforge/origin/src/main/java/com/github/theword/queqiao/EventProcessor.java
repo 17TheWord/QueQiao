@@ -20,6 +20,8 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
+import java.util.Arrays;
+
 import static com.github.theword.queqiao.Queqiao.minecraftServer;
 import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgeAchievement;
@@ -99,9 +101,16 @@ public class EventProcessor {
 
         if (localizedDeathMessage.getContents() instanceof TranslatableContents translatableContents) {
             deathModel.setKey(translatableContents.getKey());
-            deathModel.setArgs(translatableContents.getArgs());
-            deathModel.setDeathMessage(localizedDeathMessage.getString());
+            String[] args = Arrays.stream(translatableContents.getArgs()).map(obj-> {
+                if (obj instanceof Component component) {
+                    return component.getString();
+                } else {
+                    return String.valueOf(obj);
+                }
+            }).toArray(String[]::new);
+            deathModel.setArgs(args);
         }
+        deathModel.setDeathMessage(localizedDeathMessage.getString());
 
         PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, deathModel);
         GlobalContext.sendEvent(forgeCommandEvent);

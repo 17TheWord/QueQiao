@@ -13,15 +13,21 @@ import net.minecraft.text.Text;
 //import net.minecraft.text.TranslatableTextContent;
 // END IF
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
+import java.util.Arrays;
+
 import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {
+
+    @Shadow
+    public abstract boolean isInvulnerableTo(DamageSource damageSource);
 
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void onDeath(DamageSource source, CallbackInfo ci) {
@@ -35,18 +41,18 @@ public abstract class ServerPlayerEntityMixin {
         // IF < fabric-1.19.0
 //        if (deathMessage instanceof TranslatableText) {
 //            TranslatableText translatableText = (TranslatableText) deathMessage;
-        // ELSE
+            // ELSE
 //        if (deathMessage instanceof TranslatableTextContent) {
 //            TranslatableTextContent translatableText = (TranslatableTextContent) deathMessage;
-        // END IF
+            // END IF
             deathModel.setKey(translatableText.getKey());
-            String[] args = new String[translatableText.getArgs().length];
-            Object[] translatableTextArgs = translatableText.getArgs();
-            for (int i = 0; i < translatableTextArgs.length; i++) {
-                Object arg = translatableTextArgs[i];
-                Text argText = (Text) arg;
-                args[i] = argText.getString();
-            }
+            String[] args = Arrays.stream(translatableText.getArgs()).map(obj -> {
+                if (obj instanceof Text) {
+                    return ((Text) obj).getString();
+                } else {
+                    return String.valueOf(obj);
+                }
+            }).toArray(String[]::new);
             deathModel.setArgs(args);
         }
         deathModel.setDeathMessage(deathMessage.getString());

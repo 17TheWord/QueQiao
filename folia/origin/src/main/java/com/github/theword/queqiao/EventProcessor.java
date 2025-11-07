@@ -11,6 +11,7 @@ import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.TranslationArgument;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -66,7 +67,14 @@ class EventProcessor implements Listener {
 
         if (component instanceof TranslatableComponent translatableComponent) {
             deathModel.setKey(translatableComponent.key());
-            deathModel.setArgs(translatableComponent.arguments().toArray());
+            String[] args = translatableComponent.arguments().stream().map(arg -> {
+                if (arg instanceof TranslationArgument translationArgument) {
+                    return translationArgument.toString();
+                } else {
+                    return String.valueOf(arg);
+                }
+            }).toArray(String[]::new);
+            deathModel.setArgs(args);
         }
         deathModel.setDeathMessage(getComponentText(component));
         com.github.theword.queqiao.tool.event.PlayerDeathEvent playerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getFoliaPlayer(event.getEntity()), deathModel);
