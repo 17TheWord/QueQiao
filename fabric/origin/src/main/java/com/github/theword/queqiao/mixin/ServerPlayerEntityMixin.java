@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+
 import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
 
 @Mixin(ServerPlayerEntity.class)
@@ -34,16 +35,20 @@ public abstract class ServerPlayerEntityMixin {
         // IF < fabric-1.19.0
 //        if (deathMessage instanceof TranslatableText) {
 //            TranslatableText translatableText = (TranslatableText) deathMessage;
-//            deathModel.setKey(translatableText.getKey());
-//            deathModel.setArgs(translatableText.getArgs());
-//        }
         // ELSE
 //        if (deathMessage instanceof TranslatableTextContent) {
 //            TranslatableTextContent translatableText = (TranslatableTextContent) deathMessage;
-//            deathModel.setKey(translatableText.getKey());
-//            deathModel.setArgs(translatableText.getArgs());
-//        }
         // END IF
+            deathModel.setKey(translatableText.getKey());
+            String[] args = new String[translatableText.getArgs().length];
+            Object[] translatableTextArgs = translatableText.getArgs();
+            for (int i = 0; i < translatableTextArgs.length; i++) {
+                Object arg = translatableTextArgs[i];
+                Text argText = (Text) arg;
+                args[i] = argText.getString();
+            }
+            deathModel.setArgs(args);
+        }
         deathModel.setDeathMessage(deathMessage.getString());
 
         PlayerDeathEvent event = new PlayerDeathEvent(getFabricPlayer(player), deathModel);
