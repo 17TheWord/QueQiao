@@ -193,7 +193,7 @@ public class EventProcessor {
 //            deathModel.setArgs(args);
 //        }
         // END IF
-        deathModel.setDeathMessage(localizedDeathMessage.getString());
+        deathModel.setText(localizedDeathMessage.getString());
 
         PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, deathModel);
         GlobalContext.sendEvent(forgeCommandEvent);
@@ -202,14 +202,16 @@ public class EventProcessor {
     @SubscribeEvent
     // IF >= forge-1.19
 //    public void onPlayerAdvancement(AdvancementEvent.AdvancementEarnEvent event) {
-    // ELSE
+        // ELSE
 //    public void onPlayerAdvancement(AdvancementEvent event) {
         // END IF
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
         // IF <= forge-1.20.1
 //        Advancement advancement = event.getAdvancement();
+//        if (advancement.getDisplay() == null || !advancement.getDisplay().shouldAnnounceChat()) return;
         // ELSE
 //        Advancement advancement = event.getAdvancement().value();
+//        if (advancement.display().isEmpty() || !advancement.display().get().shouldAnnounceChat()) return;
         // END IF
 
         // IF > forge-1.16.5
@@ -219,6 +221,13 @@ public class EventProcessor {
         // END IF
 
         AchievementModel achievementModel = getForgeAchievement(advancement);
+        // IF < forge-1.21
+//        String advancementText = player.getNickname() + " has made the advancement " + advancement.getChatComponent().getString();
+        // ELSE
+//        if (advancement.name().isEmpty()) return;
+//        String advancementText = player.getNickname() + " has made the advancement " + advancement.name().get().getString();
+        // END IF
+        achievementModel.setText(advancementText);
 
         PlayerAchievementEvent forgeAdvancementEvent = new PlayerAchievementEvent(player, achievementModel);
         GlobalContext.sendEvent(forgeAdvancementEvent);

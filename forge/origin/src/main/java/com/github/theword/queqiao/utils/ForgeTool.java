@@ -9,13 +9,20 @@ import net.minecraft.advancements.DisplayInfo;
 // IF > forge-1.16.5
 //import net.minecraft.server.level.ServerPlayer;
 // ELSE
+//import net.minecraft.util.text.TranslationTextComponent;
 //import net.minecraft.entity.player.ServerPlayerEntity;
+// END IF
+
+// IF forge-1.18.2
+//import net.minecraft.network.chat.TranslatableComponent;
+// ELSE IF >= 1.19
+import net.minecraft.network.chat.contents.TranslatableContents;
 // END IF
 
 public class ForgeTool {
     // IF > forge-1.16.5
 //    public static PlayerModel getForgePlayer(ServerPlayer forgeServerPlayer) {
-    // ELSE
+        // ELSE
 //    public static PlayerModel getForgePlayer(ServerPlayerEntity forgeServerPlayer) {
         // END IF
         PlayerModel playerModel = new PlayerModel();
@@ -42,31 +49,35 @@ public class ForgeTool {
 //        if (advancement.display().isEmpty()) {
 //            return achievementModel;
 //        }
+//        if (advancement.parent().isPresent()) {
+//            achievementModel.setKey(advancement.parent().get().toString());
+//        }
 //        DisplayInfo displayInfo = advancement.display().get();
         // ELSE
+//        achievementModel.setKey(advancement.getId().toString());
 //        if (advancement.getDisplay() == null) {
 //            return achievementModel;
 //        }
 //        DisplayInfo displayInfo = advancement.getDisplay();
         // END IF
-        displayModel.setAnnounceChat(displayInfo.shouldAnnounceChat());
-        displayModel.setDescription(displayInfo.getDescription().getString());
 
         // IF >= forge-1.21
-//        if (displayInfo.getBackground().isPresent())
-//            displayModel.setBackground(displayInfo.getBackground().toString());
 //        displayModel.setFrame(displayInfo.getType().toString());
         // ELSE
 //        displayModel.setFrame(displayInfo.getFrame().toString());
-//        if (displayInfo.getBackground() != null)
-//            displayModel.setBackground(displayInfo.getBackground().toString());
         // END IF
-        displayModel.setHidden(displayInfo.isHidden());
-        displayModel.setIcon(displayInfo.getIcon().toString());
-        displayModel.setShowToast(displayInfo.shouldShowToast());
-        displayModel.setTitle(displayInfo.getTitle().getString());
-        displayModel.setX((double) displayInfo.getX());
-        displayModel.setY((double) displayInfo.getY());
+
+        // IF forge-1.16.5
+//        displayModel.setTitle(((TranslationTextComponent) displayInfo.getTitle()).getKey());
+//        displayModel.setDescription(((TranslationTextComponent) displayInfo.getDescription()).getKey());
+        // ELSE IF forge-1.18.2
+//        displayModel.setTitle(((TranslatableComponent) displayInfo.getTitle()).getKey());
+//        displayModel.setDescription(((TranslatableComponent) displayInfo.getDescription()).getKey());
+        // ELSE
+//        displayModel.setTitle(((TranslatableContents) displayInfo.getTitle().getContents()).getKey());
+//        displayModel.setDescription(((TranslatableContents) displayInfo.getDescription().getContents()).getKey());
+        // END IF
+
         achievementModel.setDisplay(displayModel);
         return achievementModel;
     }
