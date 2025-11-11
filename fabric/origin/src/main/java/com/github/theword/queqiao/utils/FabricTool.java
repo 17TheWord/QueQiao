@@ -1,19 +1,17 @@
 package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import com.google.gson.JsonElement;
-import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementDisplay;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 
-// IF >= fabric-1.21.6
-//import net.minecraft.text.TextCodecs;
-//import com.mojang.serialization.JsonOps;
+// IF < fabric-1.19
+//import net.minecraft.text.TranslatableText;
 // ELSE
-//import net.minecraft.text.Text;
+//import net.minecraft.text.TranslatableTextContent;
 // END IF
 
 // IF >= fabric-1.21
@@ -47,39 +45,18 @@ public class FabricTool {
         return player;
     }
 
-    public static AchievementModel getFabricAchievement(Advancement advancement) {
-        AchievementModel achievementModel = new AchievementModel();
+    public static DisplayModel getFabricAchievementDisplay(AdvancementDisplay advancementDisplay) {
         DisplayModel displayModel = new DisplayModel();
-
-        // IF < fabric-1.20.4
-//        AdvancementDisplay advancementDisplay = advancement.getDisplay();
-//        if (advancementDisplay == null) {
-//            achievementModel.setDisplay(displayModel);
-//            return achievementModel;
-//        }
+        // IF < fabric-1.19
+//        displayModel.setTitle(((TranslatableText) advancementDisplay.getTitle()).getKey());
+//        displayModel.setDescription(((TranslatableText) advancementDisplay.getDescription()).getKey());
         // ELSE
-//        if (advancement.display().isEmpty()) {
-//            achievementModel.setDisplay(displayModel);
-//            return achievementModel;
-//        }
-//        AdvancementDisplay advancementDisplay = advancement.display().get();
+//        displayModel.setTitle(((TranslatableTextContent) advancementDisplay.getTitle().getContent()).getKey());
+//        displayModel.setDescription(((TranslatableTextContent) advancementDisplay.getDescription().getContent()).getKey());
         // END IF
-
-        displayModel.setAnnounceChat(advancementDisplay.shouldAnnounceToChat());
-        // IF < fabric-1.20.4
-//        displayModel.setBackground(advancementDisplay.getBackground() == null ? null : advancementDisplay.getBackground().toString());
-        // ELSE
-//        displayModel.setBackground(advancementDisplay.getBackground().isEmpty() ? null : advancementDisplay.getBackground().toString());
-        // END IF
-        displayModel.setDescription(advancementDisplay.getDescription().getString());
         displayModel.setFrame(advancementDisplay.getFrame().toString());
-        displayModel.setHidden(advancementDisplay.isHidden());
-        displayModel.setIcon(advancementDisplay.getIcon().toString());
-        displayModel.setShowToast(advancementDisplay.shouldShowToast());
-        displayModel.setTitle(advancementDisplay.getTitle().getString());
-        displayModel.setX((double) advancementDisplay.getX());
-        displayModel.setY((double) advancementDisplay.getY());
-        return achievementModel;
+
+        return displayModel;
     }
 
     public static MutableText buildComponent(JsonElement jsonElement) {
