@@ -1,0 +1,13 @@
+name: QueQiao
+version: '${version}'
+main: "com.github.theword.queqiao.QueQiao"
+api-version: ${api_version}
+load: STARTUP
+author: ${author}
+description: ${description}
+website: ${website}
+commands:
+  queqiao:
+    description: 鹊桥命令
+    permission: queqiao
+    permission-message: 您没有执行命令的权限
