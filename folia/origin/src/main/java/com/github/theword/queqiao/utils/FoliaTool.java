@@ -3,7 +3,10 @@ package com.github.theword.queqiao.utils;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
+import com.google.gson.JsonElement;
 import io.papermc.paper.advancement.AdvancementDisplay;
+import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.advancement.Advancement;
@@ -13,7 +16,11 @@ import org.bukkit.entity.Player;
 public class FoliaTool {
 
     public static String getComponentText(Component component) {
-        return PlainTextComponentSerializer.plainText().serializeOr(component, "");
+        return PlainTextComponentSerializer.plainText().serialize(component);
+    }
+
+    public static String getComponentJson(Component component) {
+        return GsonComponentSerializer.gson().serialize(component);
     }
 
 
@@ -44,26 +51,5 @@ public class FoliaTool {
         playerModel.setZ(foliaPlayer.getLocation().getZ());
 
         return playerModel;
-    }
-
-
-    public static AchievementModel getFoliaAchievement(Advancement advancement) {
-        AchievementModel achievementModel = new AchievementModel();
-        DisplayModel displayModel = new DisplayModel();
-
-        AdvancementDisplay advancementDisplay = advancement.getDisplay();
-        if (advancementDisplay == null) {
-            return achievementModel;
-        }
-        displayModel.setAnnounceChat(advancementDisplay.doesAnnounceToChat());
-        if (advancementDisplay.backgroundPath() != null)
-            displayModel.setBackground(advancementDisplay.backgroundPath().toString());
-        displayModel.setDescription(getComponentText(advancementDisplay.description()));
-        displayModel.setFrame(advancementDisplay.frame().toString());
-        displayModel.setHidden(advancementDisplay.isHidden());
-        displayModel.setIcon(advancementDisplay.icon().translationKey());
-        displayModel.setShowToast(advancementDisplay.doesShowToast());
-        displayModel.setTitle(getComponentText(advancementDisplay.title()));
-        return achievementModel;
     }
 }

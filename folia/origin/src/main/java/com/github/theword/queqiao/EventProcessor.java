@@ -8,7 +8,9 @@ import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
 import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
+import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
+import io.papermc.paper.advancement.AdvancementDisplay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.TranslationArgument;
@@ -23,6 +25,7 @@ import org.bukkit.event.server.ServerLoadEvent;
 
 import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.FoliaTool.*;
+import static com.github.theword.queqiao.utils.FoliaTool.getComponentText;
 
 
 class EventProcessor implements Listener {
@@ -46,9 +49,7 @@ class EventProcessor implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     void onPlayerChat(AsyncChatEvent event) {
         if (event.isCancelled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
-        Component component = event.message();
-        String message = getComponentText(component);
-        PlayerChatEvent playerChatEvent = new PlayerChatEvent(getFoliaPlayer(event.getPlayer()), "", message, message);
+        PlayerChatEvent playerChatEvent = new PlayerChatEvent(getFoliaPlayer(event.getPlayer()), "", getComponentJson(event.message()), getComponentText(event.message()));
         GlobalContext.sendEvent(playerChatEvent);
     }
 
@@ -76,7 +77,8 @@ class EventProcessor implements Listener {
             }).toArray(String[]::new);
             deathModel.setArgs(args);
         }
-        deathModel.setDeathMessage(getComponentText(component));
+        deathModel.setText(getComponentText(component));
+
         com.github.theword.queqiao.tool.event.PlayerDeathEvent playerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getFoliaPlayer(event.getEntity()), deathModel);
         GlobalContext.sendEvent(playerDeathEvent);
     }
@@ -128,8 +130,19 @@ class EventProcessor implements Listener {
     void onPlayerAdvancement(PlayerAdvancementDoneEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
         Advancement advancement = event.getAdvancement();
+        AdvancementDisplay advancementDisplay = advancement.getDisplay();
+        if (advancementDisplay == null || !advancementDisplay.doesAnnounceToChat()) return;
 
-        AchievementModel achievementModel = getFoliaAchievement(advancement);
+        AchievementModel achievementModel = new AchievementModel();
+        achievementModel.setKey(advancement.getKey().toString());
+        achievementModel.setText(getComponentText(event.message()));
+
+        DisplayModel displayModel = new DisplayModel();
+        displayModel.setTitle(((TranslatableComponent) advancementDisplay.title()).key());
+        displayModel.setDescription(((TranslatableComponent) advancementDisplay.description()).key());
+        displayModel.setFrame(advancementDisplay.frame().toString());
+
+        achievementModel.setDisplay(displayModel);
 
         PlayerAchievementEvent foliaPlayerAdvancementDoneEvent = new PlayerAchievementEvent(getFoliaPlayer(event.getPlayer()), achievementModel);
         GlobalContext.sendEvent(foliaPlayerAdvancementDoneEvent);
