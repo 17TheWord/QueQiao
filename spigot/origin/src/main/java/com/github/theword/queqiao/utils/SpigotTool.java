@@ -7,9 +7,7 @@ import com.google.gson.JsonElement;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.advancement.Advancement;
-// IF >= spigot-1.13
-//import org.bukkit.advancement.AdvancementDisplay;
-// END IF
+
 import org.bukkit.entity.Player;
 
 
@@ -41,23 +39,8 @@ public class SpigotTool {
 
     public static AchievementModel getSpigotAdvancement(Advancement advancement) {
         AchievementModel achievementModel = new AchievementModel();
+        achievementModel.setKey(advancement.getKey().toString());
         DisplayModel displayModel = new DisplayModel();
-// IF >= spigot-1.13
-//        if (advancement.getDisplay() == null) {
-//            return achievementModel;
-//        }
-//        AdvancementDisplay advancementDisplay = advancement.getDisplay();
-//
-//        displayModel.setAnnounceChat(advancementDisplay.shouldAnnounceChat());
-//        displayModel.setDescription(advancementDisplay.getDescription());
-//        displayModel.setFrame(advancementDisplay.getType().toString());
-//        displayModel.setHidden(advancementDisplay.isHidden());
-//        displayModel.setIcon(advancementDisplay.getIcon().toString());
-//        displayModel.setShowToast(advancementDisplay.shouldShowToast());
-//        displayModel.setTitle(advancementDisplay.getTitle());
-//        displayModel.setX((double) advancementDisplay.getX());
-//        displayModel.setY((double) advancementDisplay.getY());
-        // END IF
         achievementModel.setDisplay(displayModel);
         return achievementModel;
     }

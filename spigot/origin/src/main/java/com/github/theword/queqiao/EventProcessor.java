@@ -41,7 +41,7 @@ class EventProcessor implements Listener {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
 
         DeathModel deathModel = new DeathModel();
-        deathModel.setDeathMessage(event.getDeathMessage());
+        deathModel.setText(event.getDeathMessage());
 
         com.github.theword.queqiao.tool.event.PlayerDeathEvent spigotPlayerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getSpigotPlayer(event.getEntity()), deathModel);
         GlobalContext.sendEvent(spigotPlayerDeathEvent);
