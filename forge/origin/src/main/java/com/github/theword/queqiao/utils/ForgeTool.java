@@ -15,8 +15,8 @@ import net.minecraft.advancements.DisplayInfo;
 
 // IF forge-1.18.2
 //import net.minecraft.network.chat.TranslatableComponent;
-// ELSE IF >= 1.19
-import net.minecraft.network.chat.contents.TranslatableContents;
+// ELSE IF >= forge-1.19
+//import net.minecraft.network.chat.contents.TranslatableContents;
 // END IF
 
 public class ForgeTool {

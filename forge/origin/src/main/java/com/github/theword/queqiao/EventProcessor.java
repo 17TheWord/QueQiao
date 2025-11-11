@@ -202,7 +202,7 @@ public class EventProcessor {
     @SubscribeEvent
     // IF >= forge-1.19
 //    public void onPlayerAdvancement(AdvancementEvent.AdvancementEarnEvent event) {
-        // ELSE
+    // ELSE
 //    public void onPlayerAdvancement(AdvancementEvent event) {
         // END IF
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
@@ -222,10 +222,10 @@ public class EventProcessor {
 
         AchievementModel achievementModel = getForgeAchievement(advancement);
         // IF < forge-1.21
-//        String advancementText = player.getNickname() + " has made the advancement " + advancement.getChatComponent().getString();
+//        String advancementText = achievementModel.pattern(achievementModel.getDisplay().getFrame(), player.getNickname(), advancement.getChatComponent().getString());
         // ELSE
 //        if (advancement.name().isEmpty()) return;
-//        String advancementText = player.getNickname() + " has made the advancement " + advancement.name().get().getString();
+// String advancementText = achievementModel.pattern(achievementModel.getDisplay().getFrame(), player.getNickname(), advancement.name().get().getString());
         // END IF
         achievementModel.setText(advancementText);
 
