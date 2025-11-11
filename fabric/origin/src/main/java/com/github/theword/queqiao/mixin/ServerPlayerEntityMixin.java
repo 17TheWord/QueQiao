@@ -13,7 +13,6 @@ import net.minecraft.text.Text;
 //import net.minecraft.text.TranslatableTextContent;
 // END IF
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,9 +24,6 @@ import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {
-
-    @Shadow
-    public abstract boolean isInvulnerableTo(DamageSource damageSource);
 
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void onDeath(DamageSource source, CallbackInfo ci) {
