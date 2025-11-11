@@ -43,9 +43,6 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
-    implementation "org.projectlombok:lombok:${project.lombok_version}"
-
     include modImplementation("com.github.theword.queqiao:queqiao-tool:${tool_version}")
     include modImplementation("org.java-websocket:Java-WebSocket:${project.java_websocket_version}")
     include modImplementation("org.yaml:snakeyaml:${project.snakeyaml_version}")
