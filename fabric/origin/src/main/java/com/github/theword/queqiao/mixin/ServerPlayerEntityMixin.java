@@ -51,7 +51,7 @@ public abstract class ServerPlayerEntityMixin {
             }).toArray(String[]::new);
             deathModel.setArgs(args);
         }
-        deathModel.setDeathMessage(deathMessage.getString());
+        deathModel.setText(deathMessage.getString());
 
         PlayerDeathEvent event = new PlayerDeathEvent(getFabricPlayer(player), deathModel);
         GlobalContext.sendEvent(event);
