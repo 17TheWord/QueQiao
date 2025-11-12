@@ -1,34 +1,45 @@
 package com.github.theword.queqiao.utils;
 
+import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
+import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import com.google.gson.JsonElement;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import com.github.theword.queqiao.event.forge.ForgeServerPlayer;
+import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import net.minecraft.stats.Achievement;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 
 public class ForgeTool {
 
-    public static ForgeServerPlayer getForgePlayer(EntityPlayerMP player) {
-        ForgeServerPlayer forgeServerPlayer = new ForgeServerPlayer();
-        forgeServerPlayer.setNickname(player.getDisplayName());
-        forgeServerPlayer.setUuid(player.getUniqueID());
-        forgeServerPlayer.setDisplayName(player.getDisplayName());
-        forgeServerPlayer.setIpAddress(player.getPlayerIP());
+    public static PlayerModel getPlayerModel(EntityPlayerMP forgePlayer) {
+        PlayerModel player = new PlayerModel();
+        player.setNickname(forgePlayer.getDisplayName());
+        player.setUuid(forgePlayer.getUniqueID());
+        player.setAddress(forgePlayer.getPlayerIP());
+        player.setHealth((double) forgePlayer.getHealth());
+        player.setMaxHealth((double) forgePlayer.getMaxHealth());
+        player.setExperienceLevel(player.getExperienceLevel());
+        player.setExperienceProgress((double) forgePlayer.experience);
+        player.setTotalExperience(forgePlayer.experienceTotal);
+        player.setOp(forgePlayer.mcServer.getConfigurationManager().func_152607_e(forgePlayer.getGameProfile()));
+        player.setWalkSpeed((double) forgePlayer.capabilities.getWalkSpeed());
+        player.setX(forgePlayer.posX);
+        player.setY(forgePlayer.posY);
+        player.setZ(forgePlayer.posZ);
+        return player;
+    }
 
-        forgeServerPlayer.setSpeed(player.capabilities.getWalkSpeed());
-        forgeServerPlayer.setFlyingSpeed(player.capabilities.getFlySpeed());
-
-        forgeServerPlayer.setGameMode(
-            player.theItemInWorldManager.getGameType()
-                .getName());
-        forgeServerPlayer.setFlying(player.capabilities.isFlying);
-        forgeServerPlayer.setSleeping(player.isPlayerSleeping());
-        forgeServerPlayer.setBlocking(player.isBlocking());
-
-        forgeServerPlayer.setBlockX((int) player.posX);
-        forgeServerPlayer.setBlockY((int) player.posY);
-        forgeServerPlayer.setBlockZ((int) player.posZ);
-        return forgeServerPlayer;
+    public static AchievementModel getForgeAchievement(Achievement achievement) {
+        AchievementModel achievementModel = new AchievementModel();
+        DisplayModel displayModel = new DisplayModel();
+        achievementModel.setKey(achievement.statId);
+        String frameType = achievement.getSpecial() ? "goal" : "task";
+        displayModel.setFrame(frameType);
+        displayModel.setTitle(((ChatComponentTranslation) achievement.func_150951_e()).getKey());
+//        displayModel.setDescription(achievement.getDescription());  // Client Only
+        achievementModel.setDisplay(displayModel);
+        return achievementModel;
     }
 
     public static IChatComponent buildComponent(JsonElement jsonElement) {

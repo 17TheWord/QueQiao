@@ -1,7 +1,7 @@
 package com.github.theword.queqiao.handle;
 
 import static com.github.theword.queqiao.QueQiao.minecraftServer;
-import static com.github.theword.queqiao.utils.ForgeTool.getForgePlayer;
+import static com.github.theword.queqiao.utils.ForgeTool.getPlayerModel;
 
 import java.util.List;
 import java.util.UUID;
@@ -70,7 +70,7 @@ public class HandleApiImpl implements HandleApiService {
         IChatComponent component = ForgeTool.buildComponent(Tool.getPrefixComponent());
         component.appendSibling(ForgeTool.buildComponent(jsonElement));
         targetPlayer.addChatComponentMessage(component);
-        return PrivateMessageResponse.sendSuccess(getForgePlayer(targetPlayer));
+        return PrivateMessageResponse.sendSuccess(getPlayerModel(targetPlayer));
     }
 
     private void sendPacket(Packet packet) {
