@@ -6,7 +6,12 @@ import com.google.gson.JsonElement;
 import net.minecraft.advancement.AdvancementDisplay;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+// IF >= fabric-1.21.6
+//import com.mojang.serialization.JsonOps;
+//import net.minecraft.text.TextCodecs;
+// ELSE
+//import net.minecraft.text.Text;
+// END IF
 
 // IF < fabric-1.19
 //import net.minecraft.text.TranslatableText;
@@ -14,7 +19,7 @@ import net.minecraft.text.Text;
 //import net.minecraft.text.TranslatableTextContent;
 // END IF
 
-// IF >= fabric-1.21
+// IF >= fabric-1.21 && < fabric-1.21.6
 //import static com.github.theword.queqiao.QueQiao.minecraftServer;
 // END IF
 
