@@ -63,7 +63,7 @@
 
 ## Documentation & Downloads
 
-- Visit the [`Wiki`](https://github.com/17TheWord/QueQiao/wiki) for detailed documentation
+- Visit the [`ApiFox QueQiao`](https://queqiao.apifox.cn/) for detailed documentation
 - [![`Modrinth`](./assets/modrinth.svg)](https://modrinth.com/plugin/queqiao)
 - [![`CurseForge`](./assets/curseforge.svg)](https://www.curseforge.com/minecraft/mc-mods/queqiao)
 
@@ -91,7 +91,7 @@
       }
       ```
 5. Launch the game and join the server
-6. Refer to the [`API Documentation`](https://queqiao.apifox.cn/) to use the corresponding API for sending messages or listening to player events. You can test with API tools or integration projects.
+6. Refer to the [`API Documentation`](https://queqiao.apifox.cn/68642911f0) to use the corresponding API for sending messages or listening to player events. You can test with API tools or integration projects.
 
 ## Integration Projects
 

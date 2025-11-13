@@ -64,7 +64,7 @@
 
 ## 帮助与下载
 
-- 前往 [`Wiki`](https://github.com/17TheWord/QueQiao/wiki) 查看文档
+- 前往 [`ApiFox QueQiao`](https://queqiao.apifox.cn/) 查看文档
 - [![`Modrinth`](./assets/modrinth.svg)](https://modrinth.com/plugin/queqiao)
 - [![`CurseForge`](./assets/curseforge.svg)](https://www.curseforge.com/minecraft/mc-mods/queqiao)
 
@@ -89,7 +89,7 @@
       }
       ```
 5. 开始游戏，加入服务器
-6. 参考 [`API文档`](https://queqiao.apifox.cn/)，使用对应接口发送消息，或监听玩家事件
+6. 参考 [`API文档`](https://queqiao.apifox.cn/68642911f0)，使用对应接口发送消息，或监听玩家事件
 
 ## 对接
 
