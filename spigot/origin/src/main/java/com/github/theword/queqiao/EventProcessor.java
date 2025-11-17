@@ -5,6 +5,7 @@ import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
 import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
+import com.github.theword.queqiao.tool.utils.Tool;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
-import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.SpigotTool.getSpigotPlayer;
 import static com.github.theword.queqiao.utils.SpigotTool.getSpigotAdvancement;
 
@@ -82,7 +82,7 @@ class EventProcessor implements Listener {
     void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
 
-        String command = isRegisterOrLoginCommand(event.getMessage());
+        String command = Tool.isIgnoredCommand(event.getMessage());
 
         if (command.isEmpty()) return;
 

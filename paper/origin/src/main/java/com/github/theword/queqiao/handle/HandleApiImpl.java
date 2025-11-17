@@ -1,9 +1,9 @@
 package com.github.theword.queqiao.handle;
 
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.handle.HandleApiService;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
-import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.PaperTool;
 import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;
@@ -21,7 +21,7 @@ public class HandleApiImpl implements HandleApiService {
 
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        Component prefix = PaperTool.buildComponent(Tool.getPrefixComponent());
+        Component prefix = PaperTool.buildComponent(GlobalContext.getMessagePrefixJsonObject());
         Component message = PaperTool.buildComponent(jsonElement);
         Component result = prefix.append(message);
         instance.getServer().sendMessage(result);
@@ -67,7 +67,7 @@ public class HandleApiImpl implements HandleApiService {
             return PrivateMessageResponse.playerNotOnline();
         }
 
-        Component prefix = PaperTool.buildComponent(Tool.getPrefixComponent());
+        Component prefix = PaperTool.buildComponent(GlobalContext.getMessagePrefixJsonObject());
         Component message = PaperTool.buildComponent(jsonElement);
 
         Component textComponent = prefix.append(message);

@@ -108,7 +108,7 @@ public class EventProcessor {
 //        if (!(event.getParseResults().getContext().getSource().getEntity() instanceof ServerPlayerEntity)) return;
         // END IF
 
-        String command = isRegisterOrLoginCommand(event.getParseResults().getReader().getString());
+        String command = isIgnoredCommand(event.getParseResults().getReader().getString());
         String rawMessage = event.getParseResults().getContext().toString();
 
         if (command.isEmpty()) return;

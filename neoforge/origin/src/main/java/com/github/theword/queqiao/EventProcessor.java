@@ -5,6 +5,7 @@ import com.github.theword.queqiao.tool.event.*;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
+import com.github.theword.queqiao.tool.utils.Tool;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.advancements.Advancement;
@@ -23,7 +24,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import java.util.Arrays;
 
 import static com.github.theword.queqiao.Queqiao.minecraftServer;
-import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgeAchievement;
 import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgePlayer;
 
@@ -70,7 +70,7 @@ public class EventProcessor {
 
         if (!parseResults.getContext().getSource().isPlayer()) return;
 
-        String command = isRegisterOrLoginCommand(parseResults.getReader().getString());
+        String command = Tool.isIgnoredCommand(parseResults.getReader().getString());
 
         if (command.isEmpty()) return;
 

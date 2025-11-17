@@ -28,7 +28,7 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        Component component = GsonComponentSerializer.gson().deserializeFromTree(Tool.getPrefixComponent());
+        Component component = GsonComponentSerializer.gson().deserializeFromTree(GlobalContext.getMessagePrefixJsonObject());
         component = component.append(GsonComponentSerializer.gson().deserializeFromTree(jsonElement));
         instance.getServer().broadcast(component);
     }
@@ -86,7 +86,7 @@ public class HandleApiImpl implements HandleApiService {
 
         if (!targetPlayer.isOnline()) return PrivateMessageResponse.playerNotOnline();
 
-        Component component = GsonComponentSerializer.gson().deserializeFromTree(Tool.getPrefixComponent());
+        Component component = GsonComponentSerializer.gson().deserializeFromTree(GlobalContext.getMessagePrefixJsonObject());
         component = component.append(GsonComponentSerializer.gson().deserializeFromTree(jsonElement));
         targetPlayer.sendMessage(component);
         return PrivateMessageResponse.sendSuccess(getFoliaPlayer(targetPlayer));

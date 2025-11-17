@@ -3,6 +3,7 @@ package com.github.theword.queqiao.mixin;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.PlayerChatEvent;
 import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
+import com.github.theword.queqiao.tool.utils.Tool;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 // IF > fabric-1.18.2
 //import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
@@ -17,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 
-import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
 
 @Mixin(ServerPlayNetworkHandler.class)
@@ -57,7 +57,7 @@ public class ServerPlayNetworkHandlerMixin {
         // END IF
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
 
-        String registerOrLoginCommand = isRegisterOrLoginCommand(input);
+        String registerOrLoginCommand = Tool.isIgnoredCommand(input);
 
         if (registerOrLoginCommand.isEmpty()) return;
 

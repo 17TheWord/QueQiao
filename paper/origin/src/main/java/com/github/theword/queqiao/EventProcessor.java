@@ -5,11 +5,11 @@ import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
 import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
+import com.github.theword.queqiao.tool.utils.Tool;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,7 +20,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.PaperTool.*;
 
 public class EventProcessor implements Listener {
@@ -103,7 +102,7 @@ public class EventProcessor implements Listener {
     void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
 
-        String command = isRegisterOrLoginCommand(event.getMessage());
+        String command = Tool.isIgnoredCommand(event.getMessage());
 
         if (command.isEmpty()) return;
 
