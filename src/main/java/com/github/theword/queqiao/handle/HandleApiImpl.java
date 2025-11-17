@@ -68,7 +68,7 @@ public class HandleApiImpl implements HandleApiService {
         if (targetPlayer.field_70135_K) {
             return PrivateMessageResponse.playerNotOnline();
         }
-        IChatComponent component = ForgeTool.buildComponent(Tool.getPrefixComponent());
+        IChatComponent component = ForgeTool.buildComponent(GlobalContext.getMessagePrefixJsonObject());
         component.appendSibling(ForgeTool.buildComponent(jsonElement));
         targetPlayer.addChatComponentMessage(component);
         return PrivateMessageResponse.sendSuccess(getPlayerModel(targetPlayer));
