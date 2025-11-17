@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.util.Arrays;
 
-import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
+import static com.github.theword.queqiao.tool.utils.Tool.isIgnoredCommand;
 import static com.github.theword.queqiao.utils.ForgeTool.getForgeAchievement;
 import static com.github.theword.queqiao.utils.ForgeTool.getForgePlayer;
 
@@ -73,7 +73,7 @@ public class EventProcessor {
             for (String parameter : event.getParameters()) {
                 commandString.append(" ").append(parameter);
             }
-            String command = isRegisterOrLoginCommand(commandString.toString());
+            String command = isIgnoredCommand(commandString.toString());
             if (command.isEmpty()) return;
 
             PlayerModel player = getForgePlayer((EntityPlayerMP) event.getSender());

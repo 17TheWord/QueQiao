@@ -1,8 +1,8 @@
 package com.github.theword.queqiao.handle;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.handle.HandleApiService;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
-import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.ForgeTool;
 import com.google.gson.JsonElement;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,7 +24,7 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        ITextComponent prefixed = ForgeTool.parseJsonToTextWrapped(Tool.getPrefixComponent());
+        ITextComponent prefixed = ForgeTool.parseJsonToTextWrapped(GlobalContext.getMessagePrefixJsonObject());
         ITextComponent message = ForgeTool.parseJsonToTextWrapped(jsonElement);
         if (message != null && prefixed != null) {
             for (EntityPlayerMP serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
@@ -108,7 +108,7 @@ public class HandleApiImpl implements HandleApiService {
             return PrivateMessageResponse.playerNotOnline();
         }
 
-        ITextComponent prefixed = ForgeTool.parseJsonToTextWrapped(Tool.getPrefixComponent());
+        ITextComponent prefixed = ForgeTool.parseJsonToTextWrapped(GlobalContext.getMessagePrefixJsonObject());
         ITextComponent message = ForgeTool.parseJsonToTextWrapped(jsonElement);
         if (message != null && prefixed != null) {
             targetPlayer.sendMessage(prefixed.appendSibling(message));

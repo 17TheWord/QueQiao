@@ -23,7 +23,7 @@ public class ForgeTool {
         playerModel.setExperienceLevel(forgeServerPlayer.experienceLevel);
         playerModel.setExperienceProgress((double) forgeServerPlayer.experience);
         playerModel.setTotalExperience(forgeServerPlayer.experienceTotal);
-//        playerModel.setOp(forgeServerPlayer.server.getPlayerList().getOppedPlayers().bypassesPlayerLimit(forgeServerPlayer.getGameProfile()));
+        playerModel.setOp(forgeServerPlayer.canUseCommand(4, "op"));
         playerModel.setWalkSpeed((double) forgeServerPlayer.getAIMoveSpeed());
         playerModel.setX(forgeServerPlayer.posX);
         playerModel.setY(forgeServerPlayer.posY);
