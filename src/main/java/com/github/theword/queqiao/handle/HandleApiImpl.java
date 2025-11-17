@@ -6,6 +6,7 @@ import static com.github.theword.queqiao.utils.ForgeTool.getPlayerModel;
 import java.util.List;
 import java.util.UUID;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.utils.ForgeTool;
 import com.google.gson.JsonElement;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,7 +23,7 @@ public class HandleApiImpl implements HandleApiService {
 
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        IChatComponent component = ForgeTool.buildComponent(Tool.getPrefixComponent());
+        IChatComponent component = ForgeTool.buildComponent(GlobalContext.getMessagePrefixJsonObject());
         component.appendSibling(ForgeTool.buildComponent(jsonElement));
         sendPacket(new S02PacketChat(component, true));
     }

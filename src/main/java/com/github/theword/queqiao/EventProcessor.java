@@ -1,6 +1,5 @@
 package com.github.theword.queqiao;
 
-import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.ForgeTool.getForgeAchievement;
 import static com.github.theword.queqiao.utils.ForgeTool.getPlayerModel;
 
@@ -9,6 +8,7 @@ import com.github.theword.queqiao.tool.event.*;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
+import com.github.theword.queqiao.tool.utils.Tool;
 import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.stats.Achievement;
@@ -63,7 +63,7 @@ public class EventProcessor {
 
         ICommand iCommand = event.command;
 
-        String command = isRegisterOrLoginCommand(iCommand.toString());
+        String command = Tool.isIgnoredCommand(iCommand.toString());
         if (command.isEmpty()) return;
 
         PlayerModel player = getPlayerModel((EntityPlayerMP) event.sender);
