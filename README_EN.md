@@ -18,20 +18,35 @@
   <a href="https://github.com/17TheWord/QueQiao/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license">
   </a>
+  <a href="https://github.com/17TheWord/QueQiao/releases">
+    <img src="https://img.shields.io/github/v/release/17TheWord/QueQiao" alt="release">
+  </a>
+</p>
+
+<p align="center">
   <a href="https://www.spigotmc.org">
-    <img src="https://img.shields.io/badge/SpigotMC-1.12.2--latest-blue?logo=SpigotMC" alt="spigotmc"/>
+    <img src="https://img.shields.io/badge/SpigotMC-1.12.2--latest-blue?logo=data:image/png;base64,..." alt="spigotmc"/>
   </a>
-  <a href="https://files.minecraftforge.net">
-    <img src="https://img.shields.io/badge/Forge-1.16.5--1.21-blue?logo=data:image/png;base64,..." alt="forge">
+  <a href="https://docs.papermc.io/paper">
+    <img src="https://img.shields.io/badge/PaperMC-1.17.1--latest-blue?logo=data:image/png;base64,..." alt="velocity">
   </a>
-  <a href="https://fabricmc.net">
-    <img src="https://img.shields.io/badge/Fabric-1.16.5--1.21-blue?logo=data:image/png;base64,..." alt="fabric">
+  <a href="https://docs.papermc.io/folia">
+    <img src="https://img.shields.io/badge/Folia-1.21.4--latest-blue?logo=data:image/png;base64,..." alt="velocity">
   </a>
   <a href="https://papermc.io/software/velocity">
     <img src="https://img.shields.io/badge/Velocity-3.3.0-blue?logo=data:image/png;base64,..." alt="velocity">
   </a>
-  <a href="https://github.com/17TheWord/QueQiao/releases">
-    <img src="https://img.shields.io/github/v/release/17TheWord/QueQiao" alt="release">
+</p>
+
+<p align="center">
+  <a href="https://files.minecraftforge.net">
+    <img src="https://img.shields.io/badge/Forge-1.7.10--1.21-blue?logo=data:image/png;base64,..." alt="forge">
+  </a>
+  <a href="https://fabricmc.net">
+    <img src="https://img.shields.io/badge/Fabric-1.16.5--1.21.8-blue?logo=data:image/png;base64,..." alt="fabric">
+  </a>
+  <a href="https://neoforged.net/">
+    <img src="https://img.shields.io/badge/NeoForge-1.21.1-blue?logo=data:image/png;base64,..." alt="fabric">
   </a>
 </p>
 
@@ -69,6 +84,8 @@
 - [![`Modrinth`](./assets/modrinth.svg)](https://modrinth.com/plugin/queqiao)
 - [![`CurseForge`](./assets/curseforge.svg)](https://www.curseforge.com/minecraft/mc-mods/queqiao)
 
+> Can't find a suitable Mod/Plugin version? Feel free to submit an [`Issue`](https://github.com/17TheWord/QueQiao/issues/new?template=version_feature.yml)
+
 ## Quick Start
 
 1. Install the corresponding server `plugin/mod`
@@ -92,13 +109,13 @@
 
 ## Integration Projects
 
-- [`@17TheWord/nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft): `NoneBot2` adapter supporting message exchange and `Rcon` commands
-- [`@17TheWord/nonebot-plugin-mcqq`](https://github.com/17TheWord/nonebot-plugin-mcqq): `NoneBot2` plugin supporting `OneBot` and `QQ` adapters for chat integration, with command support via `Rcon`
-- [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin): Yunzai plugin for `OneBot` protocol integration, supporting chat and command via `Rcon`
-- [`@Twiyan0/koishi-plugin-minecraft-sync-msg`](https://github.com/Twiyin0/koishi-plugin-minecraft-sync-msg): `Koishi` plugin for chat integration and command support via `Rcon`
-- [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq): `ZeroBot` plugin for `OneBot` protocol and Minecraft chat integration
-- [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq): Provides `QQ <-> MC` message integration for `AstrBot`
-- [`@KroMiose/nekro-agent`](https://github.com/KroMiose/nekro-agent): Smarter & more elegant agent execution for AI workflows
+- [`@17TheWord/nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft): `NoneBot2` adapter
+- [`@17TheWord/nonebot-plugin-mcqq`](https://github.com/17TheWord/nonebot-plugin-mcqq): `NoneBot2` plugin
+- [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin): `YunZai` plugin
+- [`@Twiyan0/koishi-plugin-minecraft-sync-msg`](https://github.com/Twiyin0/koishi-plugin-minecraft-sync-msg): `Koishi` plugin
+- [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq): `ZeroBot` plugin
+- [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq): `AstrBot` plugin
+- [`@KroMiose/nekro-agent`](https://github.com/KroMiose/nekro-agent): `AI` agent
 
 ## Related Projects
 
