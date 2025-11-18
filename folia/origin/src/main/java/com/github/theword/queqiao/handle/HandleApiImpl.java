@@ -3,7 +3,7 @@ package com.github.theword.queqiao.handle;
 
 import com.github.theword.queqiao.tool.handle.HandleApiService;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
-import com.github.theword.queqiao.tool.utils.Tool;
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;

@@ -1,15 +1,9 @@
 package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
-import com.google.gson.JsonElement;
-import io.papermc.paper.advancement.AdvancementDisplay;
-import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.text.Component;
-import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 
 
