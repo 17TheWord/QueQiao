@@ -4,6 +4,7 @@ import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
+import net.minecraft.advancement.AdvancementProgress;
 // IF < fabric-1.20.4
 //import net.minecraft.advancement.Advancement;
 //import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,15 +36,19 @@ public abstract class AdvancementMixin {
 
     @Shadow
     private ServerPlayerEntity owner;
-
+    
     // IF < fabric-1.20.4
+//    @Shadow
+//    public abstract AdvancementProgress getProgress(Advancement par1);
+//
 //    @Inject(
 //            method = "grantCriterion",
-//            at = @At("HEAD")
+//            at = @At("RETURN")
 //    )
 //    private void onGrantCriterion(
 //            Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir
 //    ) {
+//        if (!this.getProgress(advancement).isDone()) return;
 //        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
 //        AdvancementDisplay advancementDisplay = advancement.getDisplay();
 //        if (advancementDisplay == null || !advancementDisplay.shouldAnnounceToChat()) return;
@@ -57,12 +62,16 @@ public abstract class AdvancementMixin {
 //        Text translateText = Text.translatable("chat.type.advancement." + advancement.getDisplay().getFrame().getId(), this.owner.getDisplayName(), advancement.toHoverableText());
         // END IF
         // ELSE
+//        @Shadow
+//        public abstract AdvancementProgress getProgress(AdvancementEntry advancement);
+//
 //    @Inject(
 //            method = "grantCriterion",
-//            at = @At("HEAD"))
+//            at = @At("RETURN"))
 //    private void onGrantCriterion(
 //            AdvancementEntry advancementEntry, String criterionName, CallbackInfoReturnable<Boolean> cir
 //    ) {
+//        if (!this.getProgress(advancementEntry).isDone()) return;
 //        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
 //        Optional<AdvancementDisplay> displayOptional = advancementEntry.value().display();
 //        if (displayOptional.isEmpty() || !displayOptional.get().shouldAnnounceToChat())
