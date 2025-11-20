@@ -39,10 +39,11 @@ public abstract class ServerPlayerEntityMixin {
 //            TranslatableText translatableText = (TranslatableText) deathMessage;
             // ELSE
 //        if (deathMessage.getContent() instanceof TranslatableTextContent) {
-//            TranslatableTextContent translatableText = (TranslatableTextContent) deathMessage;
+//            TranslatableTextContent translatableText = (TranslatableTextContent) deathMessage.getContent();
             // END IF
             deathModel.setKey(translatableText.getKey());
             String[] args = Arrays.stream(translatableText.getArgs()).map(obj -> {
+                System.out.println(obj.getClass());
                 if (obj instanceof Text) {
                     return ((Text) obj).getString();
                 } else {
