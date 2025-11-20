@@ -16,7 +16,7 @@ public class ForgeTool {
         PlayerModel player = new PlayerModel();
         player.setNickname(forgePlayer.getDisplayName());
         player.setUuid(forgePlayer.getUniqueID());
-        player.setAddress(forgePlayer.getPlayerIP());
+//        player.setAddress(forgePlayer.getPlayerIP());
         player.setHealth((double) forgePlayer.getHealth());
         player.setMaxHealth((double) forgePlayer.getMaxHealth());
         player.setExperienceLevel(player.getExperienceLevel());
