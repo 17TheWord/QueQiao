@@ -38,7 +38,7 @@ public abstract class ServerPlayerEntityMixin {
 //        if (deathMessage instanceof TranslatableText) {
 //            TranslatableText translatableText = (TranslatableText) deathMessage;
             // ELSE
-//        if (deathMessage instanceof TranslatableTextContent) {
+//        if (deathMessage.getContent() instanceof TranslatableTextContent) {
 //            TranslatableTextContent translatableText = (TranslatableTextContent) deathMessage;
             // END IF
             deathModel.setKey(translatableText.getKey());
