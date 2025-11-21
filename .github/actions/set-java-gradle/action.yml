@@ -6,6 +6,10 @@ inputs:
     description: JDK version to use
     required: false
     default: "8"
+  distribution:
+    description: JDK distribution to use
+    required: false
+    default: "temurin"
 
 runs:
   using: "composite"
@@ -14,7 +18,7 @@ runs:
       uses: actions/setup-java@v4
       with:
         java-version: ${{ inputs.java-version }}
-        distribution: temurin
+        distribution: ${{ inputs.distribution }}
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 # v4.4.2
