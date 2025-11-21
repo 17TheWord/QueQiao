@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.UUID;
 
-import static com.github.theword.queqiao.Queqiao.minecraftServer;
+import static com.github.theword.queqiao.QueQiao.minecraftServer;
 import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgePlayer;
 
 

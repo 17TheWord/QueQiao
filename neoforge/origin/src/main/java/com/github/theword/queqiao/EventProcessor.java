@@ -23,7 +23,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.Arrays;
 
-import static com.github.theword.queqiao.Queqiao.minecraftServer;
+import static com.github.theword.queqiao.QueQiao.minecraftServer;
 import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgeAchievement;
 import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgePlayer;
 

@@ -14,10 +14,10 @@ import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 
 @Mod(BaseConstant.MOD_ID)
-public class Queqiao {
+public class QueQiao {
     public static MinecraftServer minecraftServer;
 
-    public Queqiao() {
+    public QueQiao() {
         NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(new EventProcessor());
     }
