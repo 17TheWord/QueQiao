@@ -46,7 +46,7 @@ dependencies {
     include modImplementation("com.github.theword.queqiao:queqiao-tool:${tool_version}")
     include modImplementation("org.java-websocket:Java-WebSocket:${project.java_websocket_version}")
     include modImplementation("org.yaml:snakeyaml:${project.snakeyaml_version}")
-    include modImplementation("org.glavo:rcon-java:${project.glavoRconVersion}")
+    include modImplementation("org.glavo:rcon-java:${project.glavo_rcon_version}")
     // IF <= fabric-1.16.5
 //    include modImplementation("org.slf4j:slf4j-api:${slf4j_version}")
 //    include modImplementation("org.slf4j:slf4j-simple:${slf4j_version}")
