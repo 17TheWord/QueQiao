@@ -3,7 +3,6 @@ package com.github.theword.queqiao.handle;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.handle.HandleApiService;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
-import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.FabricTool;
 import com.google.gson.JsonElement;
 
@@ -38,7 +37,7 @@ public class HandleApiImpl implements HandleApiService {
 
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        MutableText mutableText = FabricTool.buildComponent(GlobalContext.getMessagePrefixJsonObject());
+        MutableText mutableText = FabricTool.buildComponent(GlobalContext.getMessagePrefixJsonObject()).copy();
         assert mutableText != null;
         mutableText.append(FabricTool.buildComponent(jsonElement));
 
