@@ -42,7 +42,7 @@ public class QueQiao {
 
     @Mod.EventHandler
     @SideOnly(Side.SERVER)
-    public void FMLServerStarted(FMLServerStartedEvent event) {
+    public void onServerStarted(FMLServerStartedEvent event) {
         GlobalContext.init(
             true,
             minecraftServer.getMinecraftVersion(),
