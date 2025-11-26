@@ -51,7 +51,7 @@
 </p>
 
 <p align="center">
-  <a href="https://queqiao.apifox.cn">📖Docs</a>
+  <a href="https://queqiao-docs.pages.dev">📖Docs</a>
   ·
   <a href="https://modrinth.com/plugin/queqiao">⬇️Modrinth</a>
   ·
@@ -63,28 +63,28 @@
 ## 介绍
 
 - 将服务端**玩家事件**以 `Json` 格式通过 `Websocket` 分发。
-  - 已实现的 [`事件`](https://queqiao.apifox.cn/68795505f0)
-    - [`玩家聊天`](https://queqiao.apifox.cn/7662378m0)
-    - [`玩家命令`](https://queqiao.apifox.cn/7662404m0)
-    - [`玩家死亡`](https://queqiao.apifox.cn/7662407m0)
-    - [`玩家加入`](https://queqiao.apifox.cn/7662405m0)
-    - [`玩家离开`](https://queqiao.apifox.cn/7662406m0)
-    - [`玩家成就`](https://queqiao.apifox.cn/7662410m0)
+  - 已实现的 [事件](https://queqiao-docs.pages.dev/events/v2/)
+    - [`玩家聊天`](https://queqiao-docs.pages.dev/events/v2/message/player-chat-event.html)
+    - [`玩家命令`](https://queqiao-docs.pages.dev/events/v2/message/player-command-event.html)
+    - [`玩家死亡`](https://queqiao-docs.pages.dev/events/v2/notice/player-death-event.html)
+    - [`玩家加入`](https://queqiao-docs.pages.dev/events/v2/notice/player-join-event.html)
+    - [`玩家离开`](https://queqiao-docs.pages.dev/events/v2/notice/player-quit-event.html)
+    - [`玩家成就`](https://queqiao-docs.pages.dev/events/v2/notice/player-achievement-event.html)
 - 通过 `Websocket` 接收 `Json` 消息，并广播至游戏玩家。
-    - 已实现的接口
-        - [`广播消息`](https://queqiao.apifox.cn/3690114w0)
-        - [`私聊消息`](https://queqiao.apifox.cn/3690118w0)
-        - [`标题 & 子标题`](https://queqiao.apifox.cn/3690115w0)
-        - [`动画栏`](https://queqiao.apifox.cn/3690116w0)
-        - [`Rcon 命令`](https://queqiao.apifox.cn/3690119w0)
+    - 已实现的 [接口](https://queqiao-docs.pages.dev/api/v2/broadcast.html)
+        - [`广播消息`](https://queqiao-docs.pages.dev/api/v2/broadcast.html)
+        - [`私聊消息`](https://queqiao-docs.pages.dev/api/v2/private-message.html)
+        - [`标题 & 子标题`](https://queqiao-docs.pages.dev/api/v2/title.html)
+        - [`动画栏`](https://queqiao-docs.pages.dev/api/v2/action-bar.html)
+        - [`Rcon 命令`](https://queqiao-docs.pages.dev/api/v2/rcon-command.html)
 
 ## 帮助与下载
 
-- 前往 [`ApiFox QueQiao`](https://queqiao.apifox.cn/) 查看文档
+- 前往 [文档](https://queqiao-docs.pages.dev) 查看详细使用说明
 - [![`Modrinth`](./assets/modrinth.svg)](https://modrinth.com/plugin/queqiao)
 - [![`CurseForge`](./assets/curseforge.svg)](https://www.curseforge.com/minecraft/mc-mods/queqiao)
 
-> 没有找到合适的 Mod/Plugin 版本？欢迎提交 [`Issues`](https://github.com/17TheWord/QueQiao/issues/new?template=version_feature.yml)
+> 没有找到合适的 Mod/Plugin 版本？欢迎提交 [Issues](https://github.com/17TheWord/QueQiao/issues/new?template=version_feature.yml)
 
 ## 快速开始
 
@@ -107,7 +107,7 @@
       }
       ```
 5. 开始游戏，加入服务器
-6. 参考 [`API文档`](https://queqiao.apifox.cn/68642911f0)，使用对应接口发送消息，或监听玩家事件
+6. 参考 [API 文档](https://queqiao-docs.pages.dev/api/v2/)，使用对应接口发送消息，或监听玩家事件
 
 ## 对接
 
@@ -130,20 +130,20 @@
 
 ## 社群
 
-- [`Discord`](https://discord.gg/SBUkMYsyf2)
+- [Discord](https://discord.gg/SBUkMYsyf2)
 
 ## 特别感谢
 
-- [`@kitUIN`](https://github.com/kitUIN)：提供代码上的帮助以及构建工具
+- [@kitUIN](https://github.com/kitUIN)：提供代码上的帮助以及构建工具
 - [`@kitUIN/ModMultiVersion`](https://github.com/kitUIN/ModMultiVersion)：`IDEA` 多版本 `MOD` 插件
 - [`@kitUIN/ModMultiVersionTool`](https://github.com/kitUIN/ModMultiVersionTool)：多版本 `MOD` 构建工具
 
 ## 贡献与支持
 
-- 觉得好用可以给这个项目点个 `Star` 或者去 [`爱发电`](https://afdian.com/a/17TheWord) 投喂我。
+- 觉得好用可以给这个项目点个 `Star` 或者去 [爱发电](https://afdian.com/a/17TheWord) 投喂我。
 
-- 有意见或者建议也欢迎提交 [`Issues`](https://github.com/17TheWord/QueQiao/issues)
-  和 [`Pull requests`](https://github.com/17TheWord/QueQiao/pulls) 。
+- 有意见或者建议也欢迎提交 [Issues](https://github.com/17TheWord/QueQiao/issues)
+  和 [Pull requests](https://github.com/17TheWord/QueQiao/pulls) 。
 
 ## 星星
 
@@ -151,4 +151,4 @@
 
 ## 开源许可
 
-本项目使用 [`MIT`](https://github.com/17TheWord/QueQiao/blob/main/LICENSE) 作为开源许可证。
+本项目使用 [MIT](https://github.com/17TheWord/QueQiao/blob/main/LICENSE) 作为开源许可证。

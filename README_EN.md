@@ -51,7 +51,7 @@
 </p>
 
 <p align="center">
-  <a href="https://queqiao.apifox.cn">📖 Documentation</a>
+  <a href="https://queqiao-docs.pages.dev">📖 Documentation</a>
   ·
   <a href="https://modrinth.com/plugin/queqiao">⬇️ Modrinth</a>
   ·
@@ -63,28 +63,28 @@
 ## Introduction
 
 - Distributes **player events** from the server in `JSON` format via `WebSocket`
-    - Implemented [`Events`](https://queqiao.apifox.cn/68795505f0):
-        - [`Player Chat`](https://queqiao.apifox.cn/7662378m0)
-        - [`Player Command`](https://queqiao.apifox.cn/7662404m0)
-        - [`Player Death`](https://queqiao.apifox.cn/7662407m0) (Not available for Velocity)
-        - [`Player Join`](https://queqiao.apifox.cn/7662405m0)
-        - [`Player Quit`](https://queqiao.apifox.cn/7662406m0)
-        - [`Player Advancement(Achievement)`](https://queqiao.apifox.cn/7662410m0)
+    - Implemented [`Events`](https://queqiao-docs.pages.dev/events/v2/):
+        - [`Player Chat`](https://queqiao-docs.pages.dev/events/v2/message/player-chat-event.html)
+        - [`Player Command`](https://queqiao-docs.pages.dev/events/v2/message/player-command-event.html)
+        - [`Player Death`](https://queqiao-docs.pages.dev/events/v2/notice/player-death-event.html)
+        - [`Player Join`](https://queqiao-docs.pages.dev/events/v2/notice/player-join-event.html)
+        - [`Player Quit`](https://queqiao-docs.pages.dev/events/v2/notice/player-quit-event.html)
+        - [`Player Advancement (Achievement)`](https://queqiao-docs.pages.dev/events/v2/notice/player-achievement-event.html)
 - Receives `JSON` messages via `WebSocket` and forwards to in-game players
-    - Implemented APIs:
-        - [`Broadcast`](https://queqiao.apifox.cn/3690114w0)
-        - [`PrivateMessage`](https://queqiao.apifox.cn/3690118w0)
-        - [`Title & SubTitle`](https://queqiao.apifox.cn/3690115w0)
-        - [`ActionBar`](https://queqiao.apifox.cn/3690116w0)
-        - [`Rcon Command`](https://queqiao.apifox.cn/3690119w0)
+    - Implemented [APIs](https://queqiao-docs.pages.dev/api/v2/):
+        - [`Broadcast`](https://queqiao-docs.pages.dev/api/v2/broadcast.html)
+        - [`Private Message`](https://queqiao-docs.pages.dev/api/v2/private-message.html)
+        - [`Title & SubTitle`](https://queqiao-docs.pages.dev/api/v2/title.html)
+        - [`Action Bar`](https://queqiao-docs.pages.dev/api/v2/action-bar.html)
+        - [`Rcon Command`](https://queqiao-docs.pages.dev/api/v2/rcon-command.html)
 
 ## Documentation & Downloads
 
-- Visit the [`ApiFox QueQiao`](https://queqiao.apifox.cn/) for detailed documentation
+- Visit the [QueQiao Document](https://queqiao-docs.pages.dev/) for detailed documentation
 - [![`Modrinth`](./assets/modrinth.svg)](https://modrinth.com/plugin/queqiao)
 - [![`CurseForge`](./assets/curseforge.svg)](https://www.curseforge.com/minecraft/mc-mods/queqiao)
 
-> Can't find a suitable Mod/Plugin version? Feel free to submit an [`Issue`](https://github.com/17TheWord/QueQiao/issues/new?template=version_feature.yml)
+> Can't find a suitable Mod/Plugin version? Feel free to submit an [Issue](https://github.com/17TheWord/QueQiao/issues/new?template=version_feature.yml)
 
 ## Quick Start
 
@@ -105,7 +105,7 @@
       }
       ```
 5. Launch the game and join the server
-6. Refer to the [`API Documentation`](https://queqiao.apifox.cn/68642911f0) to send messages or listen to player events.
+6. Refer to the [API Documentation](https://queqiao-docs.pages.dev/api/v2/) to send messages or listen to player events.
 
 ## Integration Projects
 
@@ -123,23 +123,23 @@
 
 ## Compatibility
 
-- [`@kitUIN/ChatImage`](https://github.com/kitUIN/ChatImage): Displays images in Minecraft chat
+- [`@kitUIN/ChatImage`](https://github.com/kitUIN/ChatImage): Displays images in `Minecraft` chat
 
 ## Community
 
-- [`Discord`](https://discord.gg/SBUkMYsyf2)
+- [Discord](https://discord.gg/SBUkMYsyf2)
 
 ## Special Thanks
 
-- [`@kitUIN`](https://github.com/kitUIN): For code assistance and build tools
-- [`@kitUIN/ModMultiVersion`](https://github.com/kitUIN/ModMultiVersion): IDEA multi-version MOD plugin
-- [`@kitUIN/ModMultiVersionTool`](https://github.com/kitUIN/ModMultiVersionTool): Multi-version MOD build tool
+- [@kitUIN](https://github.com/kitUIN): For code assistance and build tools
+- [`@kitUIN/ModMultiVersion`](https://github.com/kitUIN/ModMultiVersion): IDEA multi-version `MOD` plugin
+- [`@kitUIN/ModMultiVersionTool`](https://github.com/kitUIN/ModMultiVersionTool): Multi-version `MOD` build tool
 
 ## Support & Contribution
 
-- Star this project if you find it useful or support me on [`Afdian`](https://afdian.com/a/17TheWord)
-- Submit suggestions/bugs via [`Issues`](https://github.com/17TheWord/QueQiao/issues)
-- Contribute via [`Pull requests`](https://github.com/17TheWord/QueQiao/pulls)
+- Star this project if you find it useful or support me on [AFDian](https://afdian.com/a/17TheWord)
+- Submit suggestions/bugs via [Issues](https://github.com/17TheWord/QueQiao/issues)
+- Contribute via [Pull requests](https://github.com/17TheWord/QueQiao/pulls)
 
 ## Stargazers
 
@@ -147,4 +147,4 @@
 
 ## License
 
-This project is licensed under the [`MIT`](https://github.com/17TheWord/QueQiao/blob/main/LICENSE) license.
+This project is licensed under the [MIT](https://github.com/17TheWord/QueQiao/blob/main/LICENSE) license.
