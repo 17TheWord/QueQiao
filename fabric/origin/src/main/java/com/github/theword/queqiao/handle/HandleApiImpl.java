@@ -37,7 +37,7 @@ public class HandleApiImpl implements HandleApiService {
 
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        MutableText mutableText = FabricTool.buildComponent(GlobalContext.getMessagePrefixJsonObject()).copy();
+        MutableText mutableText = FabricTool.buildComponent(GlobalContext.getMessagePrefixJsonObject());
         assert mutableText != null;
         mutableText.append(FabricTool.buildComponent(jsonElement));
 

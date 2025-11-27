@@ -68,11 +68,11 @@ public class FabricTool {
         // IF >= fabric-1.21.6
 //        return TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement).getOrThrow().getFirst().copy();
         // ELSE IF >= fabric-1.21
-//        return Text.Serialization.fromJsonTree(jsonElement, minecraftServer.getRegistryManager());
+//        return Text.Serialization.fromJsonTree(jsonElement, minecraftServer.getRegistryManager()).copy();
         // ELSE IF >= fabric-1.20.4
-//        return Text.Serialization.fromJsonTree(jsonElement);
+//        return Text.Serialization.fromJsonTree(jsonElement).copy();
         // ELSE
-//        return Text.Serializer.fromJson(jsonElement);
+//        return Text.Serializer.fromJson(jsonElement).copy();
         // END IF
     }
 }
