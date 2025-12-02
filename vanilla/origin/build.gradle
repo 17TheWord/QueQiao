@@ -40,7 +40,7 @@ dependencies {
     implementation "com.google.code.gson:gson:${gson_version}"
     implementation "commons-io:commons-io:${commons_io_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
-    implementation "org.glavo:rcon-java:${glavo_rcon_version}"
+    implementation "org.glavo:rcon-java:${glavoRconVersion}"
 
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
@@ -57,7 +57,7 @@ kotlin {
 }
 
 shadowJar {
-    archiveBaseName.set("${mod_name}-minecraft+origin")
+    archiveBaseName.set("${mod_name}-minecraft+vanilla")
     archiveClassifier.set("")
     destinationDirectory.set(file("../../QueQiao-jar/${version}"))
     manifest {

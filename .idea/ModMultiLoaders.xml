@@ -11,7 +11,7 @@
         <option value="spigot" />
         <option value="paper" />
         <option value="velocity" />
-        <option value="minecraft" />
+        <option value="vanilla" />
       </list>
     </option>
   </component>
