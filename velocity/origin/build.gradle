@@ -45,9 +45,6 @@ dependencies {
     implementation "com.velocitypowered:velocity-api:${project.api_version}-SNAPSHOT"
     annotationProcessor "com.velocitypowered:velocity-api:${project.api_version}-SNAPSHOT"
 
-    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
-    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
-
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
     implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
     implementation "org.yaml:snakeyaml:${snakeyaml_version}"

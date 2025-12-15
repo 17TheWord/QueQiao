@@ -4,12 +4,10 @@ package com.github.theword.queqiao.command;
 import com.github.theword.queqiao.command.subCommand.HelpCommand;
 import com.github.theword.queqiao.command.subCommand.ReloadCommand;
 import com.github.theword.queqiao.command.subCommand.client.ReconnectCommand;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 public class CommandManager {
     List<VelocitySubCommand> subCommandList = new ArrayList<>();
 
@@ -18,5 +16,9 @@ public class CommandManager {
         subCommandList.add(new HelpCommand());
         subCommandList.add(new ReloadCommand());
         subCommandList.add(new ReconnectCommand());
+    }
+
+    public List<VelocitySubCommand> getSubCommandList() {
+        return subCommandList;
     }
 }
