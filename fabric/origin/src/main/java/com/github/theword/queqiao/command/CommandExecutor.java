@@ -6,6 +6,7 @@ import com.github.theword.queqiao.command.subCommand.client.ReconnectAllCommand;
 import com.github.theword.queqiao.command.subCommand.client.ReconnectCommand;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
+import com.github.theword.queqiao.utils.FabricTool;
 import com.mojang.brigadier.Command;
 // IF > fabric-1.18.2
 //import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -26,7 +27,7 @@ public class CommandExecutor {
                         // END IF
                         dispatcher.register(
                                 CommandManager.literal(BaseConstant.COMMAND_HEADER)
-                                        .requires(source -> source.hasPermissionLevel(2))
+                                        .requires(FabricTool::permissionCheck)
                                         .executes(context -> new HelpCommand().onCommand(context))
                                         .then(CommandManager.literal("help")
                                                 .executes(context -> new HelpCommand().onCommand(context))

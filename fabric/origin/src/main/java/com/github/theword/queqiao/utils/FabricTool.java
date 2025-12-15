@@ -23,6 +23,15 @@ import net.minecraft.text.MutableText;
 //import static com.github.theword.queqiao.QueQiao.minecraftServer;
 // END IF
 
+// IF >= fabric-1.21.11
+//import net.minecraft.command.permission.Permission;
+//import net.minecraft.command.permission.PermissionLevel;
+// ELSE
+//import com.github.theword.queqiao.tool.constant.BaseConstant;
+// END IF
+
+import net.minecraft.server.command.ServerCommandSource;
+
 public class FabricTool {
 
     public static PlayerModel getFabricPlayer(ServerPlayerEntity fabricPlayer) {
@@ -39,7 +48,11 @@ public class FabricTool {
         player.setExperienceProgress((double) fabricPlayer.experienceProgress);
         player.setTotalExperience(fabricPlayer.totalExperience);
 
-        player.setOp(fabricPlayer.hasPermissionLevel(4));
+        // IF >= fabric-1.21.11
+//        player.setOp(fabricPlayer.getPermissions().hasPermission(new Permission.Level(PermissionLevel.ADMINS)));
+        // ELSE
+//player.setOp(fabricPlayer.hasPermissionLevel(BaseConstant.MOD_PERMISSION_LEVEL));
+        // END IF
 
         player.setWalkSpeed((double) fabricPlayer.getMovementSpeed());
 
@@ -73,6 +86,14 @@ public class FabricTool {
 //        return Text.Serialization.fromJsonTree(jsonElement).copy();
         // ELSE
 //        return Text.Serializer.fromJson(jsonElement).copy();
+        // END IF
+    }
+
+    public static boolean permissionCheck(ServerCommandSource source) {
+        // IF >= fabric-1.21.11
+//        return source.getPermissions().hasPermission(new Permission.Level(PermissionLevel.ADMINS));
+        // ELSE
+// return source.hasPermissionLevel(BaseConstant.MOD_PERMISSION_LEVEL);
         // END IF
     }
 }
