@@ -29,7 +29,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Generate Matrix
         id: set-matrix
         run: chmod 777 matrix.sh && ./matrix.sh -path "vanilla","spigot","velocity","forge","neoforge","fabric","folia","paper"
@@ -90,15 +90,6 @@ jobs:
             echo "VERSION_TYPE=release" >> $GITHUB_ENV
           else
             echo "VERSION_TYPE=beta" >> $GITHUB_ENV
-          fi
-
-      - name: Set Game Version
-        id: set-game-version
-        run: |
-          if [ "${{ matrix.config.mc-loader }}" == "velocity" ]; then
-            echo "game_version=1.20.1" >> $GITHUB_ENV
-          else
-            echo "game_version=${{ matrix.config.mc-version }}" >> $GITHUB_ENV
           fi
 
       - uses: Kir-Antipov/mc-publish@v3.3
