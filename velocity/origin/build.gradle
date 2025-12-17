@@ -45,16 +45,13 @@ dependencies {
     implementation "com.velocitypowered:velocity-api:${project.api_version}-SNAPSHOT"
     annotationProcessor "com.velocitypowered:velocity-api:${project.api_version}-SNAPSHOT"
 
-    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
-    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
-
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
     implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
     implementation "org.yaml:snakeyaml:${snakeyaml_version}"
     implementation "org.slf4j:slf4j-api:${slf4j_version}"
     implementation "org.slf4j:slf4j-simple:${slf4j_version}"
     implementation "commons-io:commons-io:${commons_io_version}"
-    implementation "org.glavo:rcon-java:${glavoRconVersion}"
+    implementation "org.glavo:rcon-java:${glavo_rcon_version}"
 
     testImplementation "org.slf4j:slf4j-simple:${slf4j_version}"
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}")
@@ -107,7 +104,7 @@ shadowJar {
         include(dependency("commons-io:commons-io:${commons_io_version}"))
         include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
         include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
-        include(dependency("org.glavo:rcon-java:${glavoRconVersion}"))
+        include(dependency("org.glavo:rcon-java:${glavo_rcon_version}"))
     }
 
     mergeServiceFiles()

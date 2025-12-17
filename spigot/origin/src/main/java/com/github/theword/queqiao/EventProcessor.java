@@ -1,9 +1,11 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.event.spigot.*;
-
-import com.github.theword.queqiao.event.spigot.dto.advancement.SpigotAdvancement;
 import com.github.theword.queqiao.tool.GlobalContext;
+import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
+import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
+import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
+import com.github.theword.queqiao.tool.event.model.death.DeathModel;
+import com.github.theword.queqiao.tool.utils.Tool;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,8 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
-
-import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.SpigotTool.getSpigotPlayer;
 import static com.github.theword.queqiao.utils.SpigotTool.getSpigotAdvancement;
 
@@ -26,8 +26,8 @@ class EventProcessor implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     void onPlayerChat(AsyncPlayerChatEvent event) {
         if (event.isCancelled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
-
-        SpigotAsyncPlayerChatEvent spigotAsyncPlayerChatEvent = new SpigotAsyncPlayerChatEvent(getSpigotPlayer(event.getPlayer()), event.getMessage());
+        String message = event.getMessage();
+        com.github.theword.queqiao.tool.event.PlayerChatEvent spigotAsyncPlayerChatEvent = new com.github.theword.queqiao.tool.event.PlayerChatEvent(getSpigotPlayer(event.getPlayer()), "", message, message);
         GlobalContext.sendEvent(spigotAsyncPlayerChatEvent);
     }
 
@@ -40,7 +40,10 @@ class EventProcessor implements Listener {
     void onPlayerDeath(PlayerDeathEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
 
-        SpigotPlayerDeathEvent spigotPlayerDeathEvent = new SpigotPlayerDeathEvent(getSpigotPlayer(event.getEntity()), event.getDeathMessage());
+        DeathModel deathModel = new DeathModel();
+        deathModel.setText(event.getDeathMessage());
+
+        com.github.theword.queqiao.tool.event.PlayerDeathEvent spigotPlayerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getSpigotPlayer(event.getEntity()), deathModel);
         GlobalContext.sendEvent(spigotPlayerDeathEvent);
     }
 
@@ -53,7 +56,7 @@ class EventProcessor implements Listener {
     void onPlayerJoin(PlayerJoinEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
 
-        SpigotPlayerJoinEvent spigotPlayerJoinEvent = new SpigotPlayerJoinEvent(getSpigotPlayer(event.getPlayer()));
+        com.github.theword.queqiao.tool.event.PlayerJoinEvent spigotPlayerJoinEvent = new com.github.theword.queqiao.tool.event.PlayerJoinEvent(getSpigotPlayer(event.getPlayer()));
         GlobalContext.sendEvent(spigotPlayerJoinEvent);
     }
 
@@ -66,7 +69,7 @@ class EventProcessor implements Listener {
     void onPlayerQuit(PlayerQuitEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
 
-        SpigotPlayerQuitEvent spigotPlayerQuitEvent = new SpigotPlayerQuitEvent(getSpigotPlayer(event.getPlayer()));
+        com.github.theword.queqiao.tool.event.PlayerQuitEvent spigotPlayerQuitEvent = new com.github.theword.queqiao.tool.event.PlayerQuitEvent(getSpigotPlayer(event.getPlayer()));
         GlobalContext.sendEvent(spigotPlayerQuitEvent);
     }
 
@@ -79,11 +82,11 @@ class EventProcessor implements Listener {
     void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
 
-        String command = isRegisterOrLoginCommand(event.getMessage());
+        String command = Tool.isIgnoredCommand(event.getMessage());
 
         if (command.isEmpty()) return;
 
-        SpigotPlayerCommandPreprocessEvent spigotPlayerCommandPreprocessEvent = new SpigotPlayerCommandPreprocessEvent(getSpigotPlayer(event.getPlayer()), command);
+        PlayerCommandEvent spigotPlayerCommandPreprocessEvent = new PlayerCommandEvent(getSpigotPlayer(event.getPlayer()), "", command, command);
         GlobalContext.sendEvent(spigotPlayerCommandPreprocessEvent);
     }
 
@@ -92,9 +95,9 @@ class EventProcessor implements Listener {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
         Advancement advancement = event.getAdvancement();
 
-        SpigotAdvancement spigotAdvancement = getSpigotAdvancement(advancement);
+        AchievementModel achievementModel = getSpigotAdvancement(advancement);
 
-        SpigotPlayerAdvancementDoneEvent spigotPlayerAdvancementDoneEvent = new SpigotPlayerAdvancementDoneEvent(getSpigotPlayer(event.getPlayer()), spigotAdvancement);
+        PlayerAchievementEvent spigotPlayerAdvancementDoneEvent = new PlayerAchievementEvent(getSpigotPlayer(event.getPlayer()), achievementModel);
         GlobalContext.sendEvent(spigotPlayerAdvancementDoneEvent);
     }
 

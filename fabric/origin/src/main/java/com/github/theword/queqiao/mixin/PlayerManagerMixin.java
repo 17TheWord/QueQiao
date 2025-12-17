@@ -1,8 +1,8 @@
 package com.github.theword.queqiao.mixin;
 
-import com.github.theword.queqiao.event.fabric.FabricServerPlayConnectionJoinEvent;
 
 import com.github.theword.queqiao.tool.GlobalContext;
+import com.github.theword.queqiao.tool.event.PlayerJoinEvent;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
 
@@ -28,7 +28,7 @@ public class PlayerManagerMixin {
 // END IF
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
 
-        FabricServerPlayConnectionJoinEvent event = new FabricServerPlayConnectionJoinEvent(getFabricPlayer(player));
+        PlayerJoinEvent event = new PlayerJoinEvent(getFabricPlayer(player));
         GlobalContext.sendEvent(event);
     }
 }

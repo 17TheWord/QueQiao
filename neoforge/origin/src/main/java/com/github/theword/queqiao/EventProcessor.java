@@ -1,10 +1,17 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.event.neoforge.*;
-import com.github.theword.queqiao.event.neoforge.dto.advancement.NeoForgeAdvancement;
 import com.github.theword.queqiao.tool.GlobalContext;
+import com.github.theword.queqiao.tool.event.*;
+import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
+import com.github.theword.queqiao.tool.event.model.death.DeathModel;
+import com.github.theword.queqiao.tool.utils.Tool;
+import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -14,8 +21,10 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
-import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
-import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgeAdvancement;
+import java.util.Arrays;
+
+import static com.github.theword.queqiao.QueQiao.minecraftServer;
+import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgeAchievement;
 import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgePlayer;
 
 public class EventProcessor {
@@ -24,11 +33,12 @@ public class EventProcessor {
     public void onServerChat(ServerChatEvent event) {
         if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
 
-        NeoForgeServerPlayer player = getNeoForgePlayer(event.getPlayer());
+        PlayerModel player = getNeoForgePlayer(event.getPlayer());
 
-        String message = event.getMessage().getString();
+        Component message = event.getMessage();
+        String rawMessage = Component.Serializer.toJson(message, minecraftServer.registryAccess());
 
-        NeoForgeServerChatEvent NeoForgeServerChatEvent = new NeoForgeServerChatEvent("", player, message);
+        PlayerChatEvent NeoForgeServerChatEvent = new PlayerChatEvent(player, "", rawMessage, message.getString());
         GlobalContext.sendEvent(NeoForgeServerChatEvent);
     }
 
@@ -36,9 +46,9 @@ public class EventProcessor {
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
 
-        NeoForgeServerPlayer player = getNeoForgePlayer((ServerPlayer) event.getEntity());
+        PlayerModel player = getNeoForgePlayer((ServerPlayer) event.getEntity());
 
-        NeoForgePlayerLoggedInEvent forgePlayerLoggedInEvent = new NeoForgePlayerLoggedInEvent(player);
+        PlayerJoinEvent forgePlayerLoggedInEvent = new PlayerJoinEvent(player);
         GlobalContext.sendEvent(forgePlayerLoggedInEvent);
     }
 
@@ -46,9 +56,9 @@ public class EventProcessor {
     public void onPlayerQuit(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
 
-        NeoForgeServerPlayer player = getNeoForgePlayer((ServerPlayer) event.getEntity());
+        PlayerModel player = getNeoForgePlayer((ServerPlayer) event.getEntity());
 
-        NeoForgePlayerLoggedOutEvent forgePlayerLoggedOutEvent = new NeoForgePlayerLoggedOutEvent(player);
+        PlayerQuitEvent forgePlayerLoggedOutEvent = new PlayerQuitEvent(player);
         GlobalContext.sendEvent(forgePlayerLoggedOutEvent);
     }
 
@@ -56,20 +66,23 @@ public class EventProcessor {
     public void onPlayerCommand(CommandEvent event) {
         if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
 
-        if (!event.getParseResults().getContext().getSource().isPlayer()) return;
+        ParseResults<CommandSourceStack> parseResults = event.getParseResults();
 
-        String command = isRegisterOrLoginCommand(event.getParseResults().getReader().getString());
+        if (!parseResults.getContext().getSource().isPlayer()) return;
+
+        String command = Tool.isIgnoredCommand(parseResults.getReader().getString());
 
         if (command.isEmpty()) return;
 
-        NeoForgeServerPlayer player;
+        PlayerModel player;
 
         try {
-            player = getNeoForgePlayer(event.getParseResults().getContext().getSource().getPlayerOrException());
+            player = getNeoForgePlayer(parseResults.getContext().getSource().getPlayerOrException());
         } catch (CommandSyntaxException e) {
             return;
         }
-        NeoForgeCommandEvent forgeCommandEvent = new NeoForgeCommandEvent("", player, command);
+
+        PlayerCommandEvent forgeCommandEvent = new PlayerCommandEvent(player, "", parseResults.getContext().toString(), command);
         GlobalContext.sendEvent(forgeCommandEvent);
     }
 
@@ -78,13 +91,28 @@ public class EventProcessor {
         if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
 
         if (!(event.getEntity() instanceof ServerPlayer)) return;
-        NeoForgeServerPlayer player = getNeoForgePlayer((ServerPlayer) event.getEntity());
+        PlayerModel player = getNeoForgePlayer((ServerPlayer) event.getEntity());
 
         LivingEntity entity = event.getEntity();
 
-        String message = event.getSource().getLocalizedDeathMessage(entity).getString();
+        DeathModel deathModel = new DeathModel();
 
-        NeoForgePlayerDeathEvent forgeCommandEvent = new NeoForgePlayerDeathEvent("", player, message);
+        Component localizedDeathMessage = event.getSource().getLocalizedDeathMessage(entity);
+
+        if (localizedDeathMessage.getContents() instanceof TranslatableContents translatableContents) {
+            deathModel.setKey(translatableContents.getKey());
+            String[] args = Arrays.stream(translatableContents.getArgs()).map(obj -> {
+                if (obj instanceof Component component) {
+                    return component.getString();
+                } else {
+                    return String.valueOf(obj);
+                }
+            }).toArray(String[]::new);
+            deathModel.setArgs(args);
+        }
+        deathModel.setText(localizedDeathMessage.getString());
+
+        PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, deathModel);
         GlobalContext.sendEvent(forgeCommandEvent);
     }
 
@@ -92,8 +120,16 @@ public class EventProcessor {
     public void onPlayerAdvancement(AdvancementEvent.AdvancementEarnEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
         Advancement advancement = event.getAdvancement().value();
-        NeoForgeAdvancement neoForgeAdvancement = getNeoForgeAdvancement(advancement);
-        NeoForgeAdvancementEvent forgeAdvancementEvent = new NeoForgeAdvancementEvent(getNeoForgePlayer((ServerPlayer) event.getEntity()), neoForgeAdvancement);
-        GlobalContext.sendEvent(forgeAdvancementEvent);
+        if (advancement.display().isEmpty() || !advancement.display().get().shouldAnnounceChat() || advancement.name().isEmpty())
+            return;
+
+        PlayerModel neoForgePlayer = getNeoForgePlayer((ServerPlayer) event.getEntity());
+
+        AchievementModel achievementModel = getNeoForgeAchievement(advancement);
+        achievementModel.setKey(event.getAdvancement().id().toString());
+        achievementModel.setText(neoForgePlayer.getNickname() + " has made the advancement " + advancement.name().get().getString());
+
+        PlayerAchievementEvent playerAchievementEvent = new PlayerAchievementEvent(neoForgePlayer, achievementModel);
+        GlobalContext.sendEvent(playerAchievementEvent);
     }
 }

@@ -9,8 +9,11 @@
         <option value="neoforge" />
         <option value="quilt" />
         <option value="spigot" />
+        <option value="paper" />
         <option value="velocity" />
-        <option value="minecraft" />
+        <option value="vanilla" />
+        <option value="gtnh" />
+        <option value="cleanroom" />
       </list>
     </option>
   </component>

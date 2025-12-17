@@ -1,8 +1,8 @@
 package com.github.theword.queqiao.handle;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.handle.HandleApiService;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
-import com.github.theword.queqiao.tool.utils.Tool;
 import com.google.gson.JsonElement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.UUID;
 
-import static com.github.theword.queqiao.Queqiao.minecraftServer;
+import static com.github.theword.queqiao.QueQiao.minecraftServer;
 import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgePlayer;
 
 
@@ -25,7 +25,7 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        MutableComponent mutableComponent = Component.Serializer.fromJson(Tool.getPrefixComponent(), minecraftServer.registryAccess());
+        MutableComponent mutableComponent = Component.Serializer.fromJson(GlobalContext.getMessagePrefixJsonObject(), minecraftServer.registryAccess());
         assert mutableComponent != null;
         Component message = Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
         if (message != null) {
@@ -97,7 +97,7 @@ public class HandleApiImpl implements HandleApiService {
         if (targetPlayer.hasDisconnected()) {
             return PrivateMessageResponse.playerNotOnline();
         }
-        MutableComponent mutableComponent = Component.Serializer.fromJson(Tool.getPrefixComponent(), minecraftServer.registryAccess());
+        MutableComponent mutableComponent = Component.Serializer.fromJson(GlobalContext.getMessagePrefixJsonObject(), minecraftServer.registryAccess());
         assert mutableComponent != null;
         MutableComponent message = Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
         if (message != null) {

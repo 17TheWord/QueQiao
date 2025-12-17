@@ -1,8 +1,8 @@
 package com.github.theword.queqiao.handle;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.handle.HandleApiService;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
-import com.github.theword.queqiao.tool.utils.Tool;
 import com.google.gson.JsonElement;
 
 import java.util.UUID;
@@ -40,7 +40,7 @@ public class HandleApiImpl implements HandleApiService {
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
         // IF >= forge-1.21
-//        MutableComponent mutableComponent = Component.Serializer.fromJson(Tool.getPrefixComponent(), minecraftServer.registryAccess());
+//        MutableComponent mutableComponent = Component.Serializer.fromJson(GlobalContext.getMessagePrefixJsonObject(), minecraftServer.registryAccess());
 //        assert mutableComponent != null;
 //        MutableComponent message = Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
 //        if (message != null) {
@@ -48,7 +48,7 @@ public class HandleApiImpl implements HandleApiService {
 //        }
 //        sendPacket(new ClientboundSystemChatPacket(mutableComponent, false));
         // ELSE IF >= forge-1.18
-//        MutableComponent mutableComponent = Component.Serializer.fromJson(Tool.getPrefixComponent());
+//        MutableComponent mutableComponent = Component.Serializer.fromJson(GlobalContext.getMessagePrefixJsonObject());
 //        assert mutableComponent != null;
 //        MutableComponent message = Component.Serializer.fromJson(jsonElement);
 //        if (message != null) {
@@ -60,7 +60,7 @@ public class HandleApiImpl implements HandleApiService {
 //        sendPacket(new ClientboundChatPacket(mutableComponent, ChatType.CHAT, UUID.randomUUID()));
         // END IF
         // ELSE
-//        net.minecraft.util.text.IFormattableTextComponent mutableComponent = ITextComponent.Serializer.fromJson(Tool.getPrefixComponent());
+//        net.minecraft.util.text.IFormattableTextComponent mutableComponent = ITextComponent.Serializer.fromJson(GlobalContext.getMessagePrefixJsonObject());
 //        assert mutableComponent != null;
 //        net.minecraft.util.text.IFormattableTextComponent messageComponent = ITextComponent.Serializer.fromJson(jsonElement);
 //        if (messageComponent != null) {

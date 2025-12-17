@@ -1,8 +1,9 @@
 package com.github.theword.queqiao.mixin;
 
-import com.github.theword.queqiao.event.fabric.FabricServerCommandMessageEvent;
-import com.github.theword.queqiao.event.fabric.FabricServerMessageEvent;
 import com.github.theword.queqiao.tool.GlobalContext;
+import com.github.theword.queqiao.tool.event.PlayerChatEvent;
+import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
+import com.github.theword.queqiao.tool.utils.Tool;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 // IF > fabric-1.18.2
 //import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
@@ -17,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 
-import static com.github.theword.queqiao.tool.utils.Tool.isRegisterOrLoginCommand;
 import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
 
 @Mixin(ServerPlayNetworkHandler.class)
@@ -40,7 +40,7 @@ public class ServerPlayNetworkHandlerMixin {
         if (message.startsWith("/")) return;
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
 
-        FabricServerMessageEvent event = new FabricServerMessageEvent("", getFabricPlayer(player), message);
+        PlayerChatEvent event = new PlayerChatEvent(getFabricPlayer(player), "", message, message);
         GlobalContext.sendEvent(event);
     }
 
@@ -48,20 +48,20 @@ public class ServerPlayNetworkHandlerMixin {
 //    @Inject(method = "onCommandExecution", at = @At("HEAD"))
 //    private void onCommandExecution(CommandExecutionC2SPacket packet, CallbackInfo ci) {
 //        String input = packet.command();
-        // ELSE IF fabric-1.18.2
+    // ELSE IF fabric-1.18.2
 //    @Inject(method = "executeCommand", at = @At("HEAD"))
 //    private void executeCommand(String input, CallbackInfo ci) {
-        // ELSE
+    // ELSE
 //    @Inject(method = "executeCommand", at = @At("HEAD"))
 //    private void executeCommand(String input, CallbackInfo ci) {
         // END IF
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
 
-        String registerOrLoginCommand = isRegisterOrLoginCommand(input);
+        String registerOrLoginCommand = Tool.isIgnoredCommand(input);
 
         if (registerOrLoginCommand.isEmpty()) return;
 
-        FabricServerCommandMessageEvent event = new FabricServerCommandMessageEvent("", getFabricPlayer(Objects.requireNonNull(player)), registerOrLoginCommand);
+        PlayerCommandEvent event = new PlayerCommandEvent(getFabricPlayer(Objects.requireNonNull(player)), "", registerOrLoginCommand, registerOrLoginCommand);
         GlobalContext.sendEvent(event);
     }
 }

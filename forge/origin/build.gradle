@@ -98,7 +98,7 @@ repositories {
 //        include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
 //        include(dependency("org.slf4j:slf4j-api"))
 //        include(dependency("org.slf4j:slf4j-simple"))
-//        include(dependency("org.glavo:rcon-java:${glavoRconVersion}"))
+//        include(dependency("org.glavo:rcon-java:${glavo_rcon_version}"))
 //    }
 //    mergeServiceFiles()
 //    relocate 'org.slf4j', 'shadow.org.slf4j'
@@ -128,7 +128,7 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
     implementation "org.yaml:snakeyaml:${snakeyaml_version}"
-    implementation "org.glavo:rcon-java:${glavoRconVersion}"
+    implementation "org.glavo:rcon-java:${glavo_rcon_version}"
     // IF > forge-1.16.5
 //    jarJar("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
 //        jarJar.ranged(it, "[${tool_version},)")
@@ -144,8 +144,8 @@ dependencies {
 //        jarJar.ranged(it, "[${project.snakeyaml_version},3.0)")
 //    }
 //
-//    jarJar("org.glavo:rcon-java:${glavoRconVersion}") {
-//        jarJar.ranged(it, "[${project.glavoRconVersion},4.0)")
+//    jarJar("org.glavo:rcon-java:${glavo_rcon_version}") {
+//        jarJar.ranged(it, "[${project.glavo_rcon_version},4.0)")
 //    }
     // ELSE
 //    implementation "org.slf4j:slf4j-api:${slf4j_version}"

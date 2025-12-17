@@ -1,7 +1,10 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.event.velocity.*;
 import com.github.theword.queqiao.tool.GlobalContext;
+import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
+import com.github.theword.queqiao.tool.event.PlayerJoinEvent;
+import com.github.theword.queqiao.tool.event.PlayerQuitEvent;
+import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -18,9 +21,9 @@ public class EventProcessor {
     public void onPlayerChat(PlayerChatEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
 
-        VelocityPlayer player = getVelocityPlayer(event.getPlayer());
+        PlayerModel player = getVelocityPlayer(event.getPlayer());
         String message = event.getMessage();
-        VelocityPlayerChatEvent velocityPlayerChatEvent = new VelocityPlayerChatEvent(player, message);
+        com.github.theword.queqiao.tool.event.PlayerChatEvent velocityPlayerChatEvent = new com.github.theword.queqiao.tool.event.PlayerChatEvent(player, "", message, message);
         GlobalContext.sendEvent(velocityPlayerChatEvent);
     }
 
@@ -28,8 +31,8 @@ public class EventProcessor {
     public void onPlayerLogin(LoginEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
 
-        VelocityPlayer player = getVelocityPlayer(event.getPlayer());
-        VelocityLoginEvent velocityLoginEvent = new VelocityLoginEvent(player);
+        PlayerModel player = getVelocityPlayer(event.getPlayer());
+        PlayerJoinEvent velocityLoginEvent = new PlayerJoinEvent(player);
         GlobalContext.sendEvent(velocityLoginEvent);
     }
 
@@ -37,18 +40,19 @@ public class EventProcessor {
     public void onDisconnect(DisconnectEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
 
-        VelocityPlayer player = getVelocityPlayer(event.getPlayer());
-        VelocityDisconnectEvent velocityDisconnectEvent = new VelocityDisconnectEvent(player);
+        PlayerModel player = getVelocityPlayer(event.getPlayer());
+        PlayerQuitEvent velocityDisconnectEvent = new PlayerQuitEvent(player);
         GlobalContext.sendEvent(velocityDisconnectEvent);
     }
 
     @Subscribe
     public void onCommandExecute(CommandExecuteEvent event) {
-        if (!(event.getCommandSource() instanceof Player player) || !GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
+        if (!(event.getCommandSource() instanceof Player player) || !GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand())
+            return;
 
         String command = event.getCommand();
 
-        VelocityCommandExecuteEvent velocityCommandExecuteEvent = new VelocityCommandExecuteEvent(getVelocityPlayer(player), command);
+        PlayerCommandEvent velocityCommandExecuteEvent = new PlayerCommandEvent(getVelocityPlayer(player), "", command, command);
         GlobalContext.sendEvent(velocityCommandExecuteEvent);
     }
 }

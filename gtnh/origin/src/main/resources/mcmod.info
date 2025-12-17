@@ -1,0 +1,27 @@
+{
+  "modListVersion": 2,
+  "modList": [
+    {
+      "modid": "${modId}",
+      "name": "${modName}",
+      "description": "Minecraft Server Mod/Plugin for Real-time Player Events & API Broadcast Messaging.",
+      "version": "${modVersion}",
+      "mcversion": "${minecraftVersion}",
+      "url": "https://github.com/17TheWord/QueQiao",
+      "updateUrl": "",
+      "authorList": [
+        "17TheWord"
+      ],
+      "credits": "",
+      "logoFile": "",
+      "screenshots": [],
+      "parent": "",
+      "requiredMods": [],
+      "dependencies": [],
+      "dependants": [],
+      "useDependencyInformation": false,
+      "clientSideRequired": false,
+      "serverSideRequired": true
+    }
+  ]
+}

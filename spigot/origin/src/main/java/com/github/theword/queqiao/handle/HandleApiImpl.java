@@ -1,9 +1,9 @@
 package com.github.theword.queqiao.handle;
 
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.handle.HandleApiService;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
-import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.SpigotTool;
 import com.google.gson.JsonElement;
 import net.md_5.bungee.api.ChatMessageType;
@@ -22,7 +22,7 @@ public class HandleApiImpl implements HandleApiService {
 
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        BaseComponent[] prefix = SpigotTool.buildComponent(Tool.getPrefixComponent());
+        BaseComponent[] prefix = SpigotTool.buildComponent(GlobalContext.getMessagePrefixJsonObject());
         BaseComponent[] message = SpigotTool.buildComponent(jsonElement);
 
         BaseComponent textComponent = new TextComponent();
@@ -84,7 +84,7 @@ public class HandleApiImpl implements HandleApiService {
             return PrivateMessageResponse.playerNotOnline();
         }
 
-        BaseComponent[] prefix = SpigotTool.buildComponent(Tool.getPrefixComponent());
+        BaseComponent[] prefix = SpigotTool.buildComponent(GlobalContext.getMessagePrefixJsonObject());
         BaseComponent[] message = SpigotTool.buildComponent(jsonElement);
 
         BaseComponent textComponent = new TextComponent();

@@ -1,104 +1,84 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.event.forge.ForgeServerPlayer;
-import com.github.theword.queqiao.event.forge.dto.advancement.DisplayInfoDTO;
-import com.github.theword.queqiao.event.forge.dto.advancement.ForgeAdvancement;
+import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
+import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import net.minecraft.advancements.Advancement;
 
+import net.minecraft.advancements.DisplayInfo;
 // IF > forge-1.16.5
-//import com.github.theword.queqiao.event.fabric.dto.advancement.AdvancementRewardsDTO;
-//import com.github.theword.queqiao.event.forge.dto.advancement.ItemStackDTO;
-//import net.minecraft.network.chat.Component;
-//import net.minecraft.world.item.ItemStack;
 //import net.minecraft.server.level.ServerPlayer;
 // ELSE
-//import net.minecraft.util.text.IFormattableTextComponent;
+//import net.minecraft.util.text.TranslationTextComponent;
 //import net.minecraft.entity.player.ServerPlayerEntity;
+// END IF
+
+// IF forge-1.18.2
+//import net.minecraft.network.chat.TranslatableComponent;
+// ELSE IF >= forge-1.19
+//import net.minecraft.network.chat.contents.TranslatableContents;
 // END IF
 
 public class ForgeTool {
     // IF > forge-1.16.5
-//    public static ForgeServerPlayer getForgePlayer(ServerPlayer player) {
+//    public static PlayerModel getForgePlayer(ServerPlayer forgeServerPlayer) {
         // ELSE
-//    public static ForgeServerPlayer getForgePlayer(ServerPlayerEntity player) {
+//    public static PlayerModel getForgePlayer(ServerPlayerEntity forgeServerPlayer) {
         // END IF
-        ForgeServerPlayer forgeServerPlayer = new ForgeServerPlayer();
-        forgeServerPlayer.setNickname(player.getName().getString());
-        forgeServerPlayer.setDisplayName(player.getDisplayName().getString());
-
-        forgeServerPlayer.setUuid(player.getUUID());
-        forgeServerPlayer.setIpAddress(player.getIpAddress());
-
-        forgeServerPlayer.setSpeed(player.getSpeed());
-        forgeServerPlayer.setGameMode(player.gameMode.getGameModeForPlayer().toString());
-
-        forgeServerPlayer.setBlockX((int) player.getX());
-        forgeServerPlayer.setBlockY((int) player.getY());
-        forgeServerPlayer.setBlockZ((int) player.getZ());
-
-        forgeServerPlayer.setSwimming(player.isSwimming());
-        forgeServerPlayer.setSleeping(player.isSleeping());
-        forgeServerPlayer.setBlocking(player.isBlocking());
-
-        // IF > forge-1.16.5
-//        forgeServerPlayer.setFlying(player.getAbilities().flying);
-//        forgeServerPlayer.setFlyingSpeed(player.getAbilities().getFlyingSpeed());
-        // ELSE
-//        forgeServerPlayer.setFlying(player.abilities.flying);
-//        forgeServerPlayer.setFlyingSpeed(player.abilities.getFlyingSpeed());
-        // END IF
-
-        return forgeServerPlayer;
+        PlayerModel playerModel = new PlayerModel();
+        playerModel.setNickname(forgeServerPlayer.getName().getString());
+        playerModel.setUuid(forgeServerPlayer.getUUID());
+        playerModel.setAddress(forgeServerPlayer.getIpAddress());
+        playerModel.setHealth((double) forgeServerPlayer.getHealth());
+        playerModel.setMaxHealth((double) forgeServerPlayer.getMaxHealth());
+        playerModel.setExperienceLevel(forgeServerPlayer.experienceLevel);
+        playerModel.setExperienceProgress((double) forgeServerPlayer.experienceProgress);
+        playerModel.setTotalExperience(forgeServerPlayer.totalExperience);
+        playerModel.setOp(forgeServerPlayer.hasPermissions(2));
+        playerModel.setWalkSpeed((double) forgeServerPlayer.getSpeed());
+        playerModel.setX(forgeServerPlayer.getX());
+        playerModel.setY(forgeServerPlayer.getY());
+        playerModel.setZ(forgeServerPlayer.getZ());
+        return playerModel;
     }
 
-    public static ForgeAdvancement getForgeAdvancement(Advancement advancement) {
-        ForgeAdvancement forgeAdvancement = new ForgeAdvancement();
+    public static AchievementModel getForgeAchievement(Advancement advancement) {
+        AchievementModel achievementModel = new AchievementModel();
+        DisplayModel displayModel = new DisplayModel();
         // IF >= forge-1.21
-//        advancement.name().ifPresent(name -> forgeAdvancement.setName(name.getString()));
-//        advancement.parent().ifPresent(parent -> forgeAdvancement.setParent(parent.toString()));
-//        advancement.display().ifPresent(displayInfo -> {
-//            DisplayInfoDTO displayInfoDTO = new DisplayInfoDTO();
-//            displayInfoDTO.setTitle(displayInfo.getTitle().getString());
-//            displayInfoDTO.setDescription(displayInfo.getDescription().getString());
-//
-//            ItemStack icon = displayInfo.getIcon();
-//            ItemStackDTO itemStackDTO = new ItemStackDTO();
-//            itemStackDTO.setCount(icon.getCount());
-//            itemStackDTO.setPopTime(icon.getPopTime());
-//            itemStackDTO.setDisplayName(icon.getDisplayName().getString());
-//            itemStackDTO.setItem(icon.getItem().toString());
-//            displayInfoDTO.setIcon(itemStackDTO);
-//            forgeAdvancement.setDisplay(displayInfoDTO);
-//        });
-//        AdvancementRewardsDTO advancementRewardsDTO = new AdvancementRewardsDTO();
-//        advancementRewardsDTO.setExperience(advancement.rewards().experience());
-////        advancementRewardsDTO.setLoot(advancement.rewards().loot().stream().map(ResourceKey::toString).collect(Collectors.toList()));
-////        advancementRewardsDTO.setRecipes(advancement.rewards().recipes().stream().map(ResourceLocation::toString).collect(Collectors.toList()));
-//        forgeAdvancement.setRewards(advancementRewardsDTO);
-        // ELSE
-//        forgeAdvancement.setId(advancement.getId().toString());
-//        forgeAdvancement.setParent(advancement.getParent() != null ? advancement.getParent().getId().toString() : null);
-//        if (advancement.getDisplay() != null) {
-//            DisplayInfoDTO displayInfoDTO = new DisplayInfoDTO();
-//            displayInfoDTO.setTitle(advancement.getDisplay().getTitle().getString());
-//            displayInfoDTO.setDescription(advancement.getDisplay().getDescription().getString());
-            // IF > forge-1.16.5
-//            ItemStack icon = advancement.getDisplay().getIcon();
-//            ItemStackDTO itemStackDTO = new ItemStackDTO();
-//            itemStackDTO.setCount(icon.getCount());
-//            itemStackDTO.setPopTime(icon.getPopTime());
-//            itemStackDTO.setItem(icon.getItem().toString());
-//            displayInfoDTO.setIcon(itemStackDTO);
-            // END IF
-//            forgeAdvancement.setDisplay(displayInfoDTO);
+//        if (advancement.display().isEmpty()) {
+//            return achievementModel;
 //        }
-//        forgeAdvancement.setRewards(advancement.getRewards().serializeToJson());
-//        forgeAdvancement.setChatComponent(advancement.getChatComponent().getString());
-//        forgeAdvancement.setText(advancement.getChatComponent().getString());
-// END IF
-        // IF >= forge-1.20
-//        forgeAdvancement.setSendsTelemetryEvent(advancement.sendsTelemetryEvent());
+//        if (advancement.parent().isPresent()) {
+//            achievementModel.setKey(advancement.parent().get().toString());
+//        }
+//        DisplayInfo displayInfo = advancement.display().get();
+        // ELSE
+//        achievementModel.setKey(advancement.getId().toString());
+//        if (advancement.getDisplay() == null) {
+//            return achievementModel;
+//        }
+//        DisplayInfo displayInfo = advancement.getDisplay();
         // END IF
-        return forgeAdvancement;
+
+        // IF >= forge-1.21
+//        displayModel.setFrame(displayInfo.getType().toString());
+        // ELSE
+//        displayModel.setFrame(displayInfo.getFrame().toString());
+        // END IF
+
+        // IF forge-1.16.5
+//        displayModel.setTitle(((TranslationTextComponent) displayInfo.getTitle()).getKey());
+//        displayModel.setDescription(((TranslationTextComponent) displayInfo.getDescription()).getKey());
+        // ELSE IF forge-1.18.2
+//        displayModel.setTitle(((TranslatableComponent) displayInfo.getTitle()).getKey());
+//        displayModel.setDescription(((TranslatableComponent) displayInfo.getDescription()).getKey());
+        // ELSE
+//        displayModel.setTitle(((TranslatableContents) displayInfo.getTitle().getContents()).getKey());
+//        displayModel.setDescription(((TranslatableContents) displayInfo.getDescription().getContents()).getKey());
+        // END IF
+
+        achievementModel.setDisplay(displayModel);
+        return achievementModel;
     }
 }

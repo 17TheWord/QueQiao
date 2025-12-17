@@ -1,8 +1,8 @@
 package com.github.theword.queqiao.handle;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.handle.HandleApiService;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
-import com.github.theword.queqiao.tool.utils.Tool;
 import com.google.gson.JsonElement;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
@@ -20,7 +20,7 @@ public class HandleApiImpl implements HandleApiService {
 
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        Component component = GsonComponentSerializer.gson().deserializeFromTree(Tool.getPrefixComponent());
+        Component component = GsonComponentSerializer.gson().deserializeFromTree(GlobalContext.getMessagePrefixJsonObject());
         component = component.append(GsonComponentSerializer.gson().deserializeFromTree(jsonElement));
         minecraftServer.sendMessage(component);
     }
@@ -57,7 +57,7 @@ public class HandleApiImpl implements HandleApiService {
     public PrivateMessageResponse handleSendPrivateMessage(String nickname, UUID uuid, JsonElement jsonElement) {
         for (Player player : minecraftServer.getAllPlayers()) {
             if ((uuid != null && uuid.equals(player.getUniqueId())) || (nickname != null && nickname.equals(player.getUsername()))) {
-                Component component = GsonComponentSerializer.gson().deserializeFromTree(Tool.getPrefixComponent());
+                Component component = GsonComponentSerializer.gson().deserializeFromTree(GlobalContext.getMessagePrefixJsonObject());
                 component = component.append(GsonComponentSerializer.gson().deserializeFromTree(jsonElement));
                 minecraftServer.sendMessage(component);
                 return PrivateMessageResponse.sendSuccess(getVelocityPlayer(player));

@@ -18,25 +18,40 @@
   <a href="https://github.com/17TheWord/QueQiao/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license">
   </a>
-  <a href="https://www.spigotmc.org">
-    <img src="https://img.shields.io/badge/SpigotMC-1.12.2--latest-blue?logo=SpigotMC" alt="spigotmc"/>
-  </a>
-  <a href="https://files.minecraftforge.net">
-    <img src="https://img.shields.io/badge/Forge-1.16.5--1.21-blue?logo=data:image/png;base64,..." alt="forge">
-  </a>
-  <a href="https://fabricmc.net">
-    <img src="https://img.shields.io/badge/Fabric-1.16.5--1.21-blue?logo=data:image/png;base64,..." alt="fabric">
-  </a>
-  <a href="https://papermc.io/software/velocity">
-    <img src="https://img.shields.io/badge/Velocity-3.3.0-blue?logo=data:image/png;base64,..." alt="velocity">
-  </a>
   <a href="https://github.com/17TheWord/QueQiao/releases">
     <img src="https://img.shields.io/github/v/release/17TheWord/QueQiao" alt="release">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/17TheWord/QueQiao/wiki">📖 Documentation</a>
+  <a href="https://www.spigotmc.org">
+    <img src="https://img.shields.io/badge/SpigotMC-1.12.2--latest-blue?logo=data:image/png;base64,..." alt="spigotmc"/>
+  </a>
+  <a href="https://docs.papermc.io/paper">
+    <img src="https://img.shields.io/badge/PaperMC-1.17.1--latest-blue?logo=data:image/png;base64,..." alt="velocity">
+  </a>
+  <a href="https://docs.papermc.io/folia">
+    <img src="https://img.shields.io/badge/Folia-1.21.4--latest-blue?logo=data:image/png;base64,..." alt="velocity">
+  </a>
+  <a href="https://papermc.io/software/velocity">
+    <img src="https://img.shields.io/badge/Velocity-3.3.0-blue?logo=data:image/png;base64,..." alt="velocity">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://files.minecraftforge.net">
+    <img src="https://img.shields.io/badge/Forge-1.7.10--1.21-blue?logo=data:image/png;base64,..." alt="forge">
+  </a>
+  <a href="https://fabricmc.net">
+    <img src="https://img.shields.io/badge/Fabric-1.16.5--1.21.8-blue?logo=data:image/png;base64,..." alt="fabric">
+  </a>
+  <a href="https://neoforged.net/">
+    <img src="https://img.shields.io/badge/NeoForge-1.21.1-blue?logo=data:image/png;base64,..." alt="fabric">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://queqiao-docs.pages.dev">📖 Documentation</a>
   ·
   <a href="https://modrinth.com/plugin/queqiao">⬇️ Modrinth</a>
   ·
@@ -48,24 +63,28 @@
 ## Introduction
 
 - Distributes **player events** from the server in `JSON` format via `WebSocket`
-    - Implemented [`Events`](https://github.com/17TheWord/QueQiao/wiki/4.-Event-Types):
-        - [`Player Chat`](https://github.com/17TheWord/QueQiao/wiki/4.-Event-Types)
-        - [`Player Command`](https://github.com/17TheWord/QueQiao/wiki/4.-Event-Types)
-        - [`Player Death`](https://github.com/17TheWord/QueQiao/wiki/4.-Event-Types) (Not available for Velocity)
-        - [`Player Join`](https://github.com/17TheWord/QueQiao/wiki/4.-Event-Types)
-        - [`Player Quit`](https://github.com/17TheWord/QueQiao/wiki/4.-Event-Types)
+    - Implemented [`Events`](https://queqiao-docs.pages.dev/events/v2/):
+        - [`Player Chat`](https://queqiao-docs.pages.dev/events/v2/message/player-chat-event.html)
+        - [`Player Command`](https://queqiao-docs.pages.dev/events/v2/message/player-command-event.html)
+        - [`Player Death`](https://queqiao-docs.pages.dev/events/v2/notice/player-death-event.html)
+        - [`Player Join`](https://queqiao-docs.pages.dev/events/v2/notice/player-join-event.html)
+        - [`Player Quit`](https://queqiao-docs.pages.dev/events/v2/notice/player-quit-event.html)
+        - [`Player Advancement (Achievement)`](https://queqiao-docs.pages.dev/events/v2/notice/player-achievement-event.html)
 - Receives `JSON` messages via `WebSocket` and forwards to in-game players
-    - Implemented APIs:
-        - [`Broadcast`](https://github.com/17TheWord/QueQiao/wiki/5.-API#broadcast--send-message)
-        - [`PrivateMessage`](https://github.com/17TheWord/QueQiao/wiki/5.-API#privatemessage)
-        - [`Title & SubTitle`](https://github.com/17TheWord/QueQiao/wiki/5.-API#title)
-        - [`ActionBar`](https://github.com/17TheWord/QueQiao/wiki/5.-API#actionbar)
+    - Implemented [APIs](https://queqiao-docs.pages.dev/api/v2/):
+        - [`Broadcast`](https://queqiao-docs.pages.dev/api/v2/broadcast.html)
+        - [`Private Message`](https://queqiao-docs.pages.dev/api/v2/private-message.html)
+        - [`Title & SubTitle`](https://queqiao-docs.pages.dev/api/v2/title.html)
+        - [`Action Bar`](https://queqiao-docs.pages.dev/api/v2/action-bar.html)
+        - [`Rcon Command`](https://queqiao-docs.pages.dev/api/v2/rcon-command.html)
 
 ## Documentation & Downloads
 
-- Visit the [`Wiki`](https://github.com/17TheWord/QueQiao/wiki) for detailed documentation
+- Visit the [QueQiao Document](https://queqiao-docs.pages.dev/) for detailed documentation
 - [![`Modrinth`](./assets/modrinth.svg)](https://modrinth.com/plugin/queqiao)
 - [![`CurseForge`](./assets/curseforge.svg)](https://www.curseforge.com/minecraft/mc-mods/queqiao)
+
+> Can't find a suitable Mod/Plugin version? Feel free to submit an [Issue](https://github.com/17TheWord/QueQiao/issues/new?template=version_feature.yml)
 
 ## Quick Start
 
@@ -75,53 +94,52 @@
     - `host: "127.0.0.1"` # WebSocket Server address
     - `port: 8080` # WebSocket Server port
 3. Start the server and wait for `WebSocket Server` to initialize
-4. Use [`ApiFox`](https://apifox.com/) or other API testing tools, or connect with [Integration](#integration) projects
+4. Use [`ApiFox`](https://apifox.com/) or other API testing tools, or connect with [Integration](#integration-projects) projects
     - Configure global `Request Header`:
       ```json5
       {
+        // Required: server name, must match 'server_name' in config.yml
         "x-self-name": "TestServer",
-        // Required
-        // Server name, must match 'server_name' in config.yml
-        "Authorization": "Bearer 123",
-        // Optional
-        // Authentication, must match 'access_token' in config.yml (can be omitted if 'auth_token' is empty)
-        "x-client-origin": "apifox"
-        // Required
-        // Client origin (set to 'minecraft' for Minecraft WebSocket Client connections, which will be rejected)
+        // Optional: auth token, must match 'access_token' in config.yml (omit if empty)
+        "Authorization": "Bearer 123"
       }
       ```
 5. Launch the game and join the server
-6. Refer to the [`API Documentation`](https://queqiao.apifox.cn/) to use the corresponding API for sending messages or listening to player events. You can test with API tools or integration projects.
+6. Refer to the [API Documentation](https://queqiao-docs.pages.dev/api/v2/) to send messages or listen to player events.
 
 ## Integration Projects
 
-- [`@17TheWord/nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft): `NoneBot2` adapter supporting message exchange and `Rcon` commands
-- [`@17TheWord/nonebot-plugin-mcqq`](https://github.com/17TheWord/nonebot-plugin-mcqq): `NoneBot2` plugin supporting `OneBot` and `QQ` adapters for chat integration, with command support via `Rcon`
-- [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin): Yunzai plugin for `OneBot` protocol integration, supporting chat and command via `Rcon`
-- [`@Twiyan0/koishi-plugin-minecraft-sync-msg`](https://github.com/Twiyin0/koishi-plugin-minecraft-sync-msg): `Koishi` plugin for chat integration and command support via `Rcon`
-- [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq): `ZeroBot` plugin for `OneBot` protocol and Minecraft chat integration
-- [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq): Provides `QQ <-> MC` message integration for `AstrBot`
+- [`@17TheWord/nonebot-adapter-minecraft`](https://github.com/17TheWord/nonebot-adapter-minecraft): `NoneBot2` adapter
+- [`@17TheWord/nonebot-plugin-mcqq`](https://github.com/17TheWord/nonebot-plugin-mcqq): `NoneBot2` plugin
+- [`@CikeyQi/mc-plugin`](https://github.com/CikeyQi/mc-plugin): `YunZai` plugin
+- [`@Twiyan0/koishi-plugin-minecraft-sync-msg`](https://github.com/Twiyin0/koishi-plugin-minecraft-sync-msg): `Koishi` plugin
+- [`@17TheWord/zerobot-plugin-mcqq`](https://github.com/17TheWord/zerobot-plugin-mcqq): `ZeroBot` plugin
+- [`@kterna/astrbot_plugin_mcqq`](https://github.com/kterna/astrbot_plugin_mcqq): `AstrBot` plugin
+- [`@KroMiose/nekro-agent`](https://github.com/KroMiose/nekro-agent): `AI` agent
+
+## Related Projects
+
 - [`@kterna/queqiao_mcdr`](https://github.com/kterna/queqiao_mcdr): `MCDR` implementation of `QueQiao` for message exchange
 
 ## Compatibility
 
-- [`@kitUIN/ChatImage`](https://github.com/kitUIN/ChatImage): Displays images in Minecraft chat
+- [`@kitUIN/ChatImage`](https://github.com/kitUIN/ChatImage): Displays images in `Minecraft` chat
 
 ## Community
 
-- [`Discord`](https://discord.gg/SBUkMYsyf2)
+- [Discord](https://discord.gg/SBUkMYsyf2)
 
 ## Special Thanks
 
-- [`@kitUIN`](https://github.com/kitUIN): For code assistance and build tools
-- [`@kitUIN/ModMultiVersion`](https://github.com/kitUIN/ModMultiVersion): IDEA multi-version MOD plugin
-- [`@kitUIN/ModMultiVersionTool`](https://github.com/kitUIN/ModMultiVersionTool): Multi-version MOD build tool
+- [@kitUIN](https://github.com/kitUIN): For code assistance and build tools
+- [`@kitUIN/ModMultiVersion`](https://github.com/kitUIN/ModMultiVersion): IDEA multi-version `MOD` plugin
+- [`@kitUIN/ModMultiVersionTool`](https://github.com/kitUIN/ModMultiVersionTool): Multi-version `MOD` build tool
 
 ## Support & Contribution
 
-- Star this project if you find it useful or support me on [`Afdian`](https://afdian.com/a/17TheWord)
-- Submit suggestions/bugs via [`Issues`](https://github.com/17TheWord/QueQiao/issues)
-- Contribute via [`Pull requests`](https://github.com/17TheWord/QueQiao/pulls)
+- Star this project if you find it useful or support me on [AFDian](https://afdian.com/a/17TheWord)
+- Submit suggestions/bugs via [Issues](https://github.com/17TheWord/QueQiao/issues)
+- Contribute via [Pull requests](https://github.com/17TheWord/QueQiao/pulls)
 
 ## Stargazers
 
@@ -129,4 +147,4 @@
 
 ## License
 
-This project is licensed under the [`MIT`](https://github.com/17TheWord/QueQiao/blob/main/LICENSE) license.
+This project is licensed under the [MIT](https://github.com/17TheWord/QueQiao/blob/main/LICENSE) license.
