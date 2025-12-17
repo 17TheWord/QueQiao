@@ -32,7 +32,7 @@ jobs:
       - uses: actions/checkout@v5
       - name: Generate Matrix
         id: set-matrix
-        run: chmod 777 matrix.sh && ./matrix.sh -path "vanilla","spigot","velocity","forge","neoforge","fabric","folia","paper"
+        run: chmod 777 matrix.sh && ./matrix.sh -path "vanilla","spigot","velocity","forge","neoforge","fabric","folia","paper","gtnh"
 
   build:
     runs-on: ubuntu-latest
