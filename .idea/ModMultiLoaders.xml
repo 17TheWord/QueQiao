@@ -12,6 +12,7 @@
         <option value="paper" />
         <option value="velocity" />
         <option value="vanilla" />
+        <option value="gtnh" />
       </list>
     </option>
   </component>
