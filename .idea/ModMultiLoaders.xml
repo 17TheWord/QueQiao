@@ -13,6 +13,7 @@
         <option value="velocity" />
         <option value="vanilla" />
         <option value="gtnh" />
+        <option value="cleanroom" />
       </list>
     </option>
   </component>
