@@ -57,7 +57,7 @@ kotlin {
 }
 
 shadowJar {
-    archiveBaseName.set("${mod_name}-minecraft+vanilla")
+    archiveBaseName.set("${mod_name}-vanilla+minecraft")
     archiveClassifier.set("")
     destinationDirectory.set(file("../../QueQiao-jar/${version}"))
     manifest {
