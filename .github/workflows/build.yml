@@ -92,6 +92,18 @@ jobs:
             echo "VERSION_TYPE=beta" >> $GITHUB_ENV
           fi
 
+      - name: Resolve Publish Loader
+        id: resolve-loader
+        run: |
+          case "${{ matrix.config.mc-loader }}" in
+            gtnh|cleanroom)
+              echo "PUBLISH_LOADER=forge" >> $GITHUB_ENV
+              ;;
+            *)
+              echo "PUBLISH_LOADER=${{ matrix.config.mc-loader }}" >> $GITHUB_ENV
+              ;;
+          esac
+
       - uses: Kir-Antipov/mc-publish@v3.3
         if: |
           (github.ref == 'refs/heads/main' && github.event_name == 'push' && matrix.config.mc-loader != 'vanilla') ||
@@ -104,9 +116,9 @@ jobs:
           name: QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}
           version: ${{ env.MOD_VERSION }}
           version-type: ${{ env.VERSION_TYPE }}
-          loaders: ${{ matrix.config.mc-loader }}
+          loaders: ${{ env.PUBLISH_LOADER }}
           game-versions: ${{ matrix.config.publish-version }}
-          files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
+          files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ env.PUBLISH_LOADER }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
       - name: Upload to Release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push' && matrix.config.mc-loader == 'vanilla'
