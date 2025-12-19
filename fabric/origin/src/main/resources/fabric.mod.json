@@ -7,7 +7,7 @@
   "authors": [],
   "contact": {},
   "license": "MIT",
-  "icon": "logo.png",
+  "icon": "queqiao/logo.png",
   "environment": "server",
   "entrypoints": {
     "main": [
