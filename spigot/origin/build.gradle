@@ -47,9 +47,6 @@ dependencies {
     implementation "org.spigotmc:spigot-api:${project.spigot_version}"
     compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 
-    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
-    implementation "org.projectlombok:lombok:${project.lombok_version}"
-
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
     implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
     implementation "org.yaml:snakeyaml:${snakeyaml_version}"
