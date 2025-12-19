@@ -39,9 +39,6 @@ dependencies {
     implementation "dev.folia:folia-api:${folia_version}"
     compileOnly "org.jetbrains:annotations:${jetbrains_annotations_version}"
 
-    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
-    implementation "org.projectlombok:lombok:${lombok_version}"
-
     implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
     implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
     implementation "org.yaml:snakeyaml:${snakeyaml_version}"
