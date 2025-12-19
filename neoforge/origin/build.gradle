@@ -85,9 +85,6 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
-    implementation "org.projectlombok:lombok:${lombok_version}"
-
     jarJar(implementation("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
     additionalRuntimeClasspath "com.github.theword.queqiao:queqiao-tool:${tool_version}"
 
