@@ -13,9 +13,7 @@ folia-supported: true
 commands:
   queqiao:
     description: 鹊桥命令
-    permission: queqiao
-    permission-message: 您没有执行命令的权限
-    usage: /queqiao [参数]
+    usage: /queqiao [子命令]
 
 # 权限节点
 permissions:
