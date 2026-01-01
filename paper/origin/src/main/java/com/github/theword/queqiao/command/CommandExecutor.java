@@ -1,7 +1,7 @@
 package com.github.theword.queqiao.command;
 
-import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.command.CommandExecutorHelper;
+import com.github.theword.queqiao.tool.constant.CommandConstant;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -19,14 +19,8 @@ public class CommandExecutor implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        try {
-            commandExecutorHelper.execute(commandSender, args);
-            return true;
-        } catch (Exception e) {
-            GlobalContext.getHandleCommandReturnMessageService().sendReturnMessage(command, "执行命令时出现异常！");
-            GlobalContext.getLogger().error(e.getMessage());
-            return false;
-        }
+        int result = commandExecutorHelper.execute(commandSender, args);
+        return result == CommandConstant.SUCCESS_SIGNAL;
     }
 
     @Override

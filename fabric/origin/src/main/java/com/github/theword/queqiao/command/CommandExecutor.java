@@ -3,7 +3,6 @@ package com.github.theword.queqiao.command;
 import com.github.theword.queqiao.tool.command.RootCommand;
 import com.github.theword.queqiao.tool.command.SubCommand;
 import com.github.theword.queqiao.utils.FabricTool;
-import com.mojang.brigadier.Command;
 // IF > fabric-1.18.2
 //import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 // ELSE
@@ -41,10 +40,7 @@ public class CommandExecutor {
         if (command.isRoot()) {
             builder.requires(FabricTool::permissionCheck);
         }
-        builder.executes(context -> {
-            command.execute(context, Collections.emptyList());
-            return Command.SINGLE_SUCCESS;
-        });
+        builder.executes(context -> command.execute(context, Collections.emptyList()));
         for (SubCommand child : command.getChildren()) {
             builder.then(registerSubCommand(child));
         }

@@ -1,7 +1,7 @@
 package com.github.theword.queqiao.command;
 
 import com.github.theword.queqiao.tool.command.CommandExecutorHelper;
-import com.github.theword.queqiao.tool.constant.BaseConstant;
+import com.github.theword.queqiao.tool.constant.CommandConstant;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -17,7 +17,7 @@ public class CommandExecutor extends CommandBase {
      */
     @Override
     public int getRequiredPermissionLevel() {
-        return BaseConstant.MOD_PERMISSION_LEVEL;
+        return CommandConstant.MOD_PERMISSION_LEVEL;
     }
 
     /**
@@ -41,7 +41,6 @@ public class CommandExecutor extends CommandBase {
     public CommandExecutor() {
         commandExecutorHelper = new CommandExecutorHelper();
     }
-
 
     /**
      * Gets the name of the command

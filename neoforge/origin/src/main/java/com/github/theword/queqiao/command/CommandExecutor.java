@@ -4,7 +4,7 @@ package com.github.theword.queqiao.command;
 import com.github.theword.queqiao.tool.command.RootCommand;
 import com.github.theword.queqiao.tool.command.SubCommand;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
-import com.mojang.brigadier.Command;
+import com.github.theword.queqiao.tool.constant.CommandConstant;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -36,12 +36,9 @@ public class CommandExecutor {
     private static LiteralArgumentBuilder<CommandSourceStack> registerSubCommand(SubCommand command) {
         LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(command.getName());
         if (command.isRoot()) {
-            builder.requires(commandSourceStack -> commandSourceStack.hasPermission(BaseConstant.MOD_PERMISSION_LEVEL));
+            builder.requires(commandSourceStack -> commandSourceStack.hasPermission(CommandConstant.MOD_PERMISSION_LEVEL));
         }
-        builder.executes(context -> {
-            command.execute(context, Collections.emptyList());
-            return Command.SINGLE_SUCCESS;
-        });
+        builder.executes(context -> command.execute(context, Collections.emptyList()));
         for (SubCommand child : command.getChildren()) {
             builder.then(registerSubCommand(child));
         }

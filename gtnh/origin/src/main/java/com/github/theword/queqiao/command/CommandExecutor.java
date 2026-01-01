@@ -1,7 +1,7 @@
 package com.github.theword.queqiao.command;
 
 import com.github.theword.queqiao.tool.command.CommandExecutorHelper;
-import com.github.theword.queqiao.tool.constant.BaseConstant;
+import com.github.theword.queqiao.tool.constant.CommandConstant;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 
@@ -37,6 +37,6 @@ public class CommandExecutor extends CommandBase {
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender) {
-        return sender.canCommandSenderUseCommand(BaseConstant.MOD_PERMISSION_LEVEL, getCommandName());
+        return sender.canCommandSenderUseCommand(CommandConstant.MOD_PERMISSION_LEVEL, getCommandName());
     }
 }
