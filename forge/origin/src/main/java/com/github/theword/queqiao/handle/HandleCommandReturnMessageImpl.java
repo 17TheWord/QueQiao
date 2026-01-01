@@ -1,6 +1,6 @@
 package com.github.theword.queqiao.handle;
 
-import com.github.theword.queqiao.tool.constant.BaseConstant;
+import com.github.theword.queqiao.tool.constant.CommandConstant;
 import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
 import com.mojang.brigadier.context.CommandContext;
 // IF >= forge-1.21
@@ -45,8 +45,6 @@ public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageSe
         // ELSE
 //        CommandContext<net.minecraft.command.CommandSource> context = (CommandContext<net.minecraft.command.CommandSource>) object;
         // END IF
-        if (context.getSource().hasPermission(BaseConstant.MOD_PERMISSION_LEVEL)) return true;
-        handleCommandReturnMessage(object, "您没有权限执行此命令");
-        return false;
+        return context.getSource().hasPermission(CommandConstant.MOD_PERMISSION_LEVEL);
     }
 }

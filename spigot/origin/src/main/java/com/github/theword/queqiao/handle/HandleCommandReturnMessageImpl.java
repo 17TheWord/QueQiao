@@ -27,8 +27,6 @@ public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageSe
     @Override
     public boolean hasPermission(Object object, String node) {
         CommandSender commandSender = (CommandSender) object;
-        if (commandSender.hasPermission(node)) return true;
-        commandSender.sendMessage("您没有权限执行当前命令");
-        return false;
+        return commandSender.hasPermission(node);
     }
 }

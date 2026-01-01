@@ -1,6 +1,7 @@
 package com.github.theword.queqiao.handle;
 
 import com.github.theword.queqiao.tool.constant.BaseConstant;
+import com.github.theword.queqiao.tool.constant.CommandConstant;
 import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.TextComponentString;
@@ -24,8 +25,6 @@ public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageSe
     @Override
     public boolean hasPermission(Object object, String node) {
         ICommandSender sender = (ICommandSender) object;
-        if (sender.canUseCommand(BaseConstant.MOD_PERMISSION_LEVEL,"")) return true;
-        handleCommandReturnMessage(object, "您没有权限执行此命令");
-        return false;
+        return sender.canUseCommand(CommandConstant.MOD_PERMISSION_LEVEL, BaseConstant.COMMAND_HEADER);
     }
 }
