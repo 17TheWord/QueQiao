@@ -84,7 +84,7 @@ processResources {
             name: mod_name,
             version: version,
             main_class: "${mod_group_id}.QueQiao",
-            api_version: api_version,
+            api_version: "1.17",
             author: mod_authors,
             website: mod_website,
             description: mod_description
