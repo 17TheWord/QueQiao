@@ -27,8 +27,9 @@ public class HandleApiImpl implements HandleApiService {
         ITextComponent prefixed = ForgeTool.parseJsonToTextWrapped(GlobalContext.getMessagePrefixJsonObject());
         ITextComponent message = ForgeTool.parseJsonToTextWrapped(jsonElement);
         if (message != null && prefixed != null) {
+            ITextComponent iTextComponent = prefixed.appendSibling(message);
             for (EntityPlayerMP serverPlayer : minecraftServer.getPlayerList().getPlayers()) {
-                serverPlayer.sendMessage(prefixed.appendSibling(message));
+                serverPlayer.sendMessage(iTextComponent);
             }
         }
     }
