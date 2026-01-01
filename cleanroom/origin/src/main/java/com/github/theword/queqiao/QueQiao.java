@@ -1,6 +1,6 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.command.CommandTreeQueQiao;
+import com.github.theword.queqiao.command.CommandExecutor;
 import com.github.theword.queqiao.handle.HandleApiImpl;
 import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.GlobalContext;
@@ -35,7 +35,7 @@ public class QueQiao {
     public void onServerStarting(FMLServerStartingEvent event) {
         minecraftServer = event.getServer();
 
-        CommandTreeQueQiao command = new CommandTreeQueQiao();
+        CommandExecutor command = new CommandExecutor();
         event.registerServerCommand(command);
     }
 

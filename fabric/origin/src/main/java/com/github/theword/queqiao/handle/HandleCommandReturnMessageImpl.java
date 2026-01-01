@@ -18,7 +18,7 @@ public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageSe
     @SuppressWarnings("unchecked")
     public void handleCommandReturnMessage(Object object, String message) {
         CommandContext<ServerCommandSource> context = (CommandContext<ServerCommandSource>) object;
-        if (context.getSource().getEntity() instanceof ServerPlayerEntity)
+        if (context.getSource() != null)
             // IF >= fabric-1.20
 //            context.getSource().sendFeedback(() -> Text.of(message), false);
         // ELSE

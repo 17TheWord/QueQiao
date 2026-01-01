@@ -1,5 +1,6 @@
 package com.github.theword.queqiao;
 
+import com.github.theword.queqiao.command.CommandExecutor;
 import com.github.theword.queqiao.tool.GlobalContext;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
@@ -17,12 +18,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(
-    modid = BaseConstant.MOD_ID,
-    name = BaseConstant.MODULE_NAME,
-    version = Tags.VERSION,
-    acceptableRemoteVersions = "*",
-    acceptedMinecraftVersions = "[1.7.10]",
-    useMetadata = true
+        modid = BaseConstant.MOD_ID,
+        name = BaseConstant.MODULE_NAME,
+        version = Tags.VERSION,
+        acceptableRemoteVersions = "*",
+        acceptedMinecraftVersions = "[1.7.10]",
+        useMetadata = true
 )
 public class QueQiao {
 
@@ -38,17 +39,18 @@ public class QueQiao {
     @SideOnly(Side.SERVER)
     public void onServerStarting(FMLServerStartingEvent event) {
         minecraftServer = event.getServer();
+        event.registerServerCommand(new CommandExecutor());
     }
 
     @Mod.EventHandler
     @SideOnly(Side.SERVER)
     public void onServerStarted(FMLServerStartedEvent event) {
         GlobalContext.init(
-            true,
-            minecraftServer.getMinecraftVersion(),
-            ServerTypeConstant.FORGE,
-            new HandleApiImpl(),
-            new HandleCommandReturnMessageImpl());
+                true,
+                minecraftServer.getMinecraftVersion(),
+                ServerTypeConstant.FORGE,
+                new HandleApiImpl(),
+                new HandleCommandReturnMessageImpl());
         // var eventProcessor = new EventProcessor();
         MinecraftForge.EVENT_BUS.register(new EventProcessor());
         FMLCommonHandler.instance().bus().register(new EventProcessor());
