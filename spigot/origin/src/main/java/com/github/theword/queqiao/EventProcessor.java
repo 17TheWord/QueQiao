@@ -3,6 +3,7 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
 import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
 import com.github.theword.queqiao.tool.utils.Tool;
@@ -40,10 +41,9 @@ class EventProcessor implements Listener {
     void onPlayerDeath(PlayerDeathEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
 
-        DeathModel deathModel = new DeathModel();
-        deathModel.setText(event.getDeathMessage());
+        TranslateModel translateModel = new TranslateModel(null, null, event.getDeathMessage());
 
-        com.github.theword.queqiao.tool.event.PlayerDeathEvent spigotPlayerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getSpigotPlayer(event.getEntity()), deathModel);
+        com.github.theword.queqiao.tool.event.PlayerDeathEvent spigotPlayerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getSpigotPlayer(event.getEntity()), translateModel);
         GlobalContext.sendEvent(spigotPlayerDeathEvent);
     }
 
