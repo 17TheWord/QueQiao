@@ -1,14 +1,18 @@
 package com.github.theword.queqiao.utils;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import net.minecraft.advancements.Advancement;
 
 import net.minecraft.advancements.DisplayInfo;
 // IF > forge-1.16.5
+//import net.minecraft.network.chat.Component;
 //import net.minecraft.server.level.ServerPlayer;
 // ELSE
+//import net.minecraft.util.text.ITextComponent;
 //import net.minecraft.util.text.TranslationTextComponent;
 //import net.minecraft.entity.player.ServerPlayerEntity;
 // END IF
@@ -22,7 +26,7 @@ import net.minecraft.advancements.DisplayInfo;
 public class ForgeTool {
     // IF > forge-1.16.5
 //    public static PlayerModel getForgePlayer(ServerPlayer forgeServerPlayer) {
-        // ELSE
+    // ELSE
 //    public static PlayerModel getForgePlayer(ServerPlayerEntity forgeServerPlayer) {
         // END IF
         PlayerModel playerModel = new PlayerModel();
@@ -81,4 +85,50 @@ public class ForgeTool {
         achievementModel.setDisplay(displayModel);
         return achievementModel;
     }
+
+    // IF forge-1.16.5
+//    public static TranslateModel parseTranslateModel(ITextComponent iTextComponent) {
+//        if (!(iTextComponent instanceof TranslationTextComponent))
+//            return new TranslateModel(null, null, iTextComponent.getString());
+//        TranslationTextComponent translatableTextContent = (TranslationTextComponent) iTextComponent;
+        // ELSE IF forge-1.18.2
+//public static TranslateModel parseTranslateModel(Component component) {
+//if (!(component instanceof TranslatableComponent))
+//return new TranslateModel(null, null, component.getString());
+//TranslatableComponent translatableTextContent = (TranslatableComponent) component;
+        // ELSE
+//    public static TranslateModel parseTranslateModel(Component component) {
+//        if (!(component.getContents() instanceof TranslatableContents))
+//            return new TranslateModel(null, null, component.getString());
+//        TranslatableContents translatableTextContent = (TranslatableContents) component.getContents();
+        // END IF
+        Object[] rawArgs = translatableTextContent.getArgs();
+        TranslateModel[] childModels = new TranslateModel[rawArgs.length];
+        String[] stringsForFormat = new String[rawArgs.length];
+
+        for (int i = 0; i < rawArgs.length; i++) {
+            Object rawArg = rawArgs[i];
+
+            // IF forge-1.16.5
+//            TranslateModel childModel = (rawArg instanceof ITextComponent) ? parseTranslateModel((ITextComponent) rawArg)
+                    // ELSE
+//            TranslateModel childModel = (rawArg instanceof Component) ? parseTranslateModel((Component) rawArg)
+                    // END IF
+
+                    : new TranslateModel(null, null, String.valueOf(rawArg));
+            childModels[i] = childModel;
+            stringsForFormat[i] = childModel.getText();
+        }
+
+        String finalText = GlobalContext.translate(translatableTextContent.getKey(), stringsForFormat);
+        if (finalText.equals(translatableTextContent.getKey())) {
+            // IF forge-1.16.5
+//            finalText = iTextComponent.getString();
+            // ELSE
+//            finalText = component.getString();
+            // END IF
+        }
+        return new TranslateModel(translatableTextContent.getKey(), childModels, finalText);
+    }
+
 }
