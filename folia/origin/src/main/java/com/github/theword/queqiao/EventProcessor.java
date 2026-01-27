@@ -7,10 +7,12 @@ import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
 import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
 import com.github.theword.queqiao.tool.utils.Tool;
+import com.github.theword.queqiao.utils.FoliaTool;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
@@ -64,22 +66,8 @@ class EventProcessor implements Listener {
         Component component = event.deathMessage();
         if (component == null) return;
 
-        DeathModel deathModel = new DeathModel();
-
-        if (component instanceof TranslatableComponent translatableComponent) {
-            deathModel.setKey(translatableComponent.key());
-            String[] args = translatableComponent.arguments().stream().map(arg -> {
-                if (arg instanceof TranslationArgument translationArgument) {
-                    return translationArgument.toString();
-                } else {
-                    return String.valueOf(arg);
-                }
-            }).toArray(String[]::new);
-            deathModel.setArgs(args);
-        }
-        deathModel.setText(getComponentText(component));
-
-        com.github.theword.queqiao.tool.event.PlayerDeathEvent playerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getFoliaPlayer(event.getEntity()), deathModel);
+        TranslateModel translateModel = parseTranslateModel(component);
+        com.github.theword.queqiao.tool.event.PlayerDeathEvent playerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getFoliaPlayer(event.getEntity()), translateModel);
         GlobalContext.sendEvent(playerDeathEvent);
     }
 
