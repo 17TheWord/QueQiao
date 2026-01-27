@@ -2,6 +2,7 @@ package com.github.theword.queqiao.utils;
 
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import com.google.gson.JsonElement;
@@ -55,4 +56,33 @@ public class ForgeTool {
         }
         return null;
     }
+
+    public static TranslateModel parseTranslateModel(ITextComponent iTextComponent) {
+        if (!(iTextComponent instanceof TextComponentTranslation))
+            return new TranslateModel(null, null, iTextComponent.getUnformattedText());
+
+        TextComponentTranslation textComponentTranslation = (TextComponentTranslation) iTextComponent;
+        Object[] rawArgs = textComponentTranslation.getFormatArgs();
+        TranslateModel[] childModels = new TranslateModel[rawArgs.length];
+        String[] stringsForFormat = new String[rawArgs.length];
+
+        for (int i = 0; i < rawArgs.length; i++) {
+            Object rawArg = rawArgs[i];
+            TranslateModel childModel;
+            if (rawArg instanceof ITextComponent) {
+                childModel = parseTranslateModel((ITextComponent) rawArg);
+            } else {
+                childModel = new TranslateModel(null, null, String.valueOf(rawArg));
+            }
+            childModels[i] = childModel;
+            stringsForFormat[i] = childModel.getText();
+        }
+
+        String finalText = GlobalContext.translate(textComponentTranslation.getKey(), stringsForFormat);
+        if (finalText.equals(textComponentTranslation.getKey())) {
+            finalText = textComponentTranslation.getUnformattedText();
+        }
+        return new TranslateModel(textComponentTranslation.getKey(), childModels, finalText);
+    }
+
 }

@@ -4,8 +4,10 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.*;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
+import com.github.theword.queqiao.utils.ForgeTool;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
@@ -92,23 +94,9 @@ public class EventProcessor {
             PlayerModel player = getForgePlayer((EntityPlayerMP) event.getEntity());
             ITextComponent deathMessage = event.getEntityLiving().getCombatTracker().getDeathMessage();
 
-            DeathModel deathModel = new DeathModel();
-            deathModel.setText(deathMessage.getUnformattedText());
+            TranslateModel translateModel = ForgeTool.parseTranslateModel(deathMessage);
 
-            TextComponentTranslation deathMessageTranslation = (TextComponentTranslation) deathMessage;
-
-            deathModel.setKey(deathMessageTranslation.getKey());
-
-            String[] args = Arrays.stream(deathMessageTranslation.getFormatArgs()).map(obj -> {
-                if (obj instanceof ITextComponent) {
-                    return ((ITextComponent) obj).getUnformattedText();
-                } else {
-                    return String.valueOf(obj);
-                }
-            }).toArray(String[]::new);
-            deathModel.setArgs(args);
-
-            PlayerDeathEvent forgePlayerDeathEvent = new PlayerDeathEvent(player, deathModel);
+            PlayerDeathEvent forgePlayerDeathEvent = new PlayerDeathEvent(player, translateModel);
             GlobalContext.sendEvent(forgePlayerDeathEvent);
         } catch (Exception e) {
             GlobalContext.getLogger().error("Error processing LivingDeathEvent: ", e);
