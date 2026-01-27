@@ -1,8 +1,10 @@
 package com.github.theword.queqiao.handle;
 
-import com.github.theword.queqiao.tool.constant.BaseConstant;
+import com.github.theword.queqiao.tool.constant.CommandConstant;
 import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
 import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.PlainTextContents;
 
 public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageService {
@@ -10,8 +12,8 @@ public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageSe
     @Override
     @SuppressWarnings("unchecked")
     public void handleCommandReturnMessage(Object object, String message) {
-        CommandContext<net.minecraft.commands.CommandSourceStack> context = (CommandContext<net.minecraft.commands.CommandSourceStack>) object;
-        context.getSource().sendSystemMessage(net.minecraft.network.chat.MutableComponent.create(new PlainTextContents.LiteralContents(message)));
+        CommandContext<CommandSourceStack> context = (CommandContext<CommandSourceStack>) object;
+        context.getSource().sendSystemMessage(MutableComponent.create(new PlainTextContents.LiteralContents(message)));
     }
 
     /**
@@ -25,9 +27,7 @@ public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageSe
     @Override
     @SuppressWarnings("unchecked")
     public boolean hasPermission(Object object, String node) {
-        CommandContext<net.minecraft.commands.CommandSourceStack> context = (CommandContext<net.minecraft.commands.CommandSourceStack>) object;
-        if (context.getSource().hasPermission(BaseConstant.MOD_PERMISSION_LEVEL)) return true;
-        handleCommandReturnMessage(object, "您没有权限执行此命令");
-        return false;
+        CommandContext<CommandSourceStack> context = (CommandContext<CommandSourceStack>) object;
+        return context.getSource().hasPermission(CommandConstant.MOD_PERMISSION_LEVEL);
     }
 }

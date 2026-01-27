@@ -27,7 +27,7 @@ import net.minecraft.text.MutableText;
 //import net.minecraft.command.permission.Permission;
 //import net.minecraft.command.permission.PermissionLevel;
 // ELSE
-//import com.github.theword.queqiao.tool.constant.BaseConstant;
+//import com.github.theword.queqiao.tool.constant.CommandConstant;
 // END IF
 
 import net.minecraft.server.command.ServerCommandSource;
@@ -51,7 +51,7 @@ public class FabricTool {
         // IF >= fabric-1.21.11
 //        player.setOp(fabricPlayer.getPermissions().hasPermission(new Permission.Level(PermissionLevel.ADMINS)));
         // ELSE
-//player.setOp(fabricPlayer.hasPermissionLevel(BaseConstant.MOD_PERMISSION_LEVEL));
+//player.setOp(fabricPlayer.hasPermissionLevel(CommandConstant.MOD_PERMISSION_LEVEL));
         // END IF
 
         player.setWalkSpeed((double) fabricPlayer.getMovementSpeed());
@@ -93,7 +93,7 @@ public class FabricTool {
         // IF >= fabric-1.21.11
 //        return source.getPermissions().hasPermission(new Permission.Level(PermissionLevel.ADMINS));
         // ELSE
-// return source.hasPermissionLevel(BaseConstant.MOD_PERMISSION_LEVEL);
+// return source.hasPermissionLevel(CommandConstant.MOD_PERMISSION_LEVEL);
         // END IF
     }
 }

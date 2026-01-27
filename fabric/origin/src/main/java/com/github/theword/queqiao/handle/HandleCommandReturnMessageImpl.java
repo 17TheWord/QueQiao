@@ -3,7 +3,6 @@ package com.github.theword.queqiao.handle;
 import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 import static com.github.theword.queqiao.utils.FabricTool.permissionCheck;
@@ -18,7 +17,7 @@ public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageSe
     @SuppressWarnings("unchecked")
     public void handleCommandReturnMessage(Object object, String message) {
         CommandContext<ServerCommandSource> context = (CommandContext<ServerCommandSource>) object;
-        if (context.getSource().getEntity() instanceof ServerPlayerEntity)
+        if (context.getSource() != null)
             // IF >= fabric-1.20
 //            context.getSource().sendFeedback(() -> Text.of(message), false);
         // ELSE
@@ -38,8 +37,6 @@ public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageSe
     @SuppressWarnings("unchecked")
     public boolean hasPermission(Object object, String node) {
         CommandContext<ServerCommandSource> context = (CommandContext<ServerCommandSource>) object;
-        if (permissionCheck(context.getSource())) return true;
-        handleCommandReturnMessage(object, "你没有权限执行此命令");
-        return false;
+        return permissionCheck(context.getSource());
     }
 }
