@@ -1,10 +1,13 @@
 package com.github.theword.queqiao.utils;
 
+import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -41,4 +44,28 @@ public class NeoForgeTool {
         achievement.setDisplay(display);
         return achievement;
     }
+
+    public static TranslateModel parseTranslateModel(Component component) {
+        if (!(component.getContents() instanceof TranslatableContents translatableTextContent))
+            return new TranslateModel(null, null, component.getString());
+        Object[] rawArgs = translatableTextContent.getArgs();
+        TranslateModel[] childModels = new TranslateModel[rawArgs.length];
+        String[] stringsForFormat = new String[rawArgs.length];
+
+        for (int i = 0; i < rawArgs.length; i++) {
+            Object rawArg = rawArgs[i];
+
+            TranslateModel childModel = (rawArg instanceof Component) ? parseTranslateModel((Component) rawArg)
+                    : new TranslateModel(null, null, String.valueOf(rawArg));
+            childModels[i] = childModel;
+            stringsForFormat[i] = childModel.getText();
+        }
+
+        String finalText = GlobalContext.translate(translatableTextContent.getKey(), stringsForFormat);
+        if (finalText.equals(translatableTextContent.getKey())) {
+            finalText = component.getString();
+        }
+        return new TranslateModel(translatableTextContent.getKey(), childModels, finalText);
+    }
+
 }

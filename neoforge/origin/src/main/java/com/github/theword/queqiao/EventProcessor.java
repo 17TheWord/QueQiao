@@ -3,9 +3,11 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.*;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
 import com.github.theword.queqiao.tool.utils.Tool;
+import com.github.theword.queqiao.utils.NeoForgeTool;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.advancements.Advancement;
@@ -95,24 +97,9 @@ public class EventProcessor {
 
         LivingEntity entity = event.getEntity();
 
-        DeathModel deathModel = new DeathModel();
-
         Component localizedDeathMessage = event.getSource().getLocalizedDeathMessage(entity);
-
-        if (localizedDeathMessage.getContents() instanceof TranslatableContents translatableContents) {
-            deathModel.setKey(translatableContents.getKey());
-            String[] args = Arrays.stream(translatableContents.getArgs()).map(obj -> {
-                if (obj instanceof Component component) {
-                    return component.getString();
-                } else {
-                    return String.valueOf(obj);
-                }
-            }).toArray(String[]::new);
-            deathModel.setArgs(args);
-        }
-        deathModel.setText(localizedDeathMessage.getString());
-
-        PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, deathModel);
+        TranslateModel translateModel = NeoForgeTool.parseTranslateModel(localizedDeathMessage);
+        PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, translateModel);
         GlobalContext.sendEvent(forgeCommandEvent);
     }
 
