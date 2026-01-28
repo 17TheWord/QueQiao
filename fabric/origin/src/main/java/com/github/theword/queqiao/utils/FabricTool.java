@@ -11,9 +11,8 @@ import net.minecraft.text.MutableText;
 // IF >= fabric-1.21.6
 //import com.mojang.serialization.JsonOps;
 //import net.minecraft.text.TextCodecs;
-// ELSE
-//import net.minecraft.text.Text;
 // END IF
+import net.minecraft.text.Text;
 
 // IF < fabric-1.19
 //import net.minecraft.text.TranslatableText;
