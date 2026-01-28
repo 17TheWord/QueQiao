@@ -76,7 +76,13 @@ public class ForgeTool {
         displayModel.setDescription(parseTranslateModel(displayInfo.getDescription()));
         achievementModel.setDisplay(displayModel);
 
-        // IF >= forge-1.19
+        // IF >= forge-1.21
+//        MutableComponent translatable = Component.translatable(
+//                achievementModel.getTranslationKey(displayModel.getFrame()),
+//                Component.literal(nickname),
+//                advancement.name().get()
+//        );
+        // ELSE IF >= forge-1.19
 //        MutableComponent translatable = Component.translatable(
 //                achievementModel.getTranslationKey(displayModel.getFrame()),
 //                Component.literal(nickname),

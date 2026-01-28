@@ -160,7 +160,7 @@ public class EventProcessor {
 //        if (advancement.getDisplay() == null || !advancement.getDisplay().shouldAnnounceChat()) return;
         // ELSE
 //        Advancement advancement = event.getAdvancement().value();
-//        if (advancement.display().isEmpty() || !advancement.display().get().shouldAnnounceChat()) return;
+//        if (advancement.display().isEmpty() || !advancement.display().get().shouldAnnounceChat() || advancement.name().isEmpty()) return;
         // END IF
 
         // IF > forge-1.16.5
