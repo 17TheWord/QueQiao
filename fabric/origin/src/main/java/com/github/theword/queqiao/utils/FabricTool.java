@@ -67,13 +67,8 @@ public class FabricTool {
 
     public static DisplayModel getFabricAchievementDisplay(AdvancementDisplay advancementDisplay) {
         DisplayModel displayModel = new DisplayModel();
-        // IF < fabric-1.19
-//        displayModel.setTitle(((TranslatableText) advancementDisplay.getTitle()).getKey());
-//        displayModel.setDescription(((TranslatableText) advancementDisplay.getDescription()).getKey());
-        // ELSE
-//        displayModel.setTitle(((TranslatableTextContent) advancementDisplay.getTitle().getContent()).getKey());
-//        displayModel.setDescription(((TranslatableTextContent) advancementDisplay.getDescription().getContent()).getKey());
-        // END IF
+        displayModel.setTitle(parseTranslateModel(advancementDisplay.getTitle()));
+        displayModel.setDescription(parseTranslateModel(advancementDisplay.getDescription()));
         displayModel.setFrame(advancementDisplay.getFrame().toString());
 
         return displayModel;
@@ -87,7 +82,7 @@ public class FabricTool {
         // ELSE IF >= fabric-1.20.4
 //        return Text.Serialization.fromJsonTree(jsonElement).copy();
         // ELSE
-//        return Text.Serializer.fromJson(jsonElement).shallowCopy();
+//        return Text.Serializer.fromJson(jsonElement);
         // END IF
     }
 

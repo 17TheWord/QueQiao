@@ -3,6 +3,7 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
 import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
+import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
@@ -103,11 +104,10 @@ public class EventProcessor implements Listener {
         Advancement advancement = event.getAdvancement();
         if (advancement.getDisplay() == null || !advancement.getDisplay().doesAnnounceToChat() || event.message() == null)
             return;
+        PlayerModel player = getPaperPlayer(event.getPlayer());
+        AchievementModel achievementModel = getPaperAdvancement(player.getNickname(), advancement);
 
-        AchievementModel achievementModel = getPaperAdvancement(advancement);
-        achievementModel.setText(getComponentText(event.message()));
-
-        PlayerAchievementEvent spigotPlayerAdvancementDoneEvent = new PlayerAchievementEvent(getPaperPlayer(event.getPlayer()), achievementModel);
+        PlayerAchievementEvent spigotPlayerAdvancementDoneEvent = new PlayerAchievementEvent(player, achievementModel);
         GlobalContext.sendEvent(spigotPlayerAdvancementDoneEvent);
     }
 }

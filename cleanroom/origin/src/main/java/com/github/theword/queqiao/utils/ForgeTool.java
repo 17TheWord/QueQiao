@@ -10,6 +10,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
 
@@ -32,15 +33,22 @@ public class ForgeTool {
         return playerModel;
     }
 
-    public static AchievementModel getForgeAchievement(Advancement advancement) {
+    public static AchievementModel getForgeAchievement(String nickname, Advancement advancement) {
         AchievementModel achievementModel = new AchievementModel();
         DisplayModel displayModel = new DisplayModel();
         achievementModel.setKey(advancement.getId().toString());
         DisplayInfo displayInfo = advancement.getDisplay();
         displayModel.setFrame(displayInfo.getFrame().toString());
-        displayModel.setTitle(((TextComponentTranslation) displayInfo.getTitle()).getKey());
-        displayModel.setDescription(((TextComponentTranslation) displayInfo.getDescription()).getKey());
+        displayModel.setTitle(parseTranslateModel(displayInfo.getTitle()));
+        displayModel.setDescription(parseTranslateModel(displayInfo.getTitle()));
         achievementModel.setDisplay(displayModel);
+
+        TextComponentTranslation translation = new TextComponentTranslation(
+                achievementModel.getTranslationKey(displayModel.getFrame()),
+                new TextComponentString(nickname),
+                advancement.getDisplayText()
+        );
+        achievementModel.setTranslation(parseTranslateModel(translation));
         return achievementModel;
     }
 

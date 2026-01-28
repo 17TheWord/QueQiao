@@ -109,12 +109,11 @@ public class EventProcessor {
         Advancement advancement = event.getAdvancement().value();
         if (advancement.display().isEmpty() || !advancement.display().get().shouldAnnounceChat() || advancement.name().isEmpty())
             return;
-
         PlayerModel neoForgePlayer = getNeoForgePlayer((ServerPlayer) event.getEntity());
 
-        AchievementModel achievementModel = getNeoForgeAchievement(advancement);
+        AchievementModel achievementModel = getNeoForgeAchievement(neoForgePlayer.getNickname(), advancement);
         achievementModel.setKey(event.getAdvancement().id().toString());
-        achievementModel.setText(neoForgePlayer.getNickname() + " has made the advancement " + advancement.name().get().getString());
+
 
         PlayerAchievementEvent playerAchievementEvent = new PlayerAchievementEvent(neoForgePlayer, achievementModel);
         GlobalContext.sendEvent(playerAchievementEvent);

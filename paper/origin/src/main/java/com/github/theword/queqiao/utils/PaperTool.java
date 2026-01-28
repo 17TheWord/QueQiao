@@ -45,7 +45,7 @@ public class PaperTool {
     }
 
 
-    public static AchievementModel getPaperAdvancement(Advancement advancement) {
+    public static AchievementModel getPaperAdvancement(String nickname, Advancement advancement) {
         AchievementModel achievementModel = new AchievementModel();
         achievementModel.setKey(advancement.getKey().toString());
         DisplayModel displayModel = new DisplayModel();
@@ -56,11 +56,18 @@ public class PaperTool {
             return achievementModel;
         }
 
-        displayModel.setTitle(((TranslatableComponent) advancementDisplay.title()).key());
-        displayModel.setDescription(((TranslatableComponent) advancementDisplay.description()).key());
+        displayModel.setTitle(parseTranslateModel(advancementDisplay.title()));
+        displayModel.setDescription(parseTranslateModel(advancementDisplay.description()));
         displayModel.setFrame(advancementDisplay.frame().name());
-
         achievementModel.setDisplay(displayModel);
+
+        TranslatableComponent translatable = Component.translatable(
+                achievementModel.getTranslationKey(displayModel.getFrame()),
+                Component.text(nickname),
+                advancement.getDisplay().title()
+        );
+
+        achievementModel.setTranslation(parseTranslateModel(translatable));
         return achievementModel;
     }
 

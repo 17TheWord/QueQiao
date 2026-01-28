@@ -169,14 +169,7 @@ public class EventProcessor {
 //        PlayerModel player = getForgePlayer((ServerPlayerEntity) event.getPlayer());
         // END IF
 
-        AchievementModel achievementModel = getForgeAchievement(advancement);
-        // IF < forge-1.21
-//        String advancementText = achievementModel.pattern(achievementModel.getDisplay().getFrame(), player.getNickname(), advancement.getChatComponent().getString());
-        // ELSE
-//        if (advancement.name().isEmpty()) return;
-// String advancementText = achievementModel.pattern(achievementModel.getDisplay().getFrame(), player.getNickname(), advancement.name().get().getString());
-        // END IF
-        achievementModel.setText(advancementText);
+        AchievementModel achievementModel = getForgeAchievement(player.getNickname(), advancement);
 
         PlayerAchievementEvent forgeAdvancementEvent = new PlayerAchievementEvent(player, achievementModel);
         GlobalContext.sendEvent(forgeAdvancementEvent);

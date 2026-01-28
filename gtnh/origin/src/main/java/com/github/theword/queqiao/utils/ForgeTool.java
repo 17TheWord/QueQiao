@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import net.minecraft.stats.Achievement;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 
@@ -32,15 +33,23 @@ public class ForgeTool {
         return player;
     }
 
-    public static AchievementModel getForgeAchievement(Achievement achievement) {
+    public static AchievementModel getForgeAchievement(String nickname, Achievement achievement) {
         AchievementModel achievementModel = new AchievementModel();
         DisplayModel displayModel = new DisplayModel();
         achievementModel.setKey(achievement.statId);
         String frameType = achievement.getSpecial() ? "goal" : "task";
         displayModel.setFrame(frameType);
-        displayModel.setTitle(((ChatComponentTranslation) achievement.func_150951_e()).getKey());
+        displayModel.setTitle(parseTranslateModel(achievement.func_150951_e()));
 //        displayModel.setDescription(achievement.getDescription());  // Client Only
         achievementModel.setDisplay(displayModel);
+
+        ChatComponentTranslation chatComponentTranslation = new ChatComponentTranslation(
+                achievementModel.getTranslationKey(displayModel.getFrame()),
+                new ChatComponentText(nickname),
+                achievement.func_150951_e()
+        );
+        achievementModel.setTranslation(parseTranslateModel(chatComponentTranslation));
+
         return achievementModel;
     }
 

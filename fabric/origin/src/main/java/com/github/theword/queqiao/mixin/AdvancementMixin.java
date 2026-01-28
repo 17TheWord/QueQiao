@@ -4,6 +4,7 @@ import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
+import com.github.theword.queqiao.utils.FabricTool;
 import net.minecraft.advancement.AdvancementProgress;
 // IF < fabric-1.20.4
 //import net.minecraft.advancement.Advancement;
@@ -57,9 +58,9 @@ public abstract class AdvancementMixin {
 //        DisplayModel displayModel = getFabricAchievementDisplay(advancementDisplay);
 //        achievementModel.setKey(advancement.getId().toString());
         // IF < fabric-1.19
-//        Text translateText = new TranslatableText("chat.type.advancement." + advancement.getDisplay().getFrame().getId(), this.owner.getDisplayName(), advancement.toHoverableText());
+//        Text translateText = new TranslatableText(achievementModel.getTranslationKey(displayModel.getFrame()), this.owner.getDisplayName(), advancement.toHoverableText());
         // ELSE
-//        Text translateText = Text.translatable("chat.type.advancement." + advancement.getDisplay().getFrame().getId(), this.owner.getDisplayName(), advancement.toHoverableText());
+//        Text translateText = Text.translatable(achievementModel.getTranslationKey(displayModel.getFrame()), this.owner.getDisplayName(), advancement.toHoverableText());
         // END IF
         // ELSE
 //        @Shadow
@@ -83,7 +84,7 @@ public abstract class AdvancementMixin {
 //        DisplayModel displayModel = getFabricAchievementDisplay(advancementEntry.value().display().get());
         // END IF
         achievementModel.setDisplay(displayModel);
-        achievementModel.setText(translateText.getString());
+        achievementModel.setTranslation(FabricTool.parseTranslateModel(translateText));
         PlayerAchievementEvent event = new PlayerAchievementEvent(getFabricPlayer(owner), achievementModel);
         GlobalContext.sendEvent(event);
     }

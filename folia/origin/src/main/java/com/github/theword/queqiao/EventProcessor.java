@@ -7,6 +7,7 @@ import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
 import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
+import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
@@ -121,18 +122,26 @@ class EventProcessor implements Listener {
         AdvancementDisplay advancementDisplay = advancement.getDisplay();
         if (advancementDisplay == null || !advancementDisplay.doesAnnounceToChat()) return;
 
+        PlayerModel player = getFoliaPlayer(event.getPlayer());
+
         AchievementModel achievementModel = new AchievementModel();
         achievementModel.setKey(advancement.getKey().toString());
-        achievementModel.setText(getComponentText(event.message()));
 
         DisplayModel displayModel = new DisplayModel();
-        displayModel.setTitle(((TranslatableComponent) advancementDisplay.title()).key());
-        displayModel.setDescription(((TranslatableComponent) advancementDisplay.description()).key());
+        displayModel.setTitle(parseTranslateModel(advancementDisplay.title()));
+        displayModel.setDescription(parseTranslateModel(advancementDisplay.description()));
         displayModel.setFrame(advancementDisplay.frame().toString());
-
         achievementModel.setDisplay(displayModel);
 
-        PlayerAchievementEvent foliaPlayerAdvancementDoneEvent = new PlayerAchievementEvent(getFoliaPlayer(event.getPlayer()), achievementModel);
+        Component translate = Component.translatable(
+                achievementModel.getTranslationKey(displayModel.getFrame()),
+                TranslationArgument.component(Component.text(player.getNickname())),
+                TranslationArgument.component(advancement.displayName())
+        );
+
+        achievementModel.setTranslation(parseTranslateModel(translate));
+
+        PlayerAchievementEvent foliaPlayerAdvancementDoneEvent = new PlayerAchievementEvent(player, achievementModel);
         GlobalContext.sendEvent(foliaPlayerAdvancementDoneEvent);
     }
 

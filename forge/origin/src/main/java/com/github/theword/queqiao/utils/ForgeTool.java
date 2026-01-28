@@ -10,6 +10,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 // IF > forge-1.16.5
 //import net.minecraft.network.chat.Component;
+//import net.minecraft.network.chat.MutableComponent;
 //import net.minecraft.server.level.ServerPlayer;
 // ELSE
 //import net.minecraft.util.text.ITextComponent;
@@ -26,7 +27,7 @@ import net.minecraft.advancements.DisplayInfo;
 public class ForgeTool {
     // IF > forge-1.16.5
 //    public static PlayerModel getForgePlayer(ServerPlayer forgeServerPlayer) {
-    // ELSE
+        // ELSE
 //    public static PlayerModel getForgePlayer(ServerPlayerEntity forgeServerPlayer) {
         // END IF
         PlayerModel playerModel = new PlayerModel();
@@ -46,7 +47,7 @@ public class ForgeTool {
         return playerModel;
     }
 
-    public static AchievementModel getForgeAchievement(Advancement advancement) {
+    public static AchievementModel getForgeAchievement(String nickname, Advancement advancement) {
         AchievementModel achievementModel = new AchievementModel();
         DisplayModel displayModel = new DisplayModel();
         // IF >= forge-1.21
@@ -71,18 +72,31 @@ public class ForgeTool {
 //        displayModel.setFrame(displayInfo.getFrame().toString());
         // END IF
 
-        // IF forge-1.16.5
-//        displayModel.setTitle(((TranslationTextComponent) displayInfo.getTitle()).getKey());
-//        displayModel.setDescription(((TranslationTextComponent) displayInfo.getDescription()).getKey());
-        // ELSE IF forge-1.18.2
-//        displayModel.setTitle(((TranslatableComponent) displayInfo.getTitle()).getKey());
-//        displayModel.setDescription(((TranslatableComponent) displayInfo.getDescription()).getKey());
-        // ELSE
-//        displayModel.setTitle(((TranslatableContents) displayInfo.getTitle().getContents()).getKey());
-//        displayModel.setDescription(((TranslatableContents) displayInfo.getDescription().getContents()).getKey());
-        // END IF
-
+        displayModel.setTitle(parseTranslateModel(displayInfo.getTitle()));
+        displayModel.setDescription(parseTranslateModel(displayInfo.getDescription()));
         achievementModel.setDisplay(displayModel);
+
+        // IF >= forge-1.19
+//        MutableComponent translatable = Component.translatable(
+//                achievementModel.getTranslationKey(displayModel.getFrame()),
+//                Component.literal(nickname),
+//                advancement.getChatComponent()
+//        );
+        // ELSE IF forge-1.18.2
+//        TranslatableComponent translatable = new TranslatableComponent(
+//                achievementModel.getTranslationKey(displayModel.getFrame()),
+//                new TranslatableComponent(nickname),
+//                advancement.getDisplay().getTitle()
+//        );
+        // ELSE
+//        TranslationTextComponent translatable = new TranslationTextComponent(
+//                achievementModel.getTranslationKey(displayModel.getFrame()),
+//                new TranslationTextComponent(nickname),
+//                advancement.getDisplay().getTitle()
+//        );
+        // END IF
+        achievementModel.setTranslation(parseTranslateModel(translatable));
+
         return achievementModel;
     }
 
@@ -91,12 +105,12 @@ public class ForgeTool {
 //        if (!(iTextComponent instanceof TranslationTextComponent))
 //            return new TranslateModel(null, null, iTextComponent.getString());
 //        TranslationTextComponent translatableTextContent = (TranslationTextComponent) iTextComponent;
-        // ELSE IF forge-1.18.2
-//public static TranslateModel parseTranslateModel(Component component) {
-//if (!(component instanceof TranslatableComponent))
-//return new TranslateModel(null, null, component.getString());
-//TranslatableComponent translatableTextContent = (TranslatableComponent) component;
-        // ELSE
+    // ELSE IF forge-1.18.2
+//    public static TranslateModel parseTranslateModel(Component component) {
+//        if (!(component instanceof TranslatableComponent))
+//            return new TranslateModel(null, null, component.getString());
+//        TranslatableComponent translatableTextContent = (TranslatableComponent) component;
+    // ELSE
 //    public static TranslateModel parseTranslateModel(Component component) {
 //        if (!(component.getContents() instanceof TranslatableContents))
 //            return new TranslateModel(null, null, component.getString());
@@ -111,7 +125,7 @@ public class ForgeTool {
 
             // IF forge-1.16.5
 //            TranslateModel childModel = (rawArg instanceof ITextComponent) ? parseTranslateModel((ITextComponent) rawArg)
-                    // ELSE
+            // ELSE
 //            TranslateModel childModel = (rawArg instanceof Component) ? parseTranslateModel((Component) rawArg)
                     // END IF
 
