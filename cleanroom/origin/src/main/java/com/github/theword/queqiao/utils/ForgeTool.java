@@ -40,7 +40,7 @@ public class ForgeTool {
         DisplayInfo displayInfo = advancement.getDisplay();
         displayModel.setFrame(displayInfo.getFrame().toString());
         displayModel.setTitle(parseTranslateModel(displayInfo.getTitle()));
-        displayModel.setDescription(parseTranslateModel(displayInfo.getTitle()));
+        displayModel.setDescription(parseTranslateModel(displayInfo.getDescription()));
         achievementModel.setDisplay(displayModel);
 
         TextComponentTranslation translation = new TextComponentTranslation(
