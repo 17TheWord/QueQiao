@@ -44,7 +44,7 @@ public class HandleApiImpl implements HandleApiService {
         // IF >= fabric-1.19.2
 //        sendPacket(new GameMessageS2CPacket(mutableText, false));
         // ELSE
-//        sendPacket(new GameMessageS2CPacket(mutableText, MessageType.CHAT, UUID.randomUUID()));
+//        sendPacket(new GameMessageS2CPacket(mutableText, MessageType.SYSTEM, UUID.randomUUID()));
         // END IF
     }
 

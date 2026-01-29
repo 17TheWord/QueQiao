@@ -3,8 +3,9 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.*;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.death.DeathModel;
+import com.github.theword.queqiao.utils.ForgeTool;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.advancements.Advancement;
@@ -13,7 +14,6 @@ import net.minecraft.advancements.Advancement;
 //import net.minecraft.entity.LivingEntity;
 //import net.minecraft.entity.player.ServerPlayerEntity;
 //import net.minecraft.util.text.ITextComponent;
-//import net.minecraft.util.text.TranslationTextComponent;
 // ELSE
 //import net.minecraft.network.chat.Component;
 //import net.minecraft.server.level.ServerPlayer;
@@ -37,7 +37,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 // IF >= forge-1.21
 //import static com.github.theword.queqiao.QueQiao.minecraftServer;
 // END IF
-import java.util.Arrays;
 
 import static com.github.theword.queqiao.tool.utils.Tool.*;
 import static com.github.theword.queqiao.utils.ForgeTool.getForgeAchievement;
@@ -129,7 +128,6 @@ public class EventProcessor {
     public void onPlayerDeath(LivingDeathEvent event) {
         if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
 
-        DeathModel deathModel = new DeathModel();
         // IF > forge-1.16.5
 //        if (!(event.getEntity() instanceof ServerPlayer)) return;
 //        PlayerModel player = getForgePlayer((ServerPlayer) event.getEntity());
@@ -144,58 +142,9 @@ public class EventProcessor {
 //        LivingEntity entity = (LivingEntity) event.getEntity();
         // END IF
 
-        // IF forge-1.16.5
-//        ITextComponent localizedDeathMessage = event.getSource().getLocalizedDeathMessage(entity);
-//        if (localizedDeathMessage instanceof TranslationTextComponent) {
-//            TranslationTextComponent translationTextComponent = (TranslationTextComponent) localizedDeathMessage;
-//            deathModel.setKey(translationTextComponent.getKey());
-//            String[] args = Arrays.stream(translationTextComponent.getArgs())
-//                    .map(arg -> {
-//                        if (arg instanceof ITextComponent) {
-//                            return ((ITextComponent) arg).getString();
-//                        } else {
-//                            return String.valueOf(arg);
-//                        }
-//                    })
-//                    .toArray(String[]::new);
-//            deathModel.setArgs(args);
-//        }
-        // ELSE IF forge-1.18.2
-//        Component localizedDeathMessage = event.getSource().getLocalizedDeathMessage(entity);
-//        if (localizedDeathMessage instanceof TranslatableComponent) {
-//            TranslatableComponent translationTextComponent = (TranslatableComponent) localizedDeathMessage;
-//            deathModel.setKey(translationTextComponent.getKey());
-//            String[] args = Arrays.stream(translationTextComponent.getArgs())
-//                    .map(arg -> {
-//                        if (arg instanceof Component) {
-//                            return ((Component) arg).getString();
-//                        } else {
-//                            return String.valueOf(arg);
-//                        }
-//                    })
-//                    .toArray(String[]::new);
-//            deathModel.setArgs(args);
-//        }
-        // ELSE
-//        Component localizedDeathMessage = event.getSource().getLocalizedDeathMessage(entity);
-//        if (localizedDeathMessage instanceof TranslatableContents) {
-//            TranslatableContents translationTextComponent = (TranslatableContents) localizedDeathMessage;
-//            deathModel.setKey(translationTextComponent.getKey());
-//            String[] args = Arrays.stream(translationTextComponent.getArgs())
-//                    .map(arg -> {
-//                        if (arg instanceof Component) {
-//                            return ((Component) arg).getString();
-//                        } else {
-//                            return String.valueOf(arg);
-//                        }
-//                    })
-//                    .toArray(String[]::new);
-//            deathModel.setArgs(args);
-//        }
-        // END IF
-        deathModel.setText(localizedDeathMessage.getString());
+        TranslateModel translateModel = ForgeTool.parseTranslateModel(event.getSource().getLocalizedDeathMessage(entity));
 
-        PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, deathModel);
+        PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, translateModel);
         GlobalContext.sendEvent(forgeCommandEvent);
     }
 
@@ -211,7 +160,7 @@ public class EventProcessor {
 //        if (advancement.getDisplay() == null || !advancement.getDisplay().shouldAnnounceChat()) return;
         // ELSE
 //        Advancement advancement = event.getAdvancement().value();
-//        if (advancement.display().isEmpty() || !advancement.display().get().shouldAnnounceChat()) return;
+//        if (advancement.display().isEmpty() || !advancement.display().get().shouldAnnounceChat() || advancement.name().isEmpty()) return;
         // END IF
 
         // IF > forge-1.16.5
@@ -220,14 +169,7 @@ public class EventProcessor {
 //        PlayerModel player = getForgePlayer((ServerPlayerEntity) event.getPlayer());
         // END IF
 
-        AchievementModel achievementModel = getForgeAchievement(advancement);
-        // IF < forge-1.21
-//        String advancementText = achievementModel.pattern(achievementModel.getDisplay().getFrame(), player.getNickname(), advancement.getChatComponent().getString());
-        // ELSE
-//        if (advancement.name().isEmpty()) return;
-// String advancementText = achievementModel.pattern(achievementModel.getDisplay().getFrame(), player.getNickname(), advancement.name().get().getString());
-        // END IF
-        achievementModel.setText(advancementText);
+        AchievementModel achievementModel = getForgeAchievement(player.getNickname(), advancement);
 
         PlayerAchievementEvent forgeAdvancementEvent = new PlayerAchievementEvent(player, achievementModel);
         GlobalContext.sendEvent(forgeAdvancementEvent);

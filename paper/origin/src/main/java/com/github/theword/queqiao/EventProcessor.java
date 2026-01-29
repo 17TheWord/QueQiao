@@ -3,9 +3,12 @@ package com.github.theword.queqiao;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
 import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
+import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.death.DeathModel;
 import com.github.theword.queqiao.tool.utils.Tool;
+import com.github.theword.queqiao.utils.PaperTool;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -45,25 +48,10 @@ public class EventProcessor implements Listener {
     void onPlayerDeath(PlayerDeathEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
 
-        DeathModel deathModel = new DeathModel();
         Component component = event.deathMessage();
-        if (component instanceof TranslatableComponent translatableComponent) {
-            deathModel.setKey(translatableComponent.key());
-            String[] args = translatableComponent.args().stream()
-                    .map(arg -> {
-                        if (arg instanceof TextComponent) {
-                            return ((TextComponent) arg).content();
-                        } else {
-                            return String.valueOf(arg);
-                        }
-                    })
-                    .toArray(String[]::new);
-            deathModel.setArgs(args);
-        }
 
-        deathModel.setText(getComponentText(component));
-
-        com.github.theword.queqiao.tool.event.PlayerDeathEvent spigotPlayerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getPaperPlayer(event.getEntity()), deathModel);
+        TranslateModel translateModel = parseTranslateModel(component);
+        com.github.theword.queqiao.tool.event.PlayerDeathEvent spigotPlayerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getPaperPlayer(event.getEntity()), translateModel);
         GlobalContext.sendEvent(spigotPlayerDeathEvent);
     }
 
@@ -116,11 +104,10 @@ public class EventProcessor implements Listener {
         Advancement advancement = event.getAdvancement();
         if (advancement.getDisplay() == null || !advancement.getDisplay().doesAnnounceToChat() || event.message() == null)
             return;
+        PlayerModel player = getPaperPlayer(event.getPlayer());
+        AchievementModel achievementModel = getPaperAdvancement(player.getNickname(), advancement);
 
-        AchievementModel achievementModel = getPaperAdvancement(advancement);
-        achievementModel.setText(getComponentText(event.message()));
-
-        PlayerAchievementEvent spigotPlayerAdvancementDoneEvent = new PlayerAchievementEvent(getPaperPlayer(event.getPlayer()), achievementModel);
+        PlayerAchievementEvent spigotPlayerAdvancementDoneEvent = new PlayerAchievementEvent(player, achievementModel);
         GlobalContext.sendEvent(spigotPlayerAdvancementDoneEvent);
     }
 }

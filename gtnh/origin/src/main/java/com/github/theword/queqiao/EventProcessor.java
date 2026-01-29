@@ -6,13 +6,13 @@ import static com.github.theword.queqiao.utils.ForgeTool.getPlayerModel;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.*;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.death.DeathModel;
 import com.github.theword.queqiao.tool.utils.Tool;
+import com.github.theword.queqiao.utils.ForgeTool;
 import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.stats.Achievement;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -23,8 +23,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
-
-import java.util.Arrays;
 
 
 public class EventProcessor {
@@ -77,26 +75,11 @@ public class EventProcessor {
         if (!(event.entityLiving instanceof EntityPlayerMP)) return;
 
         IChatComponent component = event.source.func_151519_b(event.entityLiving);
-        String reason = event.source.func_151519_b(event.entityLiving).getUnformattedText();
 
-        DeathModel death = new DeathModel();
-        death.setText(reason);
-
-        if (component instanceof ChatComponentTranslation chatComponentTranslation) {
-            String key = chatComponentTranslation.getKey();
-            String[] args = Arrays.stream(chatComponentTranslation.getFormatArgs()).map(obj -> {
-                if (obj instanceof IChatComponent) {
-                    return ((IChatComponent) obj).getUnformattedText();
-                } else {
-                    return String.valueOf(obj);
-                }
-            }).toArray(String[]::new);
-            death.setKey(key);
-            death.setArgs(args);
-        }
+        TranslateModel translateModel = ForgeTool.parseTranslateModel(component);
 
         PlayerModel player = getPlayerModel((EntityPlayerMP) event.entityLiving);
-        PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, death);
+        PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, translateModel);
         GlobalContext.sendEvent(forgeCommandEvent);
     }
 
@@ -112,10 +95,9 @@ public class EventProcessor {
 
         PlayerModel playerModel = getPlayerModel((EntityPlayerMP) event.entityPlayer);
 
-        AchievementModel achievementModel = getForgeAchievement(achievement);
+        AchievementModel achievementModel = getForgeAchievement(playerModel.getNickname(), achievement);
 
-        String text = achievementModel.pattern(achievementModel.getDisplay().getFrame(), playerModel.getNickname(), "[" + achievement.func_150951_e().getUnformattedText() + "]");
-        achievementModel.setText(text);
+
 
         PlayerAchievementEvent forgeAdvancementEvent = new PlayerAchievementEvent(playerModel, achievementModel);
         GlobalContext.sendEvent(forgeAdvancementEvent);

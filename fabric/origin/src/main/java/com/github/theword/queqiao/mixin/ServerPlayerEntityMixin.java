@@ -3,22 +3,16 @@ package com.github.theword.queqiao.mixin;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.PlayerDeathEvent;
 import com.github.theword.queqiao.tool.event.PlayerQuitEvent;
-import com.github.theword.queqiao.tool.event.model.death.DeathModel;
+import com.github.theword.queqiao.tool.event.model.TranslateModel;
+import com.github.theword.queqiao.utils.FabricTool;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-// IF < fabric-1.19.0
-//import net.minecraft.text.TranslatableText;
-// ELSE
-//import net.minecraft.text.TranslatableTextContent;
-// END IF
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-
-import java.util.Arrays;
 
 import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
 
@@ -30,31 +24,11 @@ public abstract class ServerPlayerEntityMixin {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 
-        DeathModel deathModel = new DeathModel();
-
         Text deathMessage = player.getDamageTracker().getDeathMessage();
 
-        // IF < fabric-1.19.0
-//        if (deathMessage instanceof TranslatableText) {
-//            TranslatableText translatableText = (TranslatableText) deathMessage;
-            // ELSE
-//        if (deathMessage.getContent() instanceof TranslatableTextContent) {
-//            TranslatableTextContent translatableText = (TranslatableTextContent) deathMessage.getContent();
-            // END IF
-            deathModel.setKey(translatableText.getKey());
-            String[] args = Arrays.stream(translatableText.getArgs()).map(obj -> {
-                System.out.println(obj.getClass());
-                if (obj instanceof Text) {
-                    return ((Text) obj).getString();
-                } else {
-                    return String.valueOf(obj);
-                }
-            }).toArray(String[]::new);
-            deathModel.setArgs(args);
-        }
-        deathModel.setText(deathMessage.getString());
+        TranslateModel translateModel = FabricTool.parseTranslateModel(deathMessage);
 
-        PlayerDeathEvent event = new PlayerDeathEvent(getFabricPlayer(player), deathModel);
+        PlayerDeathEvent event = new PlayerDeathEvent(getFabricPlayer(player), translateModel);
         GlobalContext.sendEvent(event);
     }
 
