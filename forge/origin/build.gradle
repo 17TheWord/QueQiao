@@ -87,6 +87,9 @@ repositories {
 //    archiveClassifier.set('')
 //    destinationDirectory = file("../../QueQiao-jar/${mod_version}")
 //}
+//tasks.named('build') {
+//    dependsOn 'jarJar'
+//}
 // ELSE
 //shadowJar {
 //    archiveBaseName.set("${mod_name}-forge+${minecraft_version}")
@@ -131,6 +134,7 @@ dependencies {
 //    jarJar("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
 //        jarJar.ranged(it, "[${tool_version},)")
 //        exclude group: 'org.slf4j', module: 'slf4j-api'
+//        exclude group: 'com.google.code.gson', module: 'gson'
 //    }
 //
 //    jarJar("org.java-websocket:Java-WebSocket:${project.java_websocket_version}") {
@@ -188,7 +192,6 @@ tasks.named('jar', Jar).configure {
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-    finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {
