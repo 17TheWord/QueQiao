@@ -119,6 +119,7 @@ dependencies {
 
     minecraftLibrary("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
         exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'com.google.code.gson', module: 'gson'
     }
 
     implementation("org.java-websocket:Java-WebSocket:${java_websocket_version}") {
