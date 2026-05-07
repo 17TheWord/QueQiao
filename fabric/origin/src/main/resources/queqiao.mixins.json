@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "com.github.theword.queqiao.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "AdvancementMixin",
+    "PlayerListMixin",
+    "PlayerManagerMixin",
+    "ServerPlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+	}
+}
