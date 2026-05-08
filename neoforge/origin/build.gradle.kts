@@ -6,6 +6,16 @@ plugins {
 
 fun prop(key: String): String = providers.gradleProperty(key).get()
 
+fun fileProp(fileName: String): String {
+    val versionFile = file(fileName)
+
+    return if (versionFile.exists()) {
+        versionFile.readText().trim()
+    } else {
+        throw Exception("File not found: ${versionFile.absolutePath}")
+    }
+}
+
 val modId = prop("mod_id")
 val modName = prop("mod_name")
 val modLicense = prop("mod_license")
@@ -24,8 +34,8 @@ val minecraftVersion = prop("minecraft_version")
 val minecraftVersionRange = prop("minecraft_version_range")
 val neoVersion = prop("neo_version")
 
-val toolVersion = file("../../tool_version.txt").readText().trim()
-val modVersion = file("../../version.txt").readText().trim()
+val toolVersion = fileProp("../../tool_version.txt")
+val modVersion = fileProp("../../version.txt")
 
 version = modVersion
 group = modGroupId
