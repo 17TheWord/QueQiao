@@ -1,0 +1,12 @@
+name: "QueQiao"
+description: "${mod_description}"
+version: "${mod_version}"
+
+main: com.github.theword.queqiao.QueQiao
+api-version: '26.1'
+
+authors: [ "${mod_author}" ]
+website: "${mod_home_page}"
+commands:
+  queqiao:
+    description: 鹊桥命令
