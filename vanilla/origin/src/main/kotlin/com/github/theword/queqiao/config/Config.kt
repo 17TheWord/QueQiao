@@ -12,7 +12,7 @@ class Config(logger: Logger) : CommonConfig(logger) {
     var quitRegexSet: Set<RegexConfig> = emptySet()
 
     init {
-        readConfigFile("", "regex.yml")
+        readConfigFile("config", "regex.yml")
     }
 
     override fun loadConfigValues(configMap: Map<String, Any>) {

@@ -74,6 +74,7 @@ shadowJar {
         include(dependency("com.google.code.gson:gson:${gson_version}"))
         include(dependency("commons-io:commons-io:${commons_io_version}"))
         include(dependency("org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"))
+        include(dependency("org.glavo:rcon-java:${glavo_rcon_version}"))
     }
     mergeServiceFiles()
 }
