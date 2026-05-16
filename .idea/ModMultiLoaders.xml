@@ -4,16 +4,10 @@
     <option name="loaders">
       <list>
         <option value="fabric" />
-        <option value="folia" />
         <option value="forge" />
         <option value="neoforge" />
-        <option value="quilt" />
         <option value="spigot" />
         <option value="paper" />
-        <option value="velocity" />
-        <option value="vanilla" />
-        <option value="gtnh" />
-        <option value="cleanroom" />
       </list>
     </option>
   </component>
