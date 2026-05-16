@@ -5,12 +5,17 @@ import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.PermissionLevel;
 
 public class NeoForgeTool {
     public static PlayerModel getNeoForgePlayer(ServerPlayer neoForgePlayer) {
@@ -23,7 +28,7 @@ public class NeoForgeTool {
         player.setExperienceLevel(neoForgePlayer.experienceLevel);
         player.setExperienceProgress((double) neoForgePlayer.experienceProgress);
         player.setTotalExperience(neoForgePlayer.totalExperience);
-        player.setOp(neoForgePlayer.hasPermissions(2));
+        player.setOp(checkPermission(neoForgePlayer));
         player.setWalkSpeed((double) neoForgePlayer.getAbilities().getWalkingSpeed());
         player.setX(neoForgePlayer.getX());
         player.setY(neoForgePlayer.getY());
@@ -77,6 +82,22 @@ public class NeoForgeTool {
             finalText = component.getString();
         }
         return new TranslateModel(translatableTextContent.getKey(), childModels, finalText);
+    }
+
+    public static MutableComponent buildComponent(JsonElement jsonElement) {
+        return ComponentSerialization.CODEC.decode(JsonOps.INSTANCE, jsonElement).getOrThrow().getFirst().copy();
+    }
+
+    public static String parseComponent(Component component) {
+        return ComponentSerialization.CODEC.encodeStart(JsonOps.INSTANCE, component).getOrThrow().toString();
+    }
+
+    public static boolean checkPermission(ServerPlayer player) {
+        try {
+            return player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS));
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

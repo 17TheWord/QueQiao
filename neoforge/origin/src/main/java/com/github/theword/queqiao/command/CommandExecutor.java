@@ -5,9 +5,13 @@ import com.github.theword.queqiao.tool.command.RootCommand;
 import com.github.theword.queqiao.tool.command.SubCommand;
 import com.github.theword.queqiao.tool.constant.BaseConstant;
 import com.github.theword.queqiao.tool.constant.CommandConstant;
+import com.github.theword.queqiao.utils.NeoForgeTool;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -36,7 +40,13 @@ public class CommandExecutor {
     private static LiteralArgumentBuilder<CommandSourceStack> registerSubCommand(SubCommand command) {
         LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(command.getName());
         if (command.isRoot()) {
-            builder.requires(commandSourceStack -> commandSourceStack.hasPermission(CommandConstant.MOD_PERMISSION_LEVEL));
+            builder.requires(commandSourceStack -> {
+                try {
+                    return NeoForgeTool.checkPermission(commandSourceStack.getPlayerOrException());
+                } catch (CommandSyntaxException e) {
+                    return false;
+                }
+            });
         }
         builder.executes(context -> command.execute(context, Collections.emptyList()));
         for (SubCommand child : command.getChildren()) {

@@ -3,6 +3,7 @@ package com.github.theword.queqiao.handle;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.handle.HandleApiService;
 import com.github.theword.queqiao.tool.response.PrivateMessageResponse;
+import com.github.theword.queqiao.utils.NeoForgeTool;
 import com.google.gson.JsonElement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,13 +26,9 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public void handleBroadcastMessage(JsonElement jsonElement) {
-        MutableComponent mutableComponent = Component.Serializer.fromJson(GlobalContext.getMessagePrefixJsonObject(), minecraftServer.registryAccess());
-        assert mutableComponent != null;
-        Component message = Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
-        if (message != null) {
-            mutableComponent = mutableComponent.copy();
-            mutableComponent.append(message);
-        }
+        MutableComponent mutableComponent = NeoForgeTool.buildComponent(GlobalContext.getMessagePrefixJsonObject());
+        Component message = NeoForgeTool.buildComponent(jsonElement);
+        mutableComponent.append(message);
         sendPacket(new ClientboundSystemChatPacket(mutableComponent, false));
     }
 
@@ -48,14 +45,12 @@ public class HandleApiImpl implements HandleApiService {
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
         sendPacket(new ClientboundSetTitlesAnimationPacket(fadein, stay, fadeout));
         if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
-            MutableComponent title = Component.Serializer.fromJson(titleJsonElement, minecraftServer.registryAccess());
-            if (title != null)
-                sendPacket(new ClientboundSetTitleTextPacket(title));
+            MutableComponent title = NeoForgeTool.buildComponent(titleJsonElement);
+            sendPacket(new ClientboundSetTitleTextPacket(title));
         }
         if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
-            MutableComponent subtitle = Component.Serializer.fromJson(subtitleJsonElement, minecraftServer.registryAccess());
-            if (subtitle != null)
-                sendPacket(new ClientboundSetSubtitleTextPacket(subtitle));
+            MutableComponent subtitle = NeoForgeTool.buildComponent(subtitleJsonElement);
+            sendPacket(new ClientboundSetSubtitleTextPacket(subtitle));
         }
     }
 
@@ -66,8 +61,7 @@ public class HandleApiImpl implements HandleApiService {
      */
     @Override
     public void handleSendActionBarMessage(JsonElement jsonElement) {
-        MutableComponent mutableComponent = Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
-        if (mutableComponent == null) return;
+        MutableComponent mutableComponent = NeoForgeTool.buildComponent(jsonElement);
         sendPacket(new ClientboundSetActionBarTextPacket(mutableComponent));
     }
 
@@ -86,24 +80,15 @@ public class HandleApiImpl implements HandleApiService {
             targetPlayer = minecraftServer.getPlayerList().getPlayer(uuid);
         else if (nickname != null && !nickname.isEmpty())
             targetPlayer = minecraftServer.getPlayerList().getPlayerByName(nickname);
-        else {
-            return PrivateMessageResponse.playerNotFound();
-        }
+        else return PrivateMessageResponse.playerNotFound();
 
-        if (targetPlayer == null) {
-            return PrivateMessageResponse.playerIsNull();
-        }
+        if (targetPlayer == null) return PrivateMessageResponse.playerIsNull();
 
-        if (targetPlayer.hasDisconnected()) {
-            return PrivateMessageResponse.playerNotOnline();
-        }
-        MutableComponent mutableComponent = Component.Serializer.fromJson(GlobalContext.getMessagePrefixJsonObject(), minecraftServer.registryAccess());
-        assert mutableComponent != null;
-        MutableComponent message = Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
-        if (message != null) {
-            mutableComponent = mutableComponent.copy();
-            mutableComponent.append(message);
-        }
+        if (targetPlayer.hasDisconnected()) return PrivateMessageResponse.playerNotOnline();
+
+        MutableComponent mutableComponent = NeoForgeTool.buildComponent(GlobalContext.getMessagePrefixJsonObject());
+        MutableComponent message = NeoForgeTool.buildComponent(jsonElement);
+        mutableComponent.append(message);
         targetPlayer.sendSystemMessage(mutableComponent);
 
         return PrivateMessageResponse.sendSuccess(getNeoForgePlayer(targetPlayer));

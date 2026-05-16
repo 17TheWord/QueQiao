@@ -1,8 +1,9 @@
 package com.github.theword.queqiao.handle;
 
-import com.github.theword.queqiao.tool.constant.CommandConstant;
 import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
+import com.github.theword.queqiao.utils.NeoForgeTool;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.PlainTextContents;
@@ -28,6 +29,10 @@ public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageSe
     @SuppressWarnings("unchecked")
     public boolean hasPermission(Object object, String node) {
         CommandContext<CommandSourceStack> context = (CommandContext<CommandSourceStack>) object;
-        return context.getSource().hasPermission(CommandConstant.MOD_PERMISSION_LEVEL);
+        try {
+            return NeoForgeTool.checkPermission(context.getSource().getPlayerOrException());
+        } catch (CommandSyntaxException e) {
+            return false;
+        }
     }
 }

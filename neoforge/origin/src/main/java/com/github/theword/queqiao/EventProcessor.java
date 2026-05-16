@@ -5,7 +5,6 @@ import com.github.theword.queqiao.tool.event.*;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import com.github.theword.queqiao.tool.event.model.TranslateModel;
 import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.death.DeathModel;
 import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.NeoForgeTool;
 import com.mojang.brigadier.ParseResults;
@@ -13,7 +12,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -22,8 +20,6 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-
-import java.util.Arrays;
 
 import static com.github.theword.queqiao.QueQiao.minecraftServer;
 import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgeAchievement;
@@ -38,7 +34,7 @@ public class EventProcessor {
         PlayerModel player = getNeoForgePlayer(event.getPlayer());
 
         Component message = event.getMessage();
-        String rawMessage = Component.Serializer.toJson(message, minecraftServer.registryAccess());
+        String rawMessage = NeoForgeTool.parseComponent(message);
 
         PlayerChatEvent NeoForgeServerChatEvent = new PlayerChatEvent(player, "", rawMessage, message.getString());
         GlobalContext.sendEvent(NeoForgeServerChatEvent);
