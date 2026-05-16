@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version  "2.3.20"
+    kotlin("jvm") version "2.3.20"
     id("com.gradleup.shadow") version "9.4.1"
     id("xyz.jpenilla.run-paper") version "3.0.2"
 }
@@ -59,10 +59,18 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(25)
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(javaVersion))
+    }
 }
 
 tasks {
+    shadowJar {
+        destinationDirectory.set(file("../../QueQiao-jar/$modVersion"))
+        archiveBaseName.set("${modName}-paper+${minecraftVersion}-$modVersion")
+        archiveClassifier.set("")
+    }
+
     build {
         dependsOn(shadowJar)
     }

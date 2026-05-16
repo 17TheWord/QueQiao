@@ -64,7 +64,7 @@ java {
 tasks {
     shadowJar {
         destinationDirectory.set(file("../../QueQiao-jar/$modVersion"))
-        archiveBaseName.set("${modName}-spigot+${minecraftVersion}")
+        archiveBaseName.set("${modName}-spigot+${minecraftVersion}-$modVersion")
         archiveClassifier.set("")
     }
 
