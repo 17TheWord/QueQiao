@@ -38,7 +38,7 @@ version = fileProp("../../version.txt")
 group = modGroupId
 
 base {
-    archivesName = "$modName-Fabric+$minecraftVersion"
+    archivesName = "$modName-fabric+$minecraftVersion"
 }
 
 repositories {
