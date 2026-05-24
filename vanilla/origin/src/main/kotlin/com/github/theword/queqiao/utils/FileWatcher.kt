@@ -101,6 +101,9 @@ class FileWatcher(private val lineProcessor: LineProcessor) {
     }
 
     companion object {
+
+        private const val REFRESH_INTERVAL_MS = 1000L
+
         /**
          * 文件监听
          *
@@ -120,11 +123,14 @@ class FileWatcher(private val lineProcessor: LineProcessor) {
             // 刷新日志
             Thread {
                 try {
-                    while (true) {
-                        val writer = FileWriter(path.toFile(), true)
-                        writer.flush()
-                        writer.close()
+                    while (!Thread.currentThread().isInterrupted) {
+                        FileWriter(path.toFile(), true).use { writer ->
+                            writer.flush()
+                        }
+                        Thread.sleep(REFRESH_INTERVAL_MS)
                     }
+                } catch (e: InterruptedException) {
+                    Thread.currentThread().interrupt()
                 } catch (e: IOException) {
                     GlobalContext.getLogger().error("写日志时出现异常", e)
                 }
