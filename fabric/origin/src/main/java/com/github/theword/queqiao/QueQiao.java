@@ -27,6 +27,7 @@ public class QueQiao implements ModInitializer {
             );
         });
 
+        new EventProcessor();
         new CommandExecutor();
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> GlobalContext.shutdown());

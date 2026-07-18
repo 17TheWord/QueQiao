@@ -4,9 +4,7 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "AdvancementMixin",
-    "PlayerListMixin",
-    "PlayerManagerMixin",
-    "ServerPlayerEntityMixin"
+    "PlayerManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

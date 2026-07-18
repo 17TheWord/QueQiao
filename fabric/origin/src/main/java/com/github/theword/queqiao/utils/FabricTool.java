@@ -3,10 +3,12 @@ package com.github.theword.queqiao.utils;
 import com.github.theword.queqiao.tool.GlobalContext;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import com.github.theword.queqiao.tool.event.model.TranslateModel;
+import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import com.google.gson.JsonElement;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -55,17 +57,27 @@ public class FabricTool {
         return displayModel;
     }
 
+    public static AchievementModel getFabricAchievement(AdvancementHolder advancement) {
+        AchievementModel achievementModel = new AchievementModel();
+        achievementModel.setKey(advancement.id().toString());
+
+        advancement.value().display().ifPresent(display -> {
+            achievementModel.setDisplay(getFabricAchievementDisplay(display));
+            achievementModel.setTranslation(parseTranslateModel(display.getTitle()));
+        });
+
+        return achievementModel;
+    }
+
     public static MutableComponent buildComponent(JsonElement jsonElement) {
         return ComponentSerialization.CODEC.decode(JsonOps.INSTANCE, jsonElement).getOrThrow().getFirst().copy();
     }
 
     public static boolean permissionCheck(CommandSourceStack source) {
-        try {
-            ServerPlayer playerOrException = source.getPlayerOrException();
-            return playerOrException.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS));
-        } catch (CommandSyntaxException e) {
-            return false;
+        if (!(source.getEntity() instanceof ServerPlayer player)) {
+            return true;
         }
+        return player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS));
     }
 
     public static TranslateModel parseTranslateModel(Component text) {
