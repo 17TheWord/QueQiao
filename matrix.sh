@@ -1,6 +1,7 @@
 #!/bin/bash
 
 targetLoader="all"
+targetVersion="all"
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -10,6 +11,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     -loader)
       targetLoader="$2"
+      shift 2
+      ;;
+    -version)
+      targetVersion="$2"
       shift 2
       ;;
     *)
@@ -37,6 +42,10 @@ for path in "${paths[@]}"; do
       continue
     fi
 
+    if [[ "$targetVersion" != "all" && "$mcVersion" != "$targetVersion" ]]; then
+      continue
+    fi
+
     supportVersionFile="$mcLoader/$mcLoader-$mcVersion/support_version.txt"
     if [[ -f "$supportVersionFile" ]]; then
       supportVersion=$(cat "$supportVersionFile")
@@ -55,7 +64,7 @@ for path in "${paths[@]}"; do
 done
 
 if [[ ${#allFolderObjects[@]} -eq 0 ]]; then
-  echo "No matching build targets for loader: $targetLoader" >&2
+  echo "No matching build targets for loader: $targetLoader, version: $targetVersion" >&2
   exit 1
 fi
 

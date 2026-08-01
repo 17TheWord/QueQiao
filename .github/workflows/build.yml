@@ -26,6 +26,11 @@ on:
           - 'neoforge'
           - 'paper'
           - 'spigot'
+      target_version:
+        description: 'Build target version, for example 26.1 or all'
+        required: false
+        default: 'all'
+        type: string
 
 permissions:
   contents: write
@@ -46,7 +51,7 @@ jobs:
         id: set-matrix
         run: |
           chmod 777 matrix.sh
-          ./matrix.sh -path "spigot","forge","neoforge","fabric","paper" -loader "${{ github.event.inputs.target_loader || 'all' }}"
+          ./matrix.sh -path "spigot","forge","neoforge","fabric","paper" -loader "${{ github.event.inputs.target_loader || 'all' }}" -version "${{ github.event.inputs.target_version || 'all' }}"
 
   build:
     runs-on: ubuntu-latest
