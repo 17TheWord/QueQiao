@@ -29,10 +29,10 @@ public class HandleApiImpl implements HandleApiService {
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
         Component titleComponent = Component.empty();
         Component subtitleComponent = Component.empty();
-        if (titleJsonElement != null && titleJsonElement.isJsonNull()) {
+        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
             titleComponent = GsonComponentSerializer.gson().deserializeFromTree(titleJsonElement);
         }
-        if (subtitleJsonElement != null && subtitleJsonElement.isJsonNull()) {
+        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
             subtitleComponent = GsonComponentSerializer.gson().deserializeFromTree(subtitleJsonElement);
         }
         Title title = Title.title(
@@ -59,7 +59,7 @@ public class HandleApiImpl implements HandleApiService {
             if ((uuid != null && uuid.equals(player.getUniqueId())) || (nickname != null && nickname.equals(player.getUsername()))) {
                 Component component = GsonComponentSerializer.gson().deserializeFromTree(GlobalContext.getMessagePrefixJsonObject());
                 component = component.append(GsonComponentSerializer.gson().deserializeFromTree(jsonElement));
-                minecraftServer.sendMessage(component);
+                player.sendMessage(component);
                 return PrivateMessageResponse.sendSuccess(getVelocityPlayer(player));
             }
         }
