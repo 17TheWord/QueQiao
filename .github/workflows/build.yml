@@ -51,7 +51,7 @@ jobs:
         id: set-matrix
         run: |
           chmod 777 matrix.sh
-          ./matrix.sh -path "spigot","forge","neoforge","fabric","paper" -loader "${{ github.event.inputs.target_loader || 'all' }}" -version "${{ github.event.inputs.target_version || 'all' }}"
+          ./matrix.sh -path "spigot","forge","neoforge","fabric","paper","velocity" -loader "${{ github.event.inputs.target_loader || 'all' }}" -version "${{ github.event.inputs.target_version || 'all' }}"
 
   build:
     runs-on: ubuntu-latest
