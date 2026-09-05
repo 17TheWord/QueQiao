@@ -26,6 +26,7 @@ on:
           - 'neoforge'
           - 'paper'
           - 'spigot'
+          - 'velocity'
       target_version:
         description: 'Build target version, for example 26.1 or all'
         required: false
