@@ -17,21 +17,25 @@ public final class QueQiao extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        Bukkit.getScheduler().runTask(this, () -> GlobalContext.init(
-                false,
-                instance.getServer().getVersion(),
-                ServerTypeConstant.SPIGOT,
-                new HandleApiImpl(),
-                new HandleCommandReturnMessageImpl()
-        ));
-        Bukkit.getPluginManager().registerEvents(new EventProcessor(), this);
+        // 监听器与命令必须在 init 之后再注册：否则 init 完成前的玩家事件和
+        // /queqiao 调用会打到尚未准备好的上下文上
+        Bukkit.getScheduler().runTask(this, () -> {
+            GlobalContext.init(
+                    false,
+                    instance.getServer().getVersion(),
+                    ServerTypeConstant.SPIGOT,
+                    new HandleApiImpl(),
+                    new HandleCommandReturnMessageImpl()
+            );
+            Bukkit.getPluginManager().registerEvents(new EventProcessor(), this);
 
-        PluginCommand command = getCommand(BaseConstant.COMMAND_HEADER);
-        if (command != null) command.setExecutor(new CommandExecutor());
+            PluginCommand command = getCommand(BaseConstant.COMMAND_HEADER);
+            if (command != null) command.setExecutor(new CommandExecutor());
+        });
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        GlobalContext.shutdown();
     }
 }
