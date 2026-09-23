@@ -5,6 +5,7 @@ import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
 import com.github.theword.queqiao.tool.event.PlayerJoinEvent;
 import com.github.theword.queqiao.tool.event.PlayerQuitEvent;
 import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import com.github.theword.queqiao.tool.utils.Tool;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -50,7 +51,9 @@ public class EventProcessor {
         if (!(event.getCommandSource() instanceof Player player) || !GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand())
             return;
 
-        String command = event.getCommand();
+        // 未过滤会把 /login /register 的密码原文推到外部应用
+        String command = Tool.isIgnoredCommand(event.getCommand());
+        if (command.isEmpty()) return;
 
         PlayerCommandEvent velocityCommandExecuteEvent = new PlayerCommandEvent(getVelocityPlayer(player), "", command, command);
         GlobalContext.sendEvent(velocityCommandExecuteEvent);

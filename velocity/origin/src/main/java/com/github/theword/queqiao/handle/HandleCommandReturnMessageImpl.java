@@ -1,26 +1,33 @@
 package com.github.theword.queqiao.handle;
 
 import com.github.theword.queqiao.tool.handle.HandleCommandReturnMessageService;
-import com.velocitypowered.api.command.SimpleCommand;
 import net.kyori.adventure.text.Component;
+import com.velocitypowered.api.command.CommandSource;
 
 public class HandleCommandReturnMessageImpl extends HandleCommandReturnMessageService {
+
+    /**
+     * 处理命令返回消息
+     *
+     * @param object  命令发送者
+     * @param message 消息
+     */
     @Override
-    public void handleCommandReturnMessage(Object o, String s) {
-        SimpleCommand.Invocation invocation = (SimpleCommand.Invocation) o;
-        invocation.source().sendMessage(Component.text(s));
+    public void handleCommandReturnMessage(Object object, String message) {
+        CommandSource commandSource = (CommandSource) object;
+        commandSource.sendMessage(Component.text(message));
     }
 
     /**
-     * @param object CommandContext
+     * 判断命令发送者是否有权限执行命令
+     *
+     * @param object 命令发送者
      * @param node   权限节点
      * @return 是否有权限
      */
     @Override
     public boolean hasPermission(Object object, String node) {
-        SimpleCommand.Invocation invocation = (SimpleCommand.Invocation) object;
-        if (invocation.source().hasPermission(node)) return true;
-        handleCommandReturnMessage(object, "您没有执行此命令的权限");
-        return false;
+        CommandSource commandSource = (CommandSource) object;
+        return commandSource.hasPermission(node);
     }
 }

@@ -8,8 +8,8 @@ import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.title.Title;
+import net.kyori.adventure.util.Ticks;
 
-import java.time.Duration;
 import java.util.UUID;
 
 import static com.github.theword.queqiao.QueQiao.minecraftServer;
@@ -29,19 +29,19 @@ public class HandleApiImpl implements HandleApiService {
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
         Component titleComponent = Component.empty();
         Component subtitleComponent = Component.empty();
-        if (titleJsonElement != null && titleJsonElement.isJsonNull()) {
+        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
             titleComponent = GsonComponentSerializer.gson().deserializeFromTree(titleJsonElement);
         }
-        if (subtitleJsonElement != null && subtitleJsonElement.isJsonNull()) {
+        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
             subtitleComponent = GsonComponentSerializer.gson().deserializeFromTree(subtitleJsonElement);
         }
         Title title = Title.title(
                 titleComponent,
                 subtitleComponent,
                 Title.Times.times(
-                        Duration.ofMillis(fadein),
-                        Duration.ofMillis(stay),
-                        Duration.ofMillis(fadeout)
+                        Ticks.duration(fadein),
+                        Ticks.duration(stay),
+                        Ticks.duration(fadeout)
                 )
         );
         minecraftServer.showTitle(title);
@@ -59,7 +59,8 @@ public class HandleApiImpl implements HandleApiService {
             if ((uuid != null && uuid.equals(player.getUniqueId())) || (nickname != null && nickname.equals(player.getUsername()))) {
                 Component component = GsonComponentSerializer.gson().deserializeFromTree(GlobalContext.getMessagePrefixJsonObject());
                 component = component.append(GsonComponentSerializer.gson().deserializeFromTree(jsonElement));
-                minecraftServer.sendMessage(component);
+                // 原先发给 minecraftServer，私聊会变成全站广播
+                player.sendMessage(component);
                 return PrivateMessageResponse.sendSuccess(getVelocityPlayer(player));
             }
         }
