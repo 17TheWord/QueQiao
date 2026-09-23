@@ -18,6 +18,12 @@ on:
 permissions:
   contents: write
 
+# 连续合并时排队而不是并发跑两份：两条流水线会操作同一个 version 的
+# release 与 Maven 坐标，并行会互相覆盖
+concurrency:
+  group: queqiao-build
+  cancel-in-progress: false
+
 env:
   GH_TOKEN: ${{ github.token }}
   GH_USERNAME: ${{ github.actor }}
@@ -38,6 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: generate-matrix
     strategy:
+      fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v6
@@ -54,7 +61,9 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}-${{ hashFiles(format('{0}/{0}-{1}/build.gradle*', matrix.config.mc-loader, matrix.config.mc-version), format('{0}/{0}-{1}/settings.gradle*', matrix.config.mc-loader, matrix.config.mc-version)) }}
+          # 版本目录下的 build.gradle 是 Init Files 步骤生成的，那时缓存键已经算完；
+          # 改哈希真正的输入 origin/ 下的构建脚本，才能随其变更失效
+          key: ${{ runner.os }}-gradle-${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}-${{ hashFiles(format('{0}/origin/build.gradle*', matrix.config.mc-loader), format('{0}/origin/settings.gradle*', matrix.config.mc-loader), format('{0}/origin/gradle.properties', matrix.config.mc-loader), 'tool_version.txt', 'version.txt') }}
           restore-keys: |
             ${{ runner.os }}-gradle-${{ matrix.config.mc-loader }}-${{ matrix.config.mc-version }}-
             ${{ runner.os }}-gradle-${{ matrix.config.mc-loader }}-

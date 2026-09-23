@@ -8,6 +8,12 @@ on:
 permissions:
   contents: write
 
+# 不与 build 共用分组：两条流水线共享分组会让本流水线在整轮构建结束后
+# 才执行删除重建，反而清掉构建刚上传的产物；这里只防止自身并发互相覆盖
+concurrency:
+  group: queqiao-release
+  cancel-in-progress: false
+
 env:
   GH_TOKEN: ${{ github.token }}
 
@@ -37,6 +43,7 @@ jobs:
           fi
 
       - name: Delete Release if exists
+        if: env.RELEASE_EXISTS == 'true'
         run: |
           # Try to delete the release and handle errors gracefully
           set +e
