@@ -8,10 +8,10 @@ import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.title.Title;
+import net.kyori.adventure.util.Ticks;
 import org.bukkit.entity.Player;
 
 
-import java.time.Duration;
 import java.util.UUID;
 
 import static com.github.theword.queqiao.QueQiao.instance;
@@ -47,10 +47,10 @@ public class HandleApiImpl implements HandleApiService {
     public void handleSendTitleMessage(JsonElement titleJsonElement, JsonElement subtitleJsonElement, int fadein, int stay, int fadeout) {
         Component titleComponent = Component.empty();
         Component subtitleComponent = Component.empty();
-        if (titleJsonElement != null && titleJsonElement.isJsonNull()) {
+        if (titleJsonElement != null && !titleJsonElement.isJsonNull()) {
             titleComponent = GsonComponentSerializer.gson().deserializeFromTree(titleJsonElement);
         }
-        if (subtitleJsonElement != null && subtitleJsonElement.isJsonNull()) {
+        if (subtitleJsonElement != null && !subtitleJsonElement.isJsonNull()) {
             subtitleComponent = GsonComponentSerializer.gson().deserializeFromTree(subtitleJsonElement);
         }
 
@@ -58,9 +58,9 @@ public class HandleApiImpl implements HandleApiService {
                 titleComponent,
                 subtitleComponent,
                 Title.Times.times(
-                        Duration.ofMillis(fadein),
-                        Duration.ofMillis(stay),
-                        Duration.ofMillis(fadeout)
+                        Ticks.duration(fadein),
+                        Ticks.duration(stay),
+                        Ticks.duration(fadeout)
                 )
         );
         instance.getServer().showTitle(title);

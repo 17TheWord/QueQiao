@@ -33,8 +33,18 @@ import static com.github.theword.queqiao.utils.FoliaTool.getComponentText;
 
 class EventProcessor implements Listener {
 
+    /**
+     * ServerLoadEvent 在 /reload 后会再次触发，重复 init 会再起一套
+     * WebSocket 连接并让端口绑定失败；本对象随 onEnable 重新创建，
+     * 因此该标记在插件重新启用后会自动复位
+     */
+    private boolean initialized;
+
     @EventHandler
     public void onServerLoad(ServerLoadEvent event) {
+        if (initialized) return;
+        initialized = true;
+
         GlobalContext.init(
                 false,
                 QueQiao.instance.getServer().getVersion(),
