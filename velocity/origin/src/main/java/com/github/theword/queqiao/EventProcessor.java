@@ -8,7 +8,7 @@ import com.github.theword.queqiao.tool.event.model.PlayerModel;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.event.connection.LoginEvent;
+import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 
@@ -28,7 +28,7 @@ public class EventProcessor {
     }
 
     @Subscribe
-    public void onPlayerLogin(LoginEvent event) {
+    public void onPlayerLogin(PostLoginEvent event) {
         if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
 
         PlayerModel player = getVelocityPlayer(event.getPlayer());
