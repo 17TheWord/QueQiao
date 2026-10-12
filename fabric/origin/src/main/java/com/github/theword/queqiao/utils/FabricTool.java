@@ -50,9 +50,15 @@ public class FabricTool {
 
     public static DisplayModel getFabricAchievementDisplay(DisplayInfo advancementDisplay) {
         DisplayModel displayModel = new DisplayModel();
-        displayModel.setTitle(parseTranslateModel(advancementDisplay.getTitle()));
-        displayModel.setDescription(parseTranslateModel(advancementDisplay.getDescription()));
-        displayModel.setFrame(advancementDisplay.getType().toString());
+        // IF fabric-26.1
+        //displayModel.setTitle(parseTranslateModel(advancementDisplay.getTitle()));
+        //displayModel.setDescription(parseTranslateModel(advancementDisplay.getDescription()));
+        //displayModel.setFrame(advancementDisplay.getType().toString());
+        // ELSE IF fabric-26.3
+        //displayModel.setTitle(parseTranslateModel(advancementDisplay.title()));
+        //displayModel.setDescription(parseTranslateModel(advancementDisplay.description()));
+        //displayModel.setFrame(advancementDisplay.type().toString());
+        // END IF
 
         return displayModel;
     }
@@ -63,7 +69,11 @@ public class FabricTool {
 
         advancement.value().display().ifPresent(display -> {
             achievementModel.setDisplay(getFabricAchievementDisplay(display));
-            achievementModel.setTranslation(parseTranslateModel(display.getTitle()));
+            // IF fabric-26.1
+            //achievementModel.setTranslation(parseTranslateModel(display.getTitle()));
+            // ELSE IF fabric-26.3
+            //achievementModel.setTranslation(parseTranslateModel(display.title()));
+            // END IF
         });
 
         return achievementModel;

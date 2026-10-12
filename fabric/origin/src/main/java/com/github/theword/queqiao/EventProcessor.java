@@ -73,7 +73,11 @@ public class EventProcessor {
 
             Advancement advancement = advancementHolder.value();
             if (advancement.display().isEmpty()) return;
-            if (!advancement.display().get().shouldAnnounceChat()) return;
+            // IF fabric-26.1
+            //if (!advancement.display().get().shouldAnnounceChat()) return;
+            // ELSE IF fabric-26.3
+            //if (!advancement.display().get().announceToChat()) return;
+            // END IF
 
             AchievementModel achievementModel = FabricTool.getFabricAchievement(advancementHolder);
             PlayerAchievementEvent event = new PlayerAchievementEvent(getFabricPlayer(player), achievementModel);
