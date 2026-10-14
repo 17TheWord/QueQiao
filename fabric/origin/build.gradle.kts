@@ -92,7 +92,9 @@ val modJsonProps = mapOf(
     "mod_author" to modAuthor,
     "mod_license" to modLicense,
     "mod_version" to version,
-    "mod_home_page" to modHomePage
+    "mod_home_page" to modHomePage,
+    "loader_version" to loaderVersion,
+    "minecraft_version_range" to prop("minecraft_version_range")
 )
 
 tasks.processResources {
