@@ -38,8 +38,6 @@ permissions:
 
 env:
   GH_TOKEN: ${{ github.token }}
-  GH_USERNAME: ${{ github.actor }}
-  PACKAGE_READ_ONLY_TOKEN: ${{ secrets.PACKAGE_READ_ONLY_TOKEN }}
 
 jobs:
   generate-matrix:
