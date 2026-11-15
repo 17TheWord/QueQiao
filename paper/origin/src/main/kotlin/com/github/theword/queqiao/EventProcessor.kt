@@ -1,29 +1,29 @@
 package com.github.theword.queqiao
 
-import com.github.theword.queqiao.tool.GlobalContext
-import com.github.theword.queqiao.tool.event.PlayerAchievementEvent
-import com.github.theword.queqiao.tool.event.PlayerChatEvent
-import com.github.theword.queqiao.tool.event.PlayerCommandEvent
-import com.github.theword.queqiao.tool.event.PlayerDeathEvent
-import com.github.theword.queqiao.tool.event.PlayerJoinEvent
-import com.github.theword.queqiao.tool.event.PlayerQuitEvent
-import com.github.theword.queqiao.tool.event.model.PlayerModel
-import com.github.theword.queqiao.tool.event.model.TranslateModel
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel
-import com.github.theword.queqiao.tool.utils.Tool
 import com.github.theword.queqiao.utils.PaperTool.Companion.getComponentJson
 import com.github.theword.queqiao.utils.PaperTool.Companion.getComponentText
 import com.github.theword.queqiao.utils.PaperTool.Companion.getPaperAdvancement
-import com.github.theword.queqiao.utils.PaperTool.Companion.getPaperPlayer
-import com.github.theword.queqiao.utils.PaperTool.Companion.parseTranslateModel
-import net.kyori.adventure.text.Component
+import io.github.theword.queqiao.core.config.ConfigKeys
+import io.github.theword.queqiao.core.event.PlayerAchievementEvent
+import io.github.theword.queqiao.core.event.PlayerChatEvent
+import io.github.theword.queqiao.core.event.PlayerCommandEvent
+import io.github.theword.queqiao.core.event.PlayerDeathEvent
+import io.github.theword.queqiao.core.event.PlayerJoinEvent
+import io.github.theword.queqiao.core.event.PlayerQuitEvent
+import io.github.theword.queqiao.core.event.model.PlayerModel
+import io.github.theword.queqiao.core.event.model.TranslateModel
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
 
-class EventProcessor : Listener {
+class EventProcessor(private val contextProvider: () -> PlatformContext?) : Listener {
 
+    /**
+     * 平台上下文在插件启用后由主线程任务创建，事件在此之前可能已被触发，因此每次取值。
+     */
+    private fun context(): PlatformContext? = contextProvider()?.takeIf { it.runtime != null }
 
     /**
      * 监听玩家聊天
@@ -32,14 +32,19 @@ class EventProcessor : Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     fun onPlayerChat(event: io.papermc.paper.event.player.AsyncChatEvent) {
-        if (event.isCancelled || !GlobalContext.getConfig().subscribeEvent.isPlayerChat) return
-        val spigotAsyncPlayerChatEvent = PlayerChatEvent(
-            getPaperPlayer(event.getPlayer()),
-            "",
-            getComponentJson(event.originalMessage()),
-            getComponentText(event.message())
+        val context = context() ?: return
+        val runtime = context.runtime ?: return
+
+        if (event.isCancelled || !runtime.config.get(ConfigKeys.SubscribeEvent.PLAYER_CHAT)) return
+
+        runtime.sendEvent(
+            PlayerChatEvent(
+                context.getPlayerModel(event.player),
+                "",
+                getComponentJson(event.originalMessage()),
+                getComponentText(event.message())
+            )
         )
-        GlobalContext.sendEvent(spigotAsyncPlayerChatEvent)
     }
 
     /**
@@ -49,13 +54,15 @@ class EventProcessor : Listener {
      */
     @EventHandler
     fun onPlayerDeath(event: org.bukkit.event.entity.PlayerDeathEvent) {
-        if (!GlobalContext.getConfig().subscribeEvent.isPlayerDeath) return
+        val context = context() ?: return
+        val runtime = context.runtime ?: return
 
-        val component: Component? = event.deathMessage()
+        if (!runtime.config.get(ConfigKeys.SubscribeEvent.PLAYER_DEATH)) return
 
-        val translateModel: TranslateModel = parseTranslateModel(component)
-        val spigotPlayerDeathEvent = PlayerDeathEvent(getPaperPlayer(event.getEntity()), translateModel)
-        GlobalContext.sendEvent(spigotPlayerDeathEvent)
+        val component = event.deathMessage() ?: return
+        val translateModel: TranslateModel = context.parseTranslateModel(component)
+
+        runtime.sendEvent(PlayerDeathEvent(context.getPlayerModel(event.entity), translateModel))
     }
 
     /**
@@ -65,10 +72,12 @@ class EventProcessor : Listener {
      */
     @EventHandler
     fun onPlayerJoin(event: org.bukkit.event.player.PlayerJoinEvent) {
-        if (!GlobalContext.getConfig().subscribeEvent.isPlayerJoin) return
+        val context = context() ?: return
+        val runtime = context.runtime ?: return
 
-        val spigotPlayerJoinEvent = PlayerJoinEvent(getPaperPlayer(event.player))
-        GlobalContext.sendEvent(spigotPlayerJoinEvent)
+        if (!runtime.config.get(ConfigKeys.SubscribeEvent.PLAYER_JOIN)) return
+
+        runtime.sendEvent(PlayerJoinEvent(context.getPlayerModel(event.player)))
     }
 
     /**
@@ -78,10 +87,12 @@ class EventProcessor : Listener {
      */
     @EventHandler
     fun onPlayerQuit(event: org.bukkit.event.player.PlayerQuitEvent) {
-        if (!GlobalContext.getConfig().subscribeEvent.isPlayerQuit) return
+        val context = context() ?: return
+        val runtime = context.runtime ?: return
 
-        val spigotPlayerQuitEvent = PlayerQuitEvent(getPaperPlayer(event.player))
-        GlobalContext.sendEvent(spigotPlayerQuitEvent)
+        if (!runtime.config.get(ConfigKeys.SubscribeEvent.PLAYER_QUIT)) return
+
+        runtime.sendEvent(PlayerQuitEvent(context.getPlayerModel(event.player)))
     }
 
     /**
@@ -91,27 +102,29 @@ class EventProcessor : Listener {
      */
     @EventHandler
     fun onPlayerCommand(event: org.bukkit.event.player.PlayerCommandPreprocessEvent) {
-        val command: String = Tool.isIgnoredCommand(event.message)
+        val context = context() ?: return
+        val runtime = context.runtime ?: return
 
+        if (!runtime.config.get(ConfigKeys.SubscribeEvent.PLAYER_COMMAND)) return
+
+        val command: String = runtime.utils.isIgnoredCommand(event.message)
         if (command.isEmpty()) return
 
-        if (!GlobalContext.getConfig().subscribeEvent.isPlayerCommand) return
-
-        val spigotPlayerCommandPreprocessEvent =
-            PlayerCommandEvent(getPaperPlayer(event.getPlayer()), "", command, command)
-        GlobalContext.sendEvent(spigotPlayerCommandPreprocessEvent)
+        runtime.sendEvent(PlayerCommandEvent(context.getPlayerModel(event.player), "", command, command))
     }
 
     @EventHandler
     fun onPlayerAdvancement(event: org.bukkit.event.player.PlayerAdvancementDoneEvent) {
+        val context = context() ?: return
+        val runtime = context.runtime ?: return
+
         val advancement = event.advancement
         if (advancement.display == null || !advancement.display!!.doesAnnounceToChat() || event.message() == null) return
-        if (!GlobalContext.getConfig().subscribeEvent.isPlayerAdvancement) return
-        val player: PlayerModel = getPaperPlayer(event.getPlayer())
-        val achievementModel: AchievementModel = getPaperAdvancement(player.nickname, advancement)
+        if (!runtime.config.get(ConfigKeys.SubscribeEvent.PLAYER_ADVANCEMENT)) return
 
-        val spigotPlayerAdvancementDoneEvent = PlayerAchievementEvent(player, achievementModel)
-        GlobalContext.sendEvent(spigotPlayerAdvancementDoneEvent)
+        val player: PlayerModel = context.getPlayerModel(event.player)
+        val achievementModel: AchievementModel = getPaperAdvancement(context, player.nickname, advancement)
+
+        runtime.sendEvent(PlayerAchievementEvent(player, achievementModel))
     }
-
 }

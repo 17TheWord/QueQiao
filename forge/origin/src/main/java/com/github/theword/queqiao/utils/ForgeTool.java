@@ -1,20 +1,18 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.TranslateModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
+import com.github.theword.queqiao.PlatformContext;
 import com.google.gson.JsonElement;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.event.model.achievement.DisplayModel;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.Permission;
 import net.minecraft.server.permissions.PermissionLevel;
@@ -38,7 +36,7 @@ public class ForgeTool {
         return playerModel;
     }
 
-    public static AchievementModel getForgeAchievement(String nickname, Advancement advancement) {
+    public static AchievementModel getForgeAchievement(PlatformContext context, String nickname, Advancement advancement) {
         AchievementModel achievementModel = new AchievementModel();
         DisplayModel displayModel = new DisplayModel();
         if (advancement.display().isEmpty()) {
@@ -50,8 +48,8 @@ public class ForgeTool {
         DisplayInfo displayInfo = advancement.display().get();
         displayModel.setFrame(displayInfo.getType().toString());
 
-        displayModel.setTitle(parseTranslateModel(displayInfo.getTitle()));
-        displayModel.setDescription(parseTranslateModel(displayInfo.getDescription()));
+        displayModel.setTitle(context.parseTranslateModel(displayInfo.getTitle()));
+        displayModel.setDescription(context.parseTranslateModel(displayInfo.getDescription()));
         achievementModel.setDisplay(displayModel);
 
         MutableComponent translatable = Component.translatable(
@@ -59,7 +57,7 @@ public class ForgeTool {
                 Component.literal(nickname),
                 advancement.name().get()
         );
-        achievementModel.setTranslation(parseTranslateModel(translatable));
+        achievementModel.setTranslation(context.parseTranslateModel(translatable));
 
         return achievementModel;
     }
@@ -76,28 +74,4 @@ public class ForgeTool {
             return false;
         }
     }
-
-    public static TranslateModel parseTranslateModel(Component component) {
-        if (!(component.getContents() instanceof TranslatableContents translatableTextContent))
-            return new TranslateModel(null, null, component.getString());
-        Object[] rawArgs = translatableTextContent.getArgs();
-        TranslateModel[] childModels = new TranslateModel[rawArgs.length];
-        String[] stringsForFormat = new String[rawArgs.length];
-
-        for (int i = 0; i < rawArgs.length; i++) {
-            Object rawArg = rawArgs[i];
-
-            TranslateModel childModel = (rawArg instanceof Component) ? parseTranslateModel((Component) rawArg)
-                    : new TranslateModel(null, null, String.valueOf(rawArg));
-            childModels[i] = childModel;
-            stringsForFormat[i] = childModel.getText();
-        }
-
-        String finalText = GlobalContext.translate(translatableTextContent.getKey(), stringsForFormat);
-        if (finalText.equals(translatableTextContent.getKey())) {
-            finalText = component.getString();
-        }
-        return new TranslateModel(translatableTextContent.getKey(), childModels, finalText);
-    }
-
 }

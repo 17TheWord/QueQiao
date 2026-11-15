@@ -1,11 +1,10 @@
 package com.github.theword.queqiao.utils
 
-import com.github.theword.queqiao.tool.GlobalContext
-import com.github.theword.queqiao.tool.event.model.PlayerModel
-import com.github.theword.queqiao.tool.event.model.TranslateModel
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel
-import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel
+import com.github.theword.queqiao.PlatformContext
 import com.google.gson.JsonElement
+import io.github.theword.queqiao.core.event.model.PlayerModel
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel
+import io.github.theword.queqiao.core.event.model.achievement.DisplayModel
 import io.papermc.paper.advancement.AdvancementDisplay
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TranslatableComponent
@@ -43,7 +42,11 @@ class PaperTool {
         }
 
 
-        fun getPaperAdvancement(nickname: String?, advancement: Advancement): AchievementModel {
+        fun getPaperAdvancement(
+            context: PlatformContext,
+            nickname: String?,
+            advancement: Advancement
+        ): AchievementModel {
             val achievementModel = AchievementModel()
             achievementModel.key = advancement.key.toString()
             val displayModel = DisplayModel()
@@ -54,8 +57,8 @@ class PaperTool {
                 return achievementModel
             }
 
-            displayModel.title = parseTranslateModel(advancementDisplay.title())
-            displayModel.description = parseTranslateModel(advancementDisplay.description())
+            displayModel.title = context.parseTranslateModel(advancementDisplay.title())
+            displayModel.description = context.parseTranslateModel(advancementDisplay.description())
             displayModel.frame = advancementDisplay.frame().name
             achievementModel.display = displayModel
 
@@ -67,7 +70,9 @@ class PaperTool {
                 )
             }
 
-            achievementModel.translation = parseTranslateModel(translatable)
+            if (translatable != null) {
+                achievementModel.translation = context.parseTranslateModel(translatable)
+            }
             return achievementModel
         }
 
@@ -81,49 +86,6 @@ class PaperTool {
 
         fun getComponentJson(component: Component): String {
             return GsonComponentSerializer.gson().serialize(component)
-        }
-
-        fun parseTranslateModel(component: Component?): TranslateModel {
-            // 1. 提前处理非翻译组件
-            if (component !is TranslatableComponent) {
-                return TranslateModel(null, null, getComponentText(component!!))
-            }
-
-            // 2. 提取 Key 和 Args
-            val key = component.key()
-            // 返回的是 List<Component>
-            val args = component.arguments()
-
-            val childModels = arrayOfNulls<TranslateModel>(args.size)
-            val stringsForFormat = arrayOfNulls<String>(args.size)
-
-            for (i in args.indices) {
-                val argComponent = args[i]
-
-                // 3. 递归处理参数
-                // 因为已经是 Component 类型，直接递归即可，无需 instanceof 检查和解包
-                val child = parseTranslateModel(argComponent.asComponent())
-
-                childModels[i] = child
-                stringsForFormat[i] = child.text
-            }
-
-            // 4. 格式化逻辑
-            var finalText = GlobalContext.translate(key, stringsForFormat)
-
-            // 5. 回声检查与子组件拼接
-            if (finalText == key) {
-                finalText = getComponentText(component)
-            } else if (!component.children().isEmpty()) {
-                // 拼接 Siblings (Adventure 中称为 Children)
-                val sb = StringBuilder(finalText)
-                for (childComponent in component.children()) {
-                    sb.append(parseTranslateModel(childComponent).text)
-                }
-                finalText = sb.toString()
-            }
-
-            return TranslateModel(key, childModels, finalText)
         }
     }
 }

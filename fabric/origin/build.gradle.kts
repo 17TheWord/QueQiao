@@ -28,7 +28,6 @@ val javaVersion = prop("java_version")
 val glavoRconVersion = prop("glavo_rcon_version")
 val snakeyamlVersion = prop("snakeyaml_version")
 val javaWebsocketVersion = prop("java_websocket_version")
-val mavenRepositoryUrl = prop("maven_repository_url")
 
 val minecraftVersion = prop("minecraft_version")
 val loaderVersion = prop("loader_version")
@@ -43,13 +42,7 @@ base {
 
 repositories {
     mavenLocal()
-    maven {
-        url = uri(mavenRepositoryUrl)
-        credentials {
-            username = System.getenv("GH_USERNAME")
-            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
-        }
-    }
+    mavenCentral()
 }
 
 loom {
@@ -73,7 +66,7 @@ dependencies {
     implementation("net.fabricmc:fabric-loader:$loaderVersion")
     implementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
 
-    includeImplementation("com.github.theword.queqiao:queqiao-tool:$toolVersion")
+    includeImplementation("io.github.17theword.queqiao:core:$toolVersion")
     includeImplementation("org.java-websocket:Java-WebSocket:$javaWebsocketVersion")
     includeImplementation("org.yaml:snakeyaml:$snakeyamlVersion")
     includeImplementation("org.glavo:rcon-java:$glavoRconVersion")

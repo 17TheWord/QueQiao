@@ -1,11 +1,7 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.handle.HandleApiImpl;
-import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.constant.BaseConstant;
-import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
-import net.minecraft.server.MinecraftServer;
+import io.github.theword.queqiao.core.constant.BaseConstant;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -14,23 +10,45 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod(BaseConstant.MOD_ID)
 public class QueQiao {
-    public static MinecraftServer minecraftServer;
+
+    /**
+     * Runtime 在服务端启动后才存在；事件与命令通过供应商延迟取值。
+     */
+    private static volatile QueQiaoRuntime runtime;
+
+    private static volatile PlatformContext platformContext;
 
     public QueQiao() {
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new EventProcessor());
+        MinecraftForge.EVENT_BUS.register(new EventProcessor(QueQiao::getPlatformContext));
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
     public void onServerStarted(net.minecraftforge.event.server.ServerStartedEvent event) {
-        minecraftServer = event.getServer();
-        GlobalContext.init(true, minecraftServer.getServerVersion(), ServerTypeConstant.FORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
+        PlatformContext context = new PlatformContext(event.getServer());
+        QueQiaoRuntime created = QueQiaoRuntime.create(context);
+        context.bindRuntime(created);
+        created.start();
+
+        platformContext = context;
+        runtime = created;
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)
     @SubscribeEvent
     public void onServerStopping(net.minecraftforge.event.server.ServerStoppingEvent event) {
-        GlobalContext.shutdown();
+        QueQiaoRuntime current = runtime;
+        if (current != null) {
+            current.shutdown();
+        }
+    }
+
+    public static QueQiaoRuntime getRuntime() {
+        return runtime;
+    }
+
+    public static PlatformContext getPlatformContext() {
+        return platformContext;
     }
 }

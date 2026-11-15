@@ -1,20 +1,16 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.TranslateModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
+import com.github.theword.queqiao.PlatformContext;
 import com.google.gson.JsonElement;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.event.model.achievement.DisplayModel;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.Permission;
 import net.minecraft.server.permissions.PermissionLevel;
@@ -48,31 +44,31 @@ public class FabricTool {
         return player;
     }
 
-    public static DisplayModel getFabricAchievementDisplay(DisplayInfo advancementDisplay) {
+    public static DisplayModel getFabricAchievementDisplay(PlatformContext context, DisplayInfo advancementDisplay) {
         DisplayModel displayModel = new DisplayModel();
         // IF fabric-26.1
-        //displayModel.setTitle(parseTranslateModel(advancementDisplay.getTitle()));
-        //displayModel.setDescription(parseTranslateModel(advancementDisplay.getDescription()));
+        //displayModel.setTitle(context.parseTranslateModel(advancementDisplay.getTitle()));
+        //displayModel.setDescription(context.parseTranslateModel(advancementDisplay.getDescription()));
         //displayModel.setFrame(advancementDisplay.getType().toString());
         // ELSE IF fabric-26.3
-        //displayModel.setTitle(parseTranslateModel(advancementDisplay.title()));
-        //displayModel.setDescription(parseTranslateModel(advancementDisplay.description()));
+        //displayModel.setTitle(context.parseTranslateModel(advancementDisplay.title()));
+        //displayModel.setDescription(context.parseTranslateModel(advancementDisplay.description()));
         //displayModel.setFrame(advancementDisplay.type().toString());
         // END IF
 
         return displayModel;
     }
 
-    public static AchievementModel getFabricAchievement(AdvancementHolder advancement) {
+    public static AchievementModel getFabricAchievement(PlatformContext context, AdvancementHolder advancement) {
         AchievementModel achievementModel = new AchievementModel();
         achievementModel.setKey(advancement.id().toString());
 
         advancement.value().display().ifPresent(display -> {
-            achievementModel.setDisplay(getFabricAchievementDisplay(display));
+            achievementModel.setDisplay(getFabricAchievementDisplay(context, display));
             // IF fabric-26.1
-            //achievementModel.setTranslation(parseTranslateModel(display.getTitle()));
+            //achievementModel.setTranslation(context.parseTranslateModel(display.getTitle()));
             // ELSE IF fabric-26.3
-            //achievementModel.setTranslation(parseTranslateModel(display.title()));
+            //achievementModel.setTranslation(context.parseTranslateModel(display.title()));
             // END IF
         });
 
@@ -88,32 +84,5 @@ public class FabricTool {
             return true;
         }
         return player.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS));
-    }
-
-    public static TranslateModel parseTranslateModel(Component text) {
-        if (!(text.getContents() instanceof TranslatableContents translatableTextContent))
-            return new TranslateModel(null, null, text.getString());
-
-        Object[] rawArgs = translatableTextContent.getArgs();
-        TranslateModel[] childModels = new TranslateModel[rawArgs.length];
-        String[] stringsForFormat = new String[rawArgs.length];
-
-        for (int i = 0; i < rawArgs.length; i++) {
-            Object rawArg = rawArgs[i];
-            TranslateModel childModel;
-            if (rawArg instanceof Component) {
-                childModel = parseTranslateModel((Component) rawArg);
-            } else {
-                childModel = new TranslateModel(null, null, String.valueOf(rawArg));
-            }
-            childModels[i] = childModel;
-            stringsForFormat[i] = childModel.getText();
-        }
-
-        String finalText = GlobalContext.translate(translatableTextContent.getKey(), stringsForFormat);
-        if (finalText.equals(translatableTextContent.getKey())) {
-            finalText = text.getString();
-        }
-        return new TranslateModel(translatableTextContent.getKey(), childModels, finalText);
     }
 }

@@ -1,14 +1,19 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.*;
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.TranslateModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.NeoForgeTool;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.theword.queqiao.core.config.ConfigKeys;
+import io.github.theword.queqiao.core.event.PlayerAchievementEvent;
+import io.github.theword.queqiao.core.event.PlayerChatEvent;
+import io.github.theword.queqiao.core.event.PlayerCommandEvent;
+import io.github.theword.queqiao.core.event.PlayerDeathEvent;
+import io.github.theword.queqiao.core.event.PlayerJoinEvent;
+import io.github.theword.queqiao.core.event.PlayerQuitEvent;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.TranslateModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -21,97 +26,128 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
-import static com.github.theword.queqiao.QueQiao.minecraftServer;
-import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgeAchievement;
-import static com.github.theword.queqiao.utils.NeoForgeTool.getNeoForgePlayer;
+import java.util.function.Supplier;
 
 public class EventProcessor {
 
+    /**
+     * 平台上下文在服务端启动时才创建，事件在模组构造阶段就注册，因此用供应商延迟取值。
+     */
+    private final Supplier<PlatformContext> contextSupplier;
+
+    public EventProcessor(Supplier<PlatformContext> contextSupplier) {
+        this.contextSupplier = contextSupplier;
+    }
+
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
-        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        PlayerModel player = getNeoForgePlayer(event.getPlayer());
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (event.isCanceled() || !runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_CHAT)) return;
+
+        PlayerModel player = context.getPlayerModel(event.getPlayer());
 
         Component message = event.getMessage();
         String rawMessage = NeoForgeTool.parseComponent(message);
 
-        PlayerChatEvent NeoForgeServerChatEvent = new PlayerChatEvent(player, "", rawMessage, message.getString());
-        GlobalContext.sendEvent(NeoForgeServerChatEvent);
+        runtime.sendEvent(new PlayerChatEvent(player, "", rawMessage, message.getString()));
     }
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        PlayerModel player = getNeoForgePlayer((ServerPlayer) event.getEntity());
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_JOIN)) return;
 
-        PlayerJoinEvent forgePlayerLoggedInEvent = new PlayerJoinEvent(player);
-        GlobalContext.sendEvent(forgePlayerLoggedInEvent);
+        PlayerModel player = context.getPlayerModel((ServerPlayer) event.getEntity());
+        runtime.sendEvent(new PlayerJoinEvent(player));
     }
 
     @SubscribeEvent
     public void onPlayerQuit(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        PlayerModel player = getNeoForgePlayer((ServerPlayer) event.getEntity());
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_QUIT)) return;
 
-        PlayerQuitEvent forgePlayerLoggedOutEvent = new PlayerQuitEvent(player);
-        GlobalContext.sendEvent(forgePlayerLoggedOutEvent);
+        PlayerModel player = context.getPlayerModel((ServerPlayer) event.getEntity());
+        runtime.sendEvent(new PlayerQuitEvent(player));
     }
 
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
-        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (event.isCanceled() || !runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_COMMAND)) return;
 
         ParseResults<CommandSourceStack> parseResults = event.getParseResults();
-
         if (!parseResults.getContext().getSource().isPlayer()) return;
 
-        String command = Tool.isIgnoredCommand(parseResults.getReader().getString());
-
+        String command = runtime.utils.isIgnoredCommand(parseResults.getReader().getString());
         if (command.isEmpty()) return;
 
         PlayerModel player;
-
         try {
-            player = getNeoForgePlayer(parseResults.getContext().getSource().getPlayerOrException());
+            player = context.getPlayerModel(parseResults.getContext().getSource().getPlayerOrException());
         } catch (CommandSyntaxException e) {
             return;
         }
 
-        PlayerCommandEvent forgeCommandEvent = new PlayerCommandEvent(player, "", parseResults.getContext().toString(), command);
-        GlobalContext.sendEvent(forgeCommandEvent);
+        runtime.sendEvent(new PlayerCommandEvent(player, "", parseResults.getContext().toString(), command));
     }
 
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
-        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (event.isCanceled() || !runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_DEATH)) return;
 
         if (!(event.getEntity() instanceof ServerPlayer)) return;
-        PlayerModel player = getNeoForgePlayer((ServerPlayer) event.getEntity());
 
         LivingEntity entity = event.getEntity();
+        PlayerModel player = context.getPlayerModel((ServerPlayer) entity);
+        TranslateModel translateModel = context.parseTranslateModel(event.getSource().getLocalizedDeathMessage(entity));
 
-        Component localizedDeathMessage = event.getSource().getLocalizedDeathMessage(entity);
-        TranslateModel translateModel = NeoForgeTool.parseTranslateModel(localizedDeathMessage);
-        PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, translateModel);
-        GlobalContext.sendEvent(forgeCommandEvent);
+        runtime.sendEvent(new PlayerDeathEvent(player, translateModel));
     }
 
     @SubscribeEvent
     public void onPlayerAdvancement(AdvancementEvent.AdvancementEarnEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
-        Advancement advancement = event.getAdvancement().value();
-        if (advancement.display().isEmpty() || !advancement.display().get().shouldAnnounceChat() || advancement.name().isEmpty())
-            return;
-        PlayerModel neoForgePlayer = getNeoForgePlayer((ServerPlayer) event.getEntity());
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        AchievementModel achievementModel = getNeoForgeAchievement(neoForgePlayer.getNickname(), advancement);
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_ADVANCEMENT)) return;
+
+        Advancement advancement = event.getAdvancement().value();
+        if (advancement.display().isEmpty()
+                || !advancement.display().get().shouldAnnounceChat()
+                || advancement.name().isEmpty()) return;
+
+        PlayerModel player = context.getPlayerModel((ServerPlayer) event.getEntity());
+        AchievementModel achievementModel = NeoForgeTool.getNeoForgeAchievement(context, player.getNickname(), advancement);
         achievementModel.setKey(event.getAdvancement().id().toString());
 
+        runtime.sendEvent(new PlayerAchievementEvent(player, achievementModel));
+    }
 
-        PlayerAchievementEvent playerAchievementEvent = new PlayerAchievementEvent(neoForgePlayer, achievementModel);
-        GlobalContext.sendEvent(playerAchievementEvent);
+    /**
+     * @return 已就绪的平台上下文；服务端尚未启动时返回 null
+     */
+    private PlatformContext currentContext() {
+        PlatformContext context = contextSupplier.get();
+        if (context == null || context.getRuntime() == null) {
+            return null;
+        }
+        return context;
     }
 }
