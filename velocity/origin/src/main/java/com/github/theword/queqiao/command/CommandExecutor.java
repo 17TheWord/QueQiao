@@ -1,27 +1,41 @@
 package com.github.theword.queqiao.command;
 
-import com.github.theword.queqiao.tool.command.CommandExecutorHelper;
-import com.github.theword.queqiao.tool.constant.BaseConstant;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
+import io.github.theword.queqiao.core.command.CommandRouter;
+import io.github.theword.queqiao.core.constant.BaseConstant;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class CommandExecutor implements SimpleCommand {
 
-    private final CommandExecutorHelper commandExecutorHelper;
+    private final Supplier<QueQiaoRuntime> runtimeSupplier;
 
-    public CommandExecutor() {
-        this.commandExecutorHelper = new CommandExecutorHelper();
+    private QueQiaoRuntime cachedRuntime;
+
+    private CommandRouter<CommandSource> cachedRouter;
+
+    public CommandExecutor(Supplier<QueQiaoRuntime> runtimeSupplier) {
+        this.runtimeSupplier = runtimeSupplier;
     }
 
     @Override
     public void execute(Invocation invocation) {
-        commandExecutorHelper.execute(invocation.source(), invocation.arguments());
+        QueQiaoRuntime runtime = runtimeSupplier.get();
+        if (runtime == null) return;
+
+        router(runtime).execute(new VelocityCommandContext(invocation.source()), invocation.arguments());
     }
 
     @Override
     public List<String> suggest(Invocation invocation) {
-        return commandExecutorHelper.tabComplete(invocation.source(), invocation.arguments());
+        QueQiaoRuntime runtime = runtimeSupplier.get();
+        if (runtime == null) return Collections.emptyList();
+
+        return router(runtime).tabComplete(new VelocityCommandContext(invocation.source()), invocation.arguments());
     }
 
     @Override
@@ -29,4 +43,18 @@ public class CommandExecutor implements SimpleCommand {
         return invocation.source().hasPermission(BaseConstant.COMMAND_HEADER);
     }
 
+    /**
+     * 命令路由要求 Runtime 已启动，因此按当前 Runtime 实例惰性创建并缓存。
+     */
+    private CommandRouter<CommandSource> router(QueQiaoRuntime runtime) {
+        CommandRouter<CommandSource> current = cachedRouter;
+        if (current != null && cachedRuntime == runtime) {
+            return current;
+        }
+
+        CommandRouter<CommandSource> created = runtime.createCommandRouter();
+        cachedRuntime = runtime;
+        cachedRouter = created;
+        return created;
+    }
 }

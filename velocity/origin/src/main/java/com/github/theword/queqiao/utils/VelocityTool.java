@@ -1,6 +1,6 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
 import com.velocitypowered.api.proxy.Player;
 
 public class VelocityTool {
