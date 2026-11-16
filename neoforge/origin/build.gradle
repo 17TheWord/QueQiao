@@ -23,14 +23,6 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
-    maven {
-        url = uri(maven_repository_url)
-        credentials {
-            username = System.getenv("GH_USERNAME")
-            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
-        }
-    }
-
 }
 
 base {
@@ -85,8 +77,8 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    jarJar(implementation("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
-    additionalRuntimeClasspath "com.github.theword.queqiao:queqiao-tool:${tool_version}"
+    jarJar(implementation("io.github.17theword.queqiao:core:${tool_version}"))
+    additionalRuntimeClasspath "io.github.17theword.queqiao:core:${tool_version}"
 
     jarJar(implementation("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
     jarJar(implementation("org.yaml:snakeyaml:${snakeyaml_version}"))

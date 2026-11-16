@@ -1,10 +1,7 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.handle.HandleApiImpl;
-import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.constant.BaseConstant;
-import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
+import io.github.theword.queqiao.core.constant.BaseConstant;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -17,19 +14,48 @@ import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 public class QueQiao {
     public static MinecraftServer minecraftServer;
 
+    /**
+     * Runtime 在服务端启动后才存在；事件与命令通过供应商延迟取值。
+     */
+    private static volatile QueQiaoRuntime runtime;
+
+    private static volatile PlatformContext platformContext;
+
+    private final EventProcessor eventProcessor = new EventProcessor(QueQiao::getPlatformContext);
+
     public QueQiao() {
         NeoForge.EVENT_BUS.register(this);
-        NeoForge.EVENT_BUS.register(new EventProcessor());
+        NeoForge.EVENT_BUS.register(eventProcessor);
     }
 
     @SubscribeEvent
-    public void ServerStarted(ServerStartedEvent event) {
+    public void onServerStarted(ServerStartedEvent event) {
         minecraftServer = event.getServer();
-        GlobalContext.init(true, minecraftServer.getServerVersion(), ServerTypeConstant.NEOFORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
+
+        PlatformContext context = new PlatformContext(minecraftServer);
+        QueQiaoRuntime created = QueQiaoRuntime.create(context);
+        context.bindRuntime(created);
+        created.start();
+
+        platformContext = context;
+        runtime = created;
     }
 
     @SubscribeEvent
     public void onServerStopping(ServerStoppingEvent event) {
-        GlobalContext.shutdown();
+        QueQiaoRuntime current = runtime;
+        if (current != null) {
+            current.shutdown();
+        }
+        runtime = null;
+        platformContext = null;
+    }
+
+    public static QueQiaoRuntime getRuntime() {
+        return runtime;
+    }
+
+    public static PlatformContext getPlatformContext() {
+        return platformContext;
     }
 }
