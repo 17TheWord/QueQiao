@@ -30,6 +30,14 @@ import net.minecraft.server.MinecraftServer;
 //import net.minecraft.network.chat.ChatType;
 // END IF
 
+// IF forge-1.16.5
+//import net.minecraft.util.text.TranslationTextComponent;
+// ELSE IF forge-1.18.2
+//import net.minecraft.network.chat.TranslatableComponent;
+// ELSE
+//import net.minecraft.network.chat.contents.TranslatableContents;
+// END IF
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
