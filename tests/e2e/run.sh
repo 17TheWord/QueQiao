@@ -96,15 +96,22 @@ EOF
   fi
 }
 
+port_listening() {
+  local p="$1"
+  if command -v ss >/dev/null 2>&1; then
+    ss -ltn 2>/dev/null | grep -q ":$p "
+  elif command -v netstat >/dev/null 2>&1; then
+    # Windows 的 netstat 不支持 -ltn，只能 -ano 匹配 LISTENING；Linux 用 -ltn
+    netstat -ano 2>/dev/null | grep -q ":$p .*LISTENING" \
+      || netstat -ltn 2>/dev/null | grep -q ":$p "
+  else
+    return 1
+  fi
+}
+
 check_ports() {
   for p in "$MC_PORT" "$WS_PORT"; do
-    local busy=0
-    if command -v ss >/dev/null 2>&1; then
-      ss -ltn 2>/dev/null | grep -q ":$p " && busy=1
-    elif command -v netstat >/dev/null 2>&1; then
-      netstat -ltn 2>/dev/null | grep -q ":$p " && busy=1
-    fi
-    if [[ "$busy" -eq 1 ]]; then
+    if port_listening "$p"; then
       echo "✗ 端口 $p 已被占用，请先释放或改用 --mc-port / --ws-port"
       exit 65
     fi
@@ -116,13 +123,17 @@ if [[ "$SKIP_SERVER" -eq 0 ]]; then
   prepare_run_dir
 
   echo "→ 启动服务端：$TARGET_ABS（MC $MC_VERSION）"
+  # 仓库里的 gradlew 没有 exec bit（git 记录为 100644），
+  # Linux 上直接 ./gradlew 会 Permission denied；Windows 因不认 exec bit 所以本地测不出来
+  chmod +x "$TARGET_ABS/gradlew" 2>/dev/null || true
   ( cd "$TARGET_ABS" && ./gradlew runServer --console=plain ) > "$LOG" 2>&1 &
   SERVER_PID=$!
 
-  echo "→ 等待 WebSocket Server 就绪（最多 600 秒）…"
+  echo "→ 等待 WebSocket Server 就绪（端口 $WS_PORT，最多 600 秒）…"
   READY=0
   for _ in $(seq 1 300); do
-    if grep -q "WebSocket Server 在" "$LOG" 2>/dev/null; then READY=1; break; fi
+    # 探端口比 grep 日志可靠：gradlew 输出重定向到文件时会被块缓冲，日志可能迟迟不落盘
+    if port_listening "$WS_PORT"; then READY=1; break; fi
     if ! kill -0 "$SERVER_PID" 2>/dev/null; then break; fi
     sleep 2
   done
@@ -133,7 +144,7 @@ if [[ "$SKIP_SERVER" -eq 0 ]]; then
     exit 66
   fi
   echo "→ 服务端就绪"
-  grep -E "Done \(|WebSocket Server 在" "$LOG" | tail -2 | sed 's/^/  /'
+  grep -E "Done \(|WebSocket Server 在" "$LOG" 2>/dev/null | tail -2 | sed 's/^/  /'
 fi
 
 cd "$ROOT/tests/e2e" || exit 67
