@@ -1,10 +1,11 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
-import com.github.theword.queqiao.tool.event.PlayerJoinEvent;
-import com.github.theword.queqiao.tool.event.PlayerQuitEvent;
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
+import io.github.theword.queqiao.core.config.ConfigKeys;
+import io.github.theword.queqiao.core.event.PlayerCommandEvent;
+import io.github.theword.queqiao.core.event.PlayerJoinEvent;
+import io.github.theword.queqiao.core.event.PlayerQuitEvent;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -12,47 +13,79 @@ import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 
-import static com.github.theword.queqiao.utils.VelocityTool.getVelocityPlayer;
-
+import java.util.function.Supplier;
 
 public class EventProcessor {
 
+    /**
+     * 平台上下文在插件初始化时才创建，事件注册紧随其后，因此用供应商延迟取值。
+     */
+    private final Supplier<PlatformContext> contextSupplier;
+
+    public EventProcessor(Supplier<PlatformContext> contextSupplier) {
+        this.contextSupplier = contextSupplier;
+    }
+
     @Subscribe
     public void onPlayerChat(PlayerChatEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        PlayerModel player = getVelocityPlayer(event.getPlayer());
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_CHAT)) return;
+
+        PlayerModel player = context.getPlayerModel(event.getPlayer());
         String message = event.getMessage();
-        com.github.theword.queqiao.tool.event.PlayerChatEvent velocityPlayerChatEvent = new com.github.theword.queqiao.tool.event.PlayerChatEvent(player, "", message, message);
-        GlobalContext.sendEvent(velocityPlayerChatEvent);
+        runtime.sendEvent(new io.github.theword.queqiao.core.event.PlayerChatEvent(player, "", message, message));
     }
 
     @Subscribe
     public void onPlayerLogin(LoginEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        PlayerModel player = getVelocityPlayer(event.getPlayer());
-        PlayerJoinEvent velocityLoginEvent = new PlayerJoinEvent(player);
-        GlobalContext.sendEvent(velocityLoginEvent);
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_JOIN)) return;
+
+        PlayerModel player = context.getPlayerModel(event.getPlayer());
+        runtime.sendEvent(new PlayerJoinEvent(player));
     }
 
     @Subscribe
     public void onDisconnect(DisconnectEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        PlayerModel player = getVelocityPlayer(event.getPlayer());
-        PlayerQuitEvent velocityDisconnectEvent = new PlayerQuitEvent(player);
-        GlobalContext.sendEvent(velocityDisconnectEvent);
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_QUIT)) return;
+
+        PlayerModel player = context.getPlayerModel(event.getPlayer());
+        runtime.sendEvent(new PlayerQuitEvent(player));
     }
 
     @Subscribe
     public void onCommandExecute(CommandExecuteEvent event) {
-        if (!(event.getCommandSource() instanceof Player player) || !GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand())
-            return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
+        if (!(event.getCommandSource() instanceof Player player)) return;
 
-        String command = event.getCommand();
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_COMMAND)) return;
 
-        PlayerCommandEvent velocityCommandExecuteEvent = new PlayerCommandEvent(getVelocityPlayer(player), "", command, command);
-        GlobalContext.sendEvent(velocityCommandExecuteEvent);
+        String command = runtime.utils.isIgnoredCommand(event.getCommand());
+        if (command.isEmpty()) return;
+
+        runtime.sendEvent(new PlayerCommandEvent(context.getPlayerModel(player), "", command, command));
+    }
+
+    /**
+     * @return 已就绪的平台上下文；尚未初始化时返回 null
+     */
+    private PlatformContext currentContext() {
+        PlatformContext context = contextSupplier.get();
+        if (context == null || context.getRuntime() == null) {
+            return null;
+        }
+        return context;
     }
 }
