@@ -22,17 +22,10 @@ version = mod_version
 repositories {
     mavenLocal()
     mavenCentral()
-    maven {
-        url = uri(maven_repository_url)
-        credentials {
-            username = System.getenv("GH_USERNAME")
-            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
-        }
-    }
 }
 
 dependencies {
-    implementation "com.github.theword.queqiao:queqiao-tool:${tool_version}"
+    implementation "io.github.17theword.queqiao:core:${tool_version}"
     implementation "org.java-websocket:Java-WebSocket:${java_websocket_version}"
     implementation "org.yaml:snakeyaml:${snakeyaml_version}"
     implementation "org.slf4j:slf4j-api:${slf4j_version}"
@@ -66,7 +59,7 @@ shadowJar {
         )
     }
     dependencies {
-        include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+        include(dependency("io.github.17theword.queqiao:core:${tool_version}"))
         include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
         include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
         include(dependency("org.slf4j:slf4j-api:${slf4j_version}"))
@@ -74,6 +67,7 @@ shadowJar {
         include(dependency("com.google.code.gson:gson:${gson_version}"))
         include(dependency("commons-io:commons-io:${commons_io_version}"))
         include(dependency("org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"))
+        include(dependency("org.glavo:rcon-java:${glavo_rcon_version}"))
     }
     mergeServiceFiles()
 }

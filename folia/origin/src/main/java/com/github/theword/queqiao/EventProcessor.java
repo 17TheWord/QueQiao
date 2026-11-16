@@ -1,149 +1,135 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
-import com.github.theword.queqiao.tool.event.PlayerChatEvent;
-import com.github.theword.queqiao.handle.HandleApiImpl;
-import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
-import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.TranslateModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
-import com.github.theword.queqiao.tool.event.model.death.DeathModel;
-import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.FoliaTool;
+import io.github.theword.queqiao.core.config.ConfigKeys;
+import io.github.theword.queqiao.core.event.PlayerAchievementEvent;
+import io.github.theword.queqiao.core.event.PlayerChatEvent;
+import io.github.theword.queqiao.core.event.PlayerCommandEvent;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.TranslateModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
 import io.papermc.paper.advancement.AdvancementDisplay;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TranslatableComponent;
-import net.kyori.adventure.text.TranslationArgument;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
-import io.papermc.paper.event.player.AsyncChatEvent;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerLoadEvent;
 
-import static com.github.theword.queqiao.utils.FoliaTool.*;
-import static com.github.theword.queqiao.utils.FoliaTool.getComponentText;
+public class EventProcessor implements Listener {
 
+    private final QueQiao plugin;
 
-class EventProcessor implements Listener {
+    EventProcessor(QueQiao plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
     public void onServerLoad(ServerLoadEvent event) {
-        GlobalContext.init(
-                false,
-                QueQiao.instance.getServer().getVersion(),
-                ServerTypeConstant.SPIGOT,
-                new HandleApiImpl(),
-                new HandleCommandReturnMessageImpl()
-        );
+        plugin.initRuntime();
     }
 
-    /**
-     * 监听玩家聊天
-     *
-     * @param event 玩家聊天事件
-     */
     @EventHandler(priority = EventPriority.MONITOR)
     void onPlayerChat(AsyncChatEvent event) {
-        if (event.isCancelled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
-        PlayerChatEvent playerChatEvent = new PlayerChatEvent(getFoliaPlayer(event.getPlayer()), "", getComponentJson(event.message()), getComponentText(event.message()));
-        GlobalContext.sendEvent(playerChatEvent);
+        PlatformContext context = currentContext();
+        if (context == null) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (event.isCancelled() || !runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_CHAT)) return;
+
+        runtime.sendEvent(new PlayerChatEvent(
+                context.getPlayerModel(event.getPlayer()),
+                "",
+                FoliaTool.getComponentJson(event.originalMessage()),
+                FoliaTool.getComponentText(event.message())
+        ));
     }
 
-    /**
-     * 监听玩家死亡事件
-     *
-     * @param event 玩家死亡事件
-     */
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_DEATH)) return;
+
         Component component = event.deathMessage();
         if (component == null) return;
 
-        TranslateModel translateModel = parseTranslateModel(component);
-        com.github.theword.queqiao.tool.event.PlayerDeathEvent playerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getFoliaPlayer(event.getEntity()), translateModel);
-        GlobalContext.sendEvent(playerDeathEvent);
+        TranslateModel translateModel = context.parseTranslateModel(component);
+        runtime.sendEvent(new io.github.theword.queqiao.core.event.PlayerDeathEvent(
+                context.getPlayerModel(event.getEntity()), translateModel));
     }
 
-    /**
-     * 监听玩家加入事件
-     *
-     * @param event 玩家加入事件
-     */
     @EventHandler
     void onPlayerJoin(PlayerJoinEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        com.github.theword.queqiao.tool.event.PlayerJoinEvent playerJoinEvent = new com.github.theword.queqiao.tool.event.PlayerJoinEvent(getFoliaPlayer(event.getPlayer()));
-        GlobalContext.sendEvent(playerJoinEvent);
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_JOIN)) return;
+
+        runtime.sendEvent(new io.github.theword.queqiao.core.event.PlayerJoinEvent(
+                context.getPlayerModel(event.getPlayer())));
     }
 
-    /**
-     * 监听玩家离开事件
-     *
-     * @param event 玩家离开事件
-     */
     @EventHandler
     void onPlayerQuit(PlayerQuitEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        com.github.theword.queqiao.tool.event.PlayerQuitEvent playerQuitEvent = new com.github.theword.queqiao.tool.event.PlayerQuitEvent(getFoliaPlayer(event.getPlayer()));
-        GlobalContext.sendEvent(playerQuitEvent);
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_QUIT)) return;
+
+        runtime.sendEvent(new io.github.theword.queqiao.core.event.PlayerQuitEvent(
+                context.getPlayerModel(event.getPlayer())));
     }
 
-    /**
-     * 监听玩家命令
-     *
-     * @param event 玩家命令事件
-     */
     @EventHandler
     void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        String command = Tool.isIgnoredCommand(event.getMessage());
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_COMMAND)) return;
 
+        String command = runtime.utils.isIgnoredCommand(event.getMessage());
         if (command.isEmpty()) return;
 
-        PlayerCommandEvent playerCommandEvent = new PlayerCommandEvent(getFoliaPlayer(event.getPlayer()), "", command, command);
-        GlobalContext.sendEvent(playerCommandEvent);
+        runtime.sendEvent(new PlayerCommandEvent(context.getPlayerModel(event.getPlayer()), "", command, command));
     }
 
     @EventHandler
     void onPlayerAdvancement(PlayerAdvancementDoneEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_ADVANCEMENT)) return;
+
         Advancement advancement = event.getAdvancement();
-        AdvancementDisplay advancementDisplay = advancement.getDisplay();
-        if (advancementDisplay == null || !advancementDisplay.doesAnnounceToChat()) return;
+        if (advancement == null) return;
 
-        PlayerModel player = getFoliaPlayer(event.getPlayer());
+        AdvancementDisplay display = advancement.getDisplay();
+        if (display == null || !display.doesAnnounceToChat() || event.message() == null) return;
 
-        AchievementModel achievementModel = new AchievementModel();
-        achievementModel.setKey(advancement.getKey().toString());
-
-        DisplayModel displayModel = new DisplayModel();
-        displayModel.setTitle(parseTranslateModel(advancementDisplay.title()));
-        displayModel.setDescription(parseTranslateModel(advancementDisplay.description()));
-        displayModel.setFrame(advancementDisplay.frame().toString());
-        achievementModel.setDisplay(displayModel);
-
-        Component translate = Component.translatable(
-                achievementModel.getTranslationKey(displayModel.getFrame()),
-                TranslationArgument.component(Component.text(player.getNickname())),
-                TranslationArgument.component(advancement.displayName())
-        );
-
-        achievementModel.setTranslation(parseTranslateModel(translate));
-
-        PlayerAchievementEvent foliaPlayerAdvancementDoneEvent = new PlayerAchievementEvent(player, achievementModel);
-        GlobalContext.sendEvent(foliaPlayerAdvancementDoneEvent);
+        PlayerModel player = context.getPlayerModel(event.getPlayer());
+        AchievementModel achievementModel = FoliaTool.getFoliaAdvancement(context, player.getNickname(), advancement);
+        runtime.sendEvent(new PlayerAchievementEvent(player, achievementModel));
     }
 
-
+    private PlatformContext currentContext() {
+        PlatformContext context = plugin.getPlatformContext();
+        if (context == null || context.getRuntime() == null) {
+            return null;
+        }
+        return context;
+    }
 }

@@ -25,13 +25,6 @@ base {
 
 repositories {
     mavenLocal()
-    maven {
-        url = uri(maven_repository_url)
-        credentials {
-            username = System.getenv("GH_USERNAME")
-            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
-        }
-    }
 }
 
 dependencies {
@@ -43,7 +36,7 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    include modImplementation("com.github.theword.queqiao:queqiao-tool:${tool_version}")
+    include implementation("io.github.17theword.queqiao:core:${tool_version}")
     include modImplementation("org.java-websocket:Java-WebSocket:${project.java_websocket_version}")
     include modImplementation("org.yaml:snakeyaml:${project.snakeyaml_version}")
     include modImplementation("org.glavo:rcon-java:${project.glavo_rcon_version}")

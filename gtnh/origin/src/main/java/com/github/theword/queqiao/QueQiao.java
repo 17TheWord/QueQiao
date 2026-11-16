@@ -1,21 +1,17 @@
 package com.github.theword.queqiao;
 
 import com.github.theword.queqiao.command.CommandExecutor;
-import com.github.theword.queqiao.tool.GlobalContext;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.common.MinecraftForge;
-
-import com.github.theword.queqiao.handle.HandleApiImpl;
-import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
-import com.github.theword.queqiao.tool.constant.BaseConstant;
-import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.github.theword.queqiao.core.constant.BaseConstant;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
+import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mod(
         modid = BaseConstant.MOD_ID,
@@ -29,10 +25,18 @@ public class QueQiao {
 
     public static MinecraftServer minecraftServer;
 
+    /**
+     * Runtime 在服务端启动后才存在；事件与命令通过供应商延迟取值。
+     */
+    private static volatile QueQiaoRuntime runtime;
+
+    private static volatile PlatformContext platformContext;
+
+    private final EventProcessor eventProcessor = new EventProcessor(QueQiao::getPlatformContext);
+
     public QueQiao() {
-        MinecraftForge.EVENT_BUS.register(this);
-        // MinecraftForge.EVENT_BUS.register(new EventProcessor());
-        // FMLCommonHandler.instance().bus().register(new EventProcessor());
+        MinecraftForge.EVENT_BUS.register(eventProcessor);
+        FMLCommonHandler.instance().bus().register(eventProcessor);
     }
 
     @Mod.EventHandler
@@ -45,20 +49,31 @@ public class QueQiao {
     @Mod.EventHandler
     @SideOnly(Side.SERVER)
     public void onServerStarted(FMLServerStartedEvent event) {
-        GlobalContext.init(
-                true,
-                minecraftServer.getMinecraftVersion(),
-                ServerTypeConstant.FORGE,
-                new HandleApiImpl(),
-                new HandleCommandReturnMessageImpl());
-        // var eventProcessor = new EventProcessor();
-        MinecraftForge.EVENT_BUS.register(new EventProcessor());
-        FMLCommonHandler.instance().bus().register(new EventProcessor());
+        PlatformContext context = new PlatformContext(minecraftServer);
+        QueQiaoRuntime created = QueQiaoRuntime.create(context);
+        context.bindRuntime(created);
+        created.start();
+
+        platformContext = context;
+        runtime = created;
     }
 
     @Mod.EventHandler
     @SideOnly(Side.SERVER)
     public void onServerStopping(FMLServerStoppingEvent event) {
-        GlobalContext.shutdown();
+        QueQiaoRuntime current = runtime;
+        if (current != null) {
+            current.shutdown();
+        }
+        runtime = null;
+        platformContext = null;
+    }
+
+    public static QueQiaoRuntime getRuntime() {
+        return runtime;
+    }
+
+    public static PlatformContext getPlatformContext() {
+        return platformContext;
     }
 }

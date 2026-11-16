@@ -1,0 +1,7 @@
+# e2e 脚本在 Linux CI 上以 bash 执行，CRLF 会导致解释器和字符串比较出错
+tests/e2e/** text eol=lf
+
+# workflow 与 shell 脚本统一 LF
+*.sh   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf

@@ -10,7 +10,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.7'
-    id 'com.gtnewhorizons.retrofuturagradle' version '1.4.1'
+    id 'com.gtnewhorizons.retrofuturagradle' version '1.4.2'
     id 'com.matthewprenger.cursegradle' version '1.4.0' apply false
     id 'com.modrinth.minotaur' version '2.+' apply false
     id 'org.jetbrains.changelog' version '2.2.0'
@@ -57,6 +57,9 @@ def getVersionFromFile(String fileName) {
 
 def tool_version = getVersionFromFile('../../tool_version.txt')
 def mod_version = getVersionFromFile('../../version.txt')
+
+// 版本号统一以仓库根目录 version.txt 为准，覆盖 gradle.properties 中的占位值
+project.ext.mod_version = mod_version
 
 base {
     archivesName.set("QueQiao-forge+${minecraft_version}-${mod_version}")
@@ -379,11 +382,8 @@ apply from: 'gradle/scripts/extra.gradle'
 shadowJar {
     archiveFileName.set("QueQiao-forge+${minecraft_version}-${mod_version}-deobf.jar")
     archiveClassifier.set("")
-    manifest {
-        attributes 'Main-Class': 'com.github.theword.queqiao.QueQiao'
-    }
     dependencies {
-        include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+        include(dependency("io.github.17theword.queqiao:core:${tool_version}"))
         include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
         include(dependency('org.slf4j:slf4j-api:.*'))
         include(dependency('org.slf4j:slf4j-simple:.*'))

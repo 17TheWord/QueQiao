@@ -28,6 +28,9 @@ QueQiao-jar/
 !*/*-*/gradlew.bat
 !*/*-*/support_version.txt
 
+# skills 目录不是生成产物，但目录名含 '-' 会被上面的规则误伤
+!skills/*/SKILL.md
+
 !velocity/velocity-*/build/generated/sources/tamplates/
 
 !tool/

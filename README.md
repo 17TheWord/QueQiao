@@ -122,6 +122,7 @@
 
 ## 相关项目
 
+- [`@17TheWord/mcqq`](https://github.com/17TheWord/mcqq)：鹊桥的直连版本，通过 `QQ` 官方机器人 `API v2` 直连，无需额外部署对接端。
 - [`@kterna/queqiao_mcdr`](https://github.com/kterna/queqiao_mcdr)：鹊桥的 `MCDR` 实现。
 
 ## 兼容

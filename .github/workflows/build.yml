@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
+    # 只改 CI / 测试 / 文档时不触发 22 个版本的构建
+    paths-ignore:
+      - '.github/workflows/**'
+      - 'tests/**'
+      - 'skills/**'
+      - '**.md'
   workflow_dispatch:
     inputs:
       publish_beta:
@@ -14,28 +22,50 @@ on:
         options:
           - 'false'
           - 'true'
+      target_loader:
+        description: '只构建指定加载器'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - 'all'
+          - 'fabric'
+          - 'folia'
+          - 'forge'
+          - 'neoforge'
+          - 'spigot'  
+          - 'paper'
+          - 'velocity'
+          - 'vanilla'
+          - 'gtnh'
+          - 'cleanroom'
+      target_version:
+        description: '只构建指定版本，例如 1.12.2 或 all'
+        required: false
+        default: 'all'
+        type: string
 
 permissions:
   contents: write
 
 env:
   GH_TOKEN: ${{ github.token }}
-  GH_USERNAME: ${{ github.actor }}
-  PACKAGE_READ_ONLY_TOKEN: ${{ secrets.PACKAGE_READ_ONLY_TOKEN }}
 
 jobs:
   generate-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v6
       - name: Generate Matrix
         id: set-matrix
-        run: chmod 777 matrix.sh && ./matrix.sh -path "vanilla","spigot","velocity","forge","neoforge","fabric","folia","paper","gtnh","cleanroom"
+        run: |
+          chmod 777 matrix.sh
+          ./matrix.sh -path "vanilla","spigot","velocity","forge","neoforge","fabric","folia","paper","gtnh","cleanroom" -loader "${{ github.event.inputs.target_loader || 'all' }}" -version "${{ github.event.inputs.target_version || 'all' }}"
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs: generate-matrix
     strategy:
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
@@ -86,7 +116,8 @@ jobs:
       - name: Set Version Type
         id: set-version-type
         run: |
-          if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
+          # tag 即正式发布；分支 push 与手动触发一律 beta
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             echo "VERSION_TYPE=release" >> $GITHUB_ENV
           else
             echo "VERSION_TYPE=beta" >> $GITHUB_ENV
@@ -106,7 +137,7 @@ jobs:
 
       - uses: Kir-Antipov/mc-publish@v3.3
         if: |
-          (github.ref == 'refs/heads/main' && github.event_name == 'push' && matrix.config.mc-loader != 'vanilla') ||
+          (startsWith(github.ref, 'refs/tags/v') && matrix.config.mc-loader != 'vanilla') ||
           (github.event_name == 'workflow_dispatch' && github.event.inputs.publish_beta == 'true' && matrix.config.mc-loader != 'vanilla')
         with:
           modrinth-id: rVJvtYoX
@@ -121,5 +152,10 @@ jobs:
           files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ env.PUBLISH_LOADER }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
       - name: Upload to Release
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && matrix.config.mc-loader == 'vanilla'
-        run: gh release upload v${{ env.MOD_VERSION }} QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
+        if: startsWith(github.ref, 'refs/tags/v') && matrix.config.mc-loader == 'vanilla'
+        run: |
+          TAG="v${MOD_VERSION}"
+          JAR="QueQiao-jar/${MOD_VERSION}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${MOD_VERSION}.jar"
+          # Create Release 与本工作流并行，release 可能尚未建立，这里做一次兜底
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --generate-notes --verify-tag --title "$TAG"
+          gh release upload "$TAG" "$JAR" --clobber

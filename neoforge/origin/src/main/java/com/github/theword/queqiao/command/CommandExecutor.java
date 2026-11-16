@@ -1,17 +1,21 @@
 package com.github.theword.queqiao.command;
 
 
-import com.github.theword.queqiao.tool.command.RootCommand;
-import com.github.theword.queqiao.tool.command.SubCommand;
-import com.github.theword.queqiao.tool.constant.BaseConstant;
-import com.github.theword.queqiao.tool.constant.CommandConstant;
+import com.github.theword.queqiao.QueQiao;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import io.github.theword.queqiao.core.command.CommandNode;
+import io.github.theword.queqiao.core.command.RootCommand;
+import io.github.theword.queqiao.core.constant.BaseConstant;
+import io.github.theword.queqiao.core.constant.CommandConstant;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.server.command.ConfigCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 
@@ -19,30 +23,32 @@ import java.util.Collections;
 @EventBusSubscriber(modid = BaseConstant.MOD_ID)
 public class CommandExecutor {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseConstant.MODULE_NAME);
+
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event) {
-        RootCommand rootCommand = new RootCommand();
-        event.getDispatcher().register(registerSubCommand(rootCommand));
+        // 命令在服务端启动阶段注册，此时 Runtime 可能还不存在，因此使用延迟命令树
+        RootCommand<CommandSourceStack> rootCommand = QueQiaoRuntime.createDeferredCommandTree(LOGGER, QueQiao::getRuntime);
+
+        event.getDispatcher().register(registerCommand(rootCommand));
         ConfigCommand.register(event.getDispatcher());
     }
 
-
     /**
-     * 递归将 SubCommand 转换为 Brigadier 的 LiteralArgumentBuilder
+     * 递归将 core 命令节点转换为 Brigadier 的 LiteralArgumentBuilder
      *
-     * @param command 当前命令节点
+     * @param node 当前命令节点
      * @return Brigadier 命令构建器
      */
-    private static LiteralArgumentBuilder<CommandSourceStack> registerSubCommand(SubCommand command) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(command.getName());
-        if (command.isRoot()) {
+    private static LiteralArgumentBuilder<CommandSourceStack> registerCommand(CommandNode<CommandSourceStack> node) {
+        LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(node.getName());
+        if (node.isRoot()) {
             builder.requires(commandSourceStack -> commandSourceStack.hasPermission(CommandConstant.MOD_PERMISSION_LEVEL));
         }
-        builder.executes(context -> command.execute(context, Collections.emptyList()));
-        for (SubCommand child : command.getChildren()) {
-            builder.then(registerSubCommand(child));
+        builder.executes(context -> node.execute(new NeoForgeCommandContext(context.getSource()), Collections.emptyList()));
+        for (CommandNode<CommandSourceStack> child : node.getChildren()) {
+            builder.then(registerCommand(child));
         }
         return builder;
     }
-
 }

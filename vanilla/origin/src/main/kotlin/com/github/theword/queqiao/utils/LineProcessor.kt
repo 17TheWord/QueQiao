@@ -2,51 +2,55 @@ package com.github.theword.queqiao.utils
 
 import com.github.theword.queqiao.EventProcessor
 import com.github.theword.queqiao.config.Config
+import io.github.theword.queqiao.core.config.ConfigKeys
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime
 import org.slf4j.Logger
 
 class LineProcessor(
     private val regexConfig: Config,
-    private val config: com.github.theword.queqiao.tool.config.Config,
+    private val runtime: QueQiaoRuntime,
     private val logger: Logger,
     private val eventProcessor: EventProcessor
 ) {
 
     fun processLine(line: String) {
-        logger.debug("LogWatcher: $line")
-        if (config.subscribeEvent.isPlayerChat)
+        logger.debug("LogWatcher: {}", line)
+
+        if (runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_CHAT)) {
             regexConfig.chatRegexSet.forEach { chatConfig ->
                 val chatMatcher = chatConfig.pattern.matcher(line)
                 if (chatMatcher.find()) {
                     val playerName = chatMatcher.group(chatConfig.playerGroup)
-                    val message = chatMatcher.group(chatConfig.messageGroup!!)
+                    val message = chatConfig.messageGroup?.let { chatMatcher.group(it) }
                     if (message != null && message.isNotEmpty()) {
-                        logger.info("[Chat] $playerName: $message")
+                        logger.info("[Chat] {}: {}", playerName, message)
                         eventProcessor.onPlayerChat(playerName, message)
                     }
                     return
                 }
             }
+        }
 
-        if (config.subscribeEvent.isPlayerJoin)
+        if (runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_JOIN)) {
             regexConfig.joinRegexSet.forEach { joinConfig ->
                 val joinMatcher = joinConfig.pattern.matcher(line)
                 if (joinMatcher.find()) {
-                    logger.info("[Join] $line")
-                    val playerName = joinMatcher.group(joinConfig.playerGroup)
-                    eventProcessor.onPlayerJoin(playerName)
+                    logger.info("[Join] {}", line)
+                    eventProcessor.onPlayerJoin(joinMatcher.group(joinConfig.playerGroup))
                     return
                 }
             }
+        }
 
-        if (config.subscribeEvent.isPlayerQuit)
+        if (runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_QUIT)) {
             regexConfig.quitRegexSet.forEach { quitConfig ->
                 val quitMatcher = quitConfig.pattern.matcher(line)
                 if (quitMatcher.find()) {
-                    logger.info("[Quit] $line")
-                    val playerName = quitMatcher.group(quitConfig.playerGroup)
-                    eventProcessor.onPlayerQuit(playerName)
+                    logger.info("[Quit] {}", line)
+                    eventProcessor.onPlayerQuit(quitMatcher.group(quitConfig.playerGroup))
                     return
                 }
             }
+        }
     }
 }

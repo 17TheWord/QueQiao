@@ -1,105 +1,135 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
-import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
-import com.github.theword.queqiao.tool.event.model.TranslateModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.death.DeathModel;
-import com.github.theword.queqiao.tool.utils.Tool;
+import com.github.theword.queqiao.utils.SpigotTool;
+import io.github.theword.queqiao.core.config.ConfigKeys;
+import io.github.theword.queqiao.core.event.PlayerAchievementEvent;
+import io.github.theword.queqiao.core.event.PlayerChatEvent;
+import io.github.theword.queqiao.core.event.PlayerCommandEvent;
+import io.github.theword.queqiao.core.event.PlayerDeathEvent;
+import io.github.theword.queqiao.core.event.PlayerJoinEvent;
+import io.github.theword.queqiao.core.event.PlayerQuitEvent;
+import io.github.theword.queqiao.core.event.model.TranslateModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import static com.github.theword.queqiao.utils.SpigotTool.getSpigotPlayer;
-import static com.github.theword.queqiao.utils.SpigotTool.getSpigotAdvancement;
+import java.util.function.Supplier;
 
 
 class EventProcessor implements Listener {
+
+    private final Supplier<PlatformContext> contextSupplier;
+
+    EventProcessor(Supplier<PlatformContext> contextSupplier) {
+        this.contextSupplier = contextSupplier;
+    }
+
     /**
      * 监听玩家聊天
-     *
-     * @param event 玩家聊天事件
      */
     @EventHandler(priority = EventPriority.MONITOR)
     void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (event.isCancelled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (event.isCancelled() || !runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_CHAT)) return;
+
         String message = event.getMessage();
-        com.github.theword.queqiao.tool.event.PlayerChatEvent spigotAsyncPlayerChatEvent = new com.github.theword.queqiao.tool.event.PlayerChatEvent(getSpigotPlayer(event.getPlayer()), "", message, message);
-        GlobalContext.sendEvent(spigotAsyncPlayerChatEvent);
+        runtime.sendEvent(new PlayerChatEvent(context.getPlayerModel(event.getPlayer()), "", message, message));
     }
 
     /**
      * 监听玩家死亡事件
-     *
-     * @param event 玩家死亡事件
      */
     @EventHandler
-    void onPlayerDeath(PlayerDeathEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
+    void onPlayerDeath(org.bukkit.event.entity.PlayerDeathEvent event) {
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_DEATH)) return;
+
+        // Spigot 没有结构化消息组件，死亡信息只能按纯文本上报
         TranslateModel translateModel = new TranslateModel(null, null, event.getDeathMessage());
 
-        com.github.theword.queqiao.tool.event.PlayerDeathEvent spigotPlayerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getSpigotPlayer(event.getEntity()), translateModel);
-        GlobalContext.sendEvent(spigotPlayerDeathEvent);
+        runtime.sendEvent(new PlayerDeathEvent(context.getPlayerModel(event.getEntity()), translateModel));
     }
 
     /**
      * 监听玩家加入事件
-     *
-     * @param event 玩家加入事件
      */
     @EventHandler
-    void onPlayerJoin(PlayerJoinEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
+    void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event) {
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        com.github.theword.queqiao.tool.event.PlayerJoinEvent spigotPlayerJoinEvent = new com.github.theword.queqiao.tool.event.PlayerJoinEvent(getSpigotPlayer(event.getPlayer()));
-        GlobalContext.sendEvent(spigotPlayerJoinEvent);
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_JOIN)) return;
+
+        runtime.sendEvent(new PlayerJoinEvent(context.getPlayerModel(event.getPlayer())));
     }
 
     /**
      * 监听玩家离开事件
-     *
-     * @param event 玩家离开事件
      */
     @EventHandler
-    void onPlayerQuit(PlayerQuitEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
+    void onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent event) {
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        com.github.theword.queqiao.tool.event.PlayerQuitEvent spigotPlayerQuitEvent = new com.github.theword.queqiao.tool.event.PlayerQuitEvent(getSpigotPlayer(event.getPlayer()));
-        GlobalContext.sendEvent(spigotPlayerQuitEvent);
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_QUIT)) return;
+
+        runtime.sendEvent(new PlayerQuitEvent(context.getPlayerModel(event.getPlayer())));
     }
 
     /**
      * 监听玩家命令
-     *
-     * @param event 玩家命令事件
      */
     @EventHandler
     void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        String command = Tool.isIgnoredCommand(event.getMessage());
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_COMMAND)) return;
 
+        String command = runtime.utils.isIgnoredCommand(event.getMessage());
         if (command.isEmpty()) return;
 
-        PlayerCommandEvent spigotPlayerCommandPreprocessEvent = new PlayerCommandEvent(getSpigotPlayer(event.getPlayer()), "", command, command);
-        GlobalContext.sendEvent(spigotPlayerCommandPreprocessEvent);
+        runtime.sendEvent(new PlayerCommandEvent(context.getPlayerModel(event.getPlayer()), "", command, command));
     }
 
     @EventHandler
     void onPlayerAdvancement(PlayerAdvancementDoneEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_ADVANCEMENT)) return;
+
         Advancement advancement = event.getAdvancement();
+        if (advancement == null) return;
 
-        AchievementModel achievementModel = getSpigotAdvancement(advancement);
-
-        PlayerAchievementEvent spigotPlayerAdvancementDoneEvent = new PlayerAchievementEvent(getSpigotPlayer(event.getPlayer()), achievementModel);
-        GlobalContext.sendEvent(spigotPlayerAdvancementDoneEvent);
+        AchievementModel achievementModel = SpigotTool.getSpigotAdvancement(advancement);
+        runtime.sendEvent(new PlayerAchievementEvent(context.getPlayerModel(event.getPlayer()), achievementModel));
     }
 
-
+    /**
+     * @return 已就绪的平台上下文；插件尚未完成初始化时返回 null
+     */
+    private PlatformContext currentContext() {
+        PlatformContext context = contextSupplier.get();
+        if (context == null || context.getRuntime() == null) {
+            return null;
+        }
+        return context;
+    }
 }

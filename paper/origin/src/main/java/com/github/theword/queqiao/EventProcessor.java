@@ -1,18 +1,17 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.PlayerAchievementEvent;
-import com.github.theword.queqiao.tool.event.PlayerCommandEvent;
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.TranslateModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.death.DeathModel;
-import com.github.theword.queqiao.tool.utils.Tool;
 import com.github.theword.queqiao.utils.PaperTool;
+import io.github.theword.queqiao.core.config.ConfigKeys;
+import io.github.theword.queqiao.core.event.PlayerAchievementEvent;
+import io.github.theword.queqiao.core.event.PlayerChatEvent;
+import io.github.theword.queqiao.core.event.PlayerCommandEvent;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.TranslateModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
+import io.papermc.paper.advancement.AdvancementDisplay;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,91 +22,110 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import static com.github.theword.queqiao.utils.PaperTool.*;
+import java.util.function.Supplier;
 
 public class EventProcessor implements Listener {
 
-    /**
-     * 监听玩家聊天
-     *
-     * @param event 玩家聊天事件
-     */
+    private final Supplier<PlatformContext> contextSupplier;
+
+    EventProcessor(Supplier<PlatformContext> contextSupplier) {
+        this.contextSupplier = contextSupplier;
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     void onPlayerChat(AsyncChatEvent event) {
-        if (event.isCancelled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
-        com.github.theword.queqiao.tool.event.PlayerChatEvent spigotAsyncPlayerChatEvent = new com.github.theword.queqiao.tool.event.PlayerChatEvent(getPaperPlayer(event.getPlayer()), "", getComponentJson(event.originalMessage()), getComponentText(event.message()));
-        GlobalContext.sendEvent(spigotAsyncPlayerChatEvent);
+        PlatformContext context = currentContext();
+        if (context == null) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (event.isCancelled() || !runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_CHAT)) return;
+
+        runtime.sendEvent(new PlayerChatEvent(
+                context.getPlayerModel(event.getPlayer()),
+                "",
+                PaperTool.getComponentJson(event.originalMessage()),
+                PaperTool.getComponentText(event.message())
+        ));
     }
 
-    /**
-     * 监听玩家死亡事件
-     *
-     * @param event 玩家死亡事件
-     */
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_DEATH)) return;
 
         Component component = event.deathMessage();
+        if (component == null) return;
 
-        TranslateModel translateModel = parseTranslateModel(component);
-        com.github.theword.queqiao.tool.event.PlayerDeathEvent spigotPlayerDeathEvent = new com.github.theword.queqiao.tool.event.PlayerDeathEvent(getPaperPlayer(event.getEntity()), translateModel);
-        GlobalContext.sendEvent(spigotPlayerDeathEvent);
+        TranslateModel translateModel = context.parseTranslateModel(component);
+        runtime.sendEvent(new io.github.theword.queqiao.core.event.PlayerDeathEvent(
+                context.getPlayerModel(event.getEntity()), translateModel));
     }
 
-    /**
-     * 监听玩家加入事件
-     *
-     * @param event 玩家加入事件
-     */
     @EventHandler
     void onPlayerJoin(PlayerJoinEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        com.github.theword.queqiao.tool.event.PlayerJoinEvent spigotPlayerJoinEvent = new com.github.theword.queqiao.tool.event.PlayerJoinEvent(getPaperPlayer(event.getPlayer()));
-        GlobalContext.sendEvent(spigotPlayerJoinEvent);
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_JOIN)) return;
+
+        runtime.sendEvent(new io.github.theword.queqiao.core.event.PlayerJoinEvent(
+                context.getPlayerModel(event.getPlayer())));
     }
 
-    /**
-     * 监听玩家离开事件
-     *
-     * @param event 玩家离开事件
-     */
     @EventHandler
     void onPlayerQuit(PlayerQuitEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        com.github.theword.queqiao.tool.event.PlayerQuitEvent spigotPlayerQuitEvent = new com.github.theword.queqiao.tool.event.PlayerQuitEvent(getPaperPlayer(event.getPlayer()));
-        GlobalContext.sendEvent(spigotPlayerQuitEvent);
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_QUIT)) return;
+
+        runtime.sendEvent(new io.github.theword.queqiao.core.event.PlayerQuitEvent(
+                context.getPlayerModel(event.getPlayer())));
     }
 
-    /**
-     * 监听玩家命令
-     *
-     * @param event 玩家命令事件
-     */
     @EventHandler
     void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        String command = Tool.isIgnoredCommand(event.getMessage());
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_COMMAND)) return;
 
+        String command = runtime.utils.isIgnoredCommand(event.getMessage());
         if (command.isEmpty()) return;
 
-        PlayerCommandEvent spigotPlayerCommandPreprocessEvent = new PlayerCommandEvent(getPaperPlayer(event.getPlayer()), "", command, command);
-        GlobalContext.sendEvent(spigotPlayerCommandPreprocessEvent);
+        runtime.sendEvent(new PlayerCommandEvent(context.getPlayerModel(event.getPlayer()), "", command, command));
     }
 
     @EventHandler
     void onPlayerAdvancement(PlayerAdvancementDoneEvent event) {
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
-        Advancement advancement = event.getAdvancement();
-        if (advancement.getDisplay() == null || !advancement.getDisplay().doesAnnounceToChat() || event.message() == null)
-            return;
-        PlayerModel player = getPaperPlayer(event.getPlayer());
-        AchievementModel achievementModel = getPaperAdvancement(player.getNickname(), advancement);
+        PlatformContext context = currentContext();
+        if (context == null) return;
 
-        PlayerAchievementEvent spigotPlayerAdvancementDoneEvent = new PlayerAchievementEvent(player, achievementModel);
-        GlobalContext.sendEvent(spigotPlayerAdvancementDoneEvent);
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_ADVANCEMENT)) return;
+
+        Advancement advancement = event.getAdvancement();
+        if (advancement == null) return;
+
+        AdvancementDisplay display = advancement.getDisplay();
+        if (display == null || !display.doesAnnounceToChat() || event.message() == null) return;
+
+        PlayerModel player = context.getPlayerModel(event.getPlayer());
+        AchievementModel achievementModel = PaperTool.getPaperAdvancement(context, player.getNickname(), advancement);
+        runtime.sendEvent(new PlayerAchievementEvent(player, achievementModel));
+    }
+
+    private PlatformContext currentContext() {
+        PlatformContext context = contextSupplier.get();
+        if (context == null || context.getRuntime() == null) {
+            return null;
+        }
+        return context;
     }
 }

@@ -1,22 +1,20 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
 import com.google.gson.JsonElement;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.event.model.achievement.DisplayModel;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.advancement.Advancement;
-
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 
 
 public class SpigotTool {
     /**
-     * 获取SpigotPlayer
-     *
-     * @param player 玩家
-     * @return SpigotPlayer
+     * 获取 Spigot 玩家快照
      */
     public static PlayerModel getSpigotPlayer(Player player) {
         PlayerModel playerModel = new PlayerModel();
@@ -24,7 +22,8 @@ public class SpigotTool {
         playerModel.setUuid(player.getUniqueId());
         playerModel.setOp(player.isOp());
         playerModel.setHealth(player.getHealth());
-//        playerModel.setMaxHealth(player.getMaxHealth()); // Deprecated
+        AttributeInstance maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (maxHealth != null) playerModel.setMaxHealth(maxHealth.getBaseValue());
         playerModel.setExperienceLevel(player.getLevel());
         playerModel.setExperienceProgress((double) player.getExp());
         playerModel.setTotalExperience(player.getTotalExperience());
@@ -36,12 +35,13 @@ public class SpigotTool {
         return playerModel;
     }
 
-
+    /**
+     * 1.12.2 / 1.13 的 Bukkit API 不暴露 AdvancementDisplay，只能上报成就 key。
+     */
     public static AchievementModel getSpigotAdvancement(Advancement advancement) {
         AchievementModel achievementModel = new AchievementModel();
         achievementModel.setKey(advancement.getKey().toString());
-        DisplayModel displayModel = new DisplayModel();
-        achievementModel.setDisplay(displayModel);
+        achievementModel.setDisplay(new DisplayModel());
         return achievementModel;
     }
 

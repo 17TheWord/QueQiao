@@ -1,0 +1,147 @@
+name: E2E
+
+# 端到端验证：真起服务端 + 假玩家 + WebSocket 全量 API 与事件。
+#
+# 触发策略：
+#   PR / push        → 只跑最新一个版本，快速反馈（约 6 分钟）
+#   手动 + full=true → 跑全部 fabric 版本
+#   每周定时         → 跑全部 fabric 版本，及时发现回归
+#
+# 已实测：fabric-1.16.5 与 1.21.11 在 JDK 21 下均可正常起服并全项通过，
+# 因此矩阵统一用 JDK 21，不按 java_version 拆 JDK。
+
+on:
+  workflow_dispatch:
+    inputs:
+      full:
+        description: '跑全部版本（否则只跑最新一个）'
+        type: boolean
+        default: true
+      loader:
+        description: '加载器目录名，如 fabric / forge'
+        required: false
+        default: 'fabric'
+  pull_request:
+    paths:
+      - 'tests/e2e/**'
+      - '.github/workflows/e2e.yml'
+      - '*/origin/src/main/**'
+  # 不挂 push 触发：main 上不一定有 tests/ 目录，
+  # 且代码变更已由 pull_request 覆盖
+  schedule:
+    - cron: '0 18 * * 0'
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-26.04
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build matrix
+        id: m
+        run: |
+          FULL="${{ inputs.full }}"
+          LOADER="${{ inputs.loader }}"
+          [ -z "$LOADER" ] && LOADER="fabric"
+
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ "${{ github.event_name }}" != "schedule" ]; then
+            FULL="false"
+          fi
+
+          if [ "$FULL" = "true" ] || [ "${{ github.event_name }}" = "schedule" ]; then
+            ITEMS=""
+            for d in "$LOADER"/*-*/; do
+              [ -d "$d" ] || continue
+              name=$(basename "$d")
+              [ "$name" = "origin" ] && continue
+              ITEMS="$ITEMS{\"target\":\"$LOADER/$name\"},"
+            done
+            ITEMS="${ITEMS%,}"
+            if [ -z "$ITEMS" ]; then
+              echo "未扫描到 $LOADER 下的版本目录" >&2
+              exit 1
+            fi
+          else
+            # 注意：不要用 */ 结尾的 glob，末尾斜杠会干扰 sort -V，
+            # 导致 1.21 排在 1.21.11 之后
+            LATEST=$(ls -d "$LOADER"/*-* | grep -v origin | sort -V | tail -1)
+            ITEMS="{\"target\":\"$LATEST\"}"
+          fi
+
+          echo "matrix=[$ITEMS]" >> $GITHUB_OUTPUT
+          echo "矩阵: [$ITEMS]"
+
+  e2e:
+    needs: plan
+    runs-on: ubuntu-26.04
+    timeout-minutes: 35
+
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        include: ${{ fromJson(needs.plan.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Chose JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Cache Gradle
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: e2e-${{ matrix.target }}-${{ hashFiles('tests/e2e/package-lock.json') }}
+          restore-keys: |
+            e2e-${{ matrix.target }}-
+            e2e-
+
+      - name: Install test deps
+        working-directory: tests/e2e
+        run: |
+          if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm i --no-audit --no-fund; fi
+
+      - name: Run E2E
+        run: |
+          chmod +x tests/e2e/run.sh
+          bash tests/e2e/run.sh "${{ matrix.target }}"
+
+      - name: Dump server log on failure
+        if: failure()
+        run: |
+          LOG="${{ matrix.target }}/run/server-e2e.log"
+          echo "===== 日志路径: $LOG ====="
+          if [ -f "$LOG" ]; then
+            echo "----- 最后 60 行 -----"
+            tail -60 "$LOG"
+            echo "----- 异常行 -----"
+            grep -nE "ERROR|Exception|Caused by|FAILURE" "$LOG" | tail -25 || true
+          else
+            echo "未生成服务端日志，检查 gradlew runServer 是否成功启动"
+            ls -la "${{ matrix.target }}/run/" 2>/dev/null || true
+          fi
+
+      - name: Upload log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-log-${{ strategy.job-index }}
+          path: ${{ matrix.target }}/run/server-e2e.log
+          if-no-files-found: ignore
+          retention-days: 7
