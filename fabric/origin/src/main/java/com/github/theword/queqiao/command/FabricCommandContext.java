@@ -16,7 +16,7 @@ public final class FabricCommandContext extends CommandExecutionContext<ServerCo
 
     @Override
     public void reply(String message) {
-        // IF >= fabric-1.19
+        // IF >= fabric-1.20
 //        nativeSource.sendFeedback(() -> Text.of(message), false);
         // ELSE
 //        nativeSource.sendFeedback(Text.of(message), false);
