@@ -1,10 +1,7 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.handle.HandleApiImpl;
-import com.github.theword.queqiao.handle.HandleCommandReturnMessageImpl;
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.constant.BaseConstant;
-import com.github.theword.queqiao.tool.constant.ServerTypeConstant;
+import io.github.theword.queqiao.core.constant.BaseConstant;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,9 +14,18 @@ import net.minecraftforge.fml.common.Mod;
 public class QueQiao {
     public static MinecraftServer minecraftServer;
 
+    /**
+     * Runtime 在服务端启动后才存在；事件与命令通过供应商延迟取值。
+     */
+    private static volatile QueQiaoRuntime runtime;
+
+    private static volatile PlatformContext platformContext;
+
+    private final EventProcessor eventProcessor = new EventProcessor(QueQiao::getPlatformContext);
+
     public QueQiao() {
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new EventProcessor());
+        MinecraftForge.EVENT_BUS.register(eventProcessor);
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)
@@ -30,7 +36,14 @@ public class QueQiao {
 //    public void onServerStarted(net.minecraftforge.fml.event.server.FMLServerStartedEvent event) {
         // END IF
         minecraftServer = event.getServer();
-        GlobalContext.init(true, minecraftServer.getServerVersion(), ServerTypeConstant.FORGE, new HandleApiImpl(), new HandleCommandReturnMessageImpl());
+
+        PlatformContext context = new PlatformContext(minecraftServer);
+        QueQiaoRuntime created = QueQiaoRuntime.create(context);
+        context.bindRuntime(created);
+        created.start();
+
+        platformContext = context;
+        runtime = created;
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)
@@ -40,6 +53,19 @@ public class QueQiao {
     // ELSE
 //    public void onServerStopping(net.minecraftforge.fml.event.server.FMLServerStoppingEvent event) {
         // END IF
-        GlobalContext.shutdown();
+        QueQiaoRuntime current = runtime;
+        if (current != null) {
+            current.shutdown();
+        }
+        runtime = null;
+        platformContext = null;
+    }
+
+    public static QueQiaoRuntime getRuntime() {
+        return runtime;
+    }
+
+    public static PlatformContext getPlatformContext() {
+        return platformContext;
     }
 }

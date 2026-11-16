@@ -72,13 +72,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     mavenLocal()
     mavenCentral()
-    maven {
-        url = uri(maven_repository_url)
-        credentials {
-            username = System.getenv("GH_USERNAME")
-            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
-        }
-    }
 }
 
 // IF > forge-1.16.5
@@ -96,7 +89,7 @@ repositories {
 //    archiveClassifier.set("")
 //    destinationDirectory.set(file("../../QueQiao-jar/${version}"))
 //    dependencies {
-//        include(dependency("com.github.theword.queqiao:queqiao-tool:${tool_version}"))
+//        include(dependency("io.github.17theword.queqiao:core:${tool_version}"))
 //        include(dependency("org.java-websocket:Java-WebSocket:${java_websocket_version}"))
 //        include(dependency("org.yaml:snakeyaml:${snakeyaml_version}"))
 //        include(dependency("org.slf4j:slf4j-api"))
@@ -120,7 +113,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    minecraftLibrary("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
+    minecraftLibrary("io.github.17theword.queqiao:core:${tool_version}") {
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'com.google.code.gson', module: 'gson'
     }
@@ -131,7 +124,7 @@ dependencies {
     implementation "org.yaml:snakeyaml:${snakeyaml_version}"
     implementation "org.glavo:rcon-java:${glavo_rcon_version}"
     // IF > forge-1.16.5
-//    jarJar("com.github.theword.queqiao:queqiao-tool:${tool_version}") {
+//    jarJar("io.github.17theword.queqiao:core:${tool_version}") {
 //        jarJar.ranged(it, "[${tool_version},)")
 //        exclude group: 'org.slf4j', module: 'slf4j-api'
 //        exclude group: 'com.google.code.gson', module: 'gson'

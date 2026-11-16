@@ -1,12 +1,18 @@
 package com.github.theword.queqiao;
 
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.*;
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.TranslateModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
 import com.github.theword.queqiao.utils.ForgeTool;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.theword.queqiao.core.config.ConfigKeys;
+import io.github.theword.queqiao.core.event.PlayerAchievementEvent;
+import io.github.theword.queqiao.core.event.PlayerChatEvent;
+import io.github.theword.queqiao.core.event.PlayerCommandEvent;
+import io.github.theword.queqiao.core.event.PlayerDeathEvent;
+import io.github.theword.queqiao.core.event.PlayerJoinEvent;
+import io.github.theword.queqiao.core.event.PlayerQuitEvent;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.TranslateModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime;
 
 import net.minecraft.advancements.Advancement;
 
@@ -18,12 +24,6 @@ import net.minecraft.advancements.Advancement;
 //import net.minecraft.network.chat.Component;
 //import net.minecraft.server.level.ServerPlayer;
 //import net.minecraft.world.entity.LivingEntity;
-// END IF
-
-// IF forge-1.18.2
-//import net.minecraft.network.chat.TranslatableComponent;
-// ELSE IF >= forge-1.19
-//import net.minecraft.network.chat.contents.TranslatableContents;
 // END IF
 
 import net.minecraftforge.event.CommandEvent;
@@ -38,17 +38,28 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 //import static com.github.theword.queqiao.QueQiao.minecraftServer;
 // END IF
 
-import static com.github.theword.queqiao.tool.utils.Tool.*;
-import static com.github.theword.queqiao.utils.ForgeTool.getForgeAchievement;
-import static com.github.theword.queqiao.utils.ForgeTool.getForgePlayer;
+import java.util.function.Supplier;
 
 public class EventProcessor {
 
+    /**
+     * 平台上下文在服务端启动时才创建，事件在模组构造阶段就注册，因此用供应商延迟取值。
+     */
+    private final Supplier<PlatformContext> contextSupplier;
+
+    public EventProcessor(Supplier<PlatformContext> contextSupplier) {
+        this.contextSupplier = contextSupplier;
+    }
+
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
-        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerChat()) return;
+        PlatformContext context = currentContext();
+        if (context == null || event.isCanceled()) return;
 
-        PlayerModel player = getForgePlayer(event.getPlayer());
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_CHAT)) return;
+
+        PlayerModel player = context.getPlayerModel(event.getPlayer());
         // IF forge-1.16.5
 //        String message = event.getMessage();
 //        String rawMessage = ITextComponent.Serializer.toJson(event.getComponent());
@@ -63,41 +74,50 @@ public class EventProcessor {
 //        String rawMessage = Component.Serializer.toJson(event.getMessage(), minecraftServer.registryAccess());
         // END IF
 
-        PlayerChatEvent forgeServerChatEvent = new PlayerChatEvent(player, "", rawMessage, message);
-        GlobalContext.sendEvent(forgeServerChatEvent);
+        runtime.sendEvent(new PlayerChatEvent(player, "", rawMessage, message));
     }
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerLoggedInEvent event) {
-        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
+        PlatformContext context = currentContext();
+        if (context == null || event.isCanceled()) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_JOIN)) return;
 
         // IF > forge-1.16.5
-//        PlayerModel player = getForgePlayer((ServerPlayer) event.getEntity());
+//        PlayerModel player = context.getPlayerModel((ServerPlayer) event.getEntity());
         // ELSE
-//        PlayerModel player = getForgePlayer((ServerPlayerEntity) event.getEntity());
+//        PlayerModel player = context.getPlayerModel((ServerPlayerEntity) event.getEntity());
         // END IF
 
-        PlayerJoinEvent forgePlayerLoggedInEvent = new PlayerJoinEvent(player);
-        GlobalContext.sendEvent(forgePlayerLoggedInEvent);
+        runtime.sendEvent(new PlayerJoinEvent(player));
     }
 
     @SubscribeEvent
     public void onPlayerQuit(PlayerLoggedOutEvent event) {
-        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerQuit()) return;
+        PlatformContext context = currentContext();
+        if (context == null || event.isCanceled()) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_QUIT)) return;
 
         // IF > forge-1.16.5
-//        PlayerModel player = getForgePlayer((ServerPlayer) event.getEntity());
+//        PlayerModel player = context.getPlayerModel((ServerPlayer) event.getEntity());
         // ELSE
-//        PlayerModel player = getForgePlayer((ServerPlayerEntity) event.getPlayer());
+//        PlayerModel player = context.getPlayerModel((ServerPlayerEntity) event.getPlayer());
         // END IF
 
-        PlayerQuitEvent forgePlayerLoggedOutEvent = new PlayerQuitEvent(player);
-        GlobalContext.sendEvent(forgePlayerLoggedOutEvent);
+        runtime.sendEvent(new PlayerQuitEvent(player));
     }
 
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event) {
-        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerCommand()) return;
+        PlatformContext context = currentContext();
+        if (context == null || event.isCanceled()) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_COMMAND)) return;
 
         // IF >= forge-1.19
 //        if (!event.getParseResults().getContext().getSource().isPlayer()) return;
@@ -107,7 +127,7 @@ public class EventProcessor {
 //        if (!(event.getParseResults().getContext().getSource().getEntity() instanceof ServerPlayerEntity)) return;
         // END IF
 
-        String command = isIgnoredCommand(event.getParseResults().getReader().getString());
+        String command = runtime.utils.isIgnoredCommand(event.getParseResults().getReader().getString());
         String rawMessage = event.getParseResults().getContext().toString();
 
         if (command.isEmpty()) return;
@@ -115,25 +135,27 @@ public class EventProcessor {
         PlayerModel player;
 
         try {
-            player = getForgePlayer(event.getParseResults().getContext().getSource().getPlayerOrException());
+            player = context.getPlayerModel(event.getParseResults().getContext().getSource().getPlayerOrException());
         } catch (CommandSyntaxException e) {
             return;
         }
-        PlayerCommandEvent forgeCommandEvent = new PlayerCommandEvent(player, "", rawMessage, command);
-        GlobalContext.sendEvent(forgeCommandEvent);
-
+        runtime.sendEvent(new PlayerCommandEvent(player, "", rawMessage, command));
     }
 
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
-        if (event.isCanceled() || !GlobalContext.getConfig().getSubscribeEvent().isPlayerDeath()) return;
+        PlatformContext context = currentContext();
+        if (context == null || event.isCanceled()) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_DEATH)) return;
 
         // IF > forge-1.16.5
 //        if (!(event.getEntity() instanceof ServerPlayer)) return;
-//        PlayerModel player = getForgePlayer((ServerPlayer) event.getEntity());
+//        PlayerModel player = context.getPlayerModel((ServerPlayer) event.getEntity());
         // ELSE
 //        if (!(event.getEntity() instanceof ServerPlayerEntity)) return;
-//        PlayerModel player = getForgePlayer((ServerPlayerEntity) event.getEntity());
+//        PlayerModel player = context.getPlayerModel((ServerPlayerEntity) event.getEntity());
         // END IF
 
         // IF >= forge-1.19
@@ -142,10 +164,9 @@ public class EventProcessor {
 //        LivingEntity entity = (LivingEntity) event.getEntity();
         // END IF
 
-        TranslateModel translateModel = ForgeTool.parseTranslateModel(event.getSource().getLocalizedDeathMessage(entity));
+        TranslateModel translateModel = context.parseTranslateModel(event.getSource().getLocalizedDeathMessage(entity));
 
-        PlayerDeathEvent forgeCommandEvent = new PlayerDeathEvent(player, translateModel);
-        GlobalContext.sendEvent(forgeCommandEvent);
+        runtime.sendEvent(new PlayerDeathEvent(player, translateModel));
     }
 
     @SubscribeEvent
@@ -154,24 +175,38 @@ public class EventProcessor {
     // ELSE
 //    public void onPlayerAdvancement(AdvancementEvent event) {
         // END IF
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerAdvancement()) return;
+        PlatformContext context = currentContext();
+        if (context == null) return;
+
+        QueQiaoRuntime runtime = context.getRuntime();
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_ADVANCEMENT)) return;
+
         // IF <= forge-1.20.1
 //        Advancement advancement = event.getAdvancement();
-//        if (advancement.getDisplay() == null || !advancement.getDisplay().shouldAnnounceChat()) return;
         // ELSE
 //        Advancement advancement = event.getAdvancement().value();
-//        if (advancement.display().isEmpty() || !advancement.display().get().shouldAnnounceChat() || advancement.name().isEmpty()) return;
         // END IF
 
         // IF > forge-1.16.5
-//        PlayerModel player = getForgePlayer((ServerPlayer) event.getEntity());
+//        PlayerModel player = context.getPlayerModel((ServerPlayer) event.getEntity());
         // ELSE
-//        PlayerModel player = getForgePlayer((ServerPlayerEntity) event.getPlayer());
+//        PlayerModel player = context.getPlayerModel((ServerPlayerEntity) event.getPlayer());
         // END IF
 
-        AchievementModel achievementModel = getForgeAchievement(player.getNickname(), advancement);
+        AchievementModel achievementModel = ForgeTool.getForgeAchievement(context, player.getNickname(), advancement);
+        if (achievementModel == null) return;
 
-        PlayerAchievementEvent forgeAdvancementEvent = new PlayerAchievementEvent(player, achievementModel);
-        GlobalContext.sendEvent(forgeAdvancementEvent);
+        runtime.sendEvent(new PlayerAchievementEvent(player, achievementModel));
+    }
+
+    /**
+     * @return 已就绪的平台上下文；服务端尚未启动时返回 null
+     */
+    private PlatformContext currentContext() {
+        PlatformContext context = contextSupplier.get();
+        if (context == null || context.getRuntime() == null) {
+            return null;
+        }
+        return context;
     }
 }

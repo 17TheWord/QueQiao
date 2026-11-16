@@ -1,30 +1,34 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.TranslateModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
+import com.github.theword.queqiao.PlatformContext;
+import com.google.gson.JsonElement;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.event.model.achievement.DisplayModel;
 import net.minecraft.advancements.Advancement;
-
 import net.minecraft.advancements.DisplayInfo;
+
 // IF > forge-1.16.5
 //import net.minecraft.network.chat.Component;
 //import net.minecraft.network.chat.MutableComponent;
 //import net.minecraft.server.level.ServerPlayer;
 // ELSE
+//import net.minecraft.entity.player.ServerPlayerEntity;
+//import net.minecraft.util.text.IFormattableTextComponent;
 //import net.minecraft.util.text.ITextComponent;
 //import net.minecraft.util.text.TranslationTextComponent;
-//import net.minecraft.entity.player.ServerPlayerEntity;
 // END IF
 
 // IF forge-1.18.2
 //import net.minecraft.network.chat.TranslatableComponent;
-// ELSE IF >= forge-1.19
-//import net.minecraft.network.chat.contents.TranslatableContents;
+// END IF
+
+// IF >= forge-1.21
+//import static com.github.theword.queqiao.QueQiao.minecraftServer;
 // END IF
 
 public class ForgeTool {
+
     // IF > forge-1.16.5
 //    public static PlayerModel getForgePlayer(ServerPlayer forgeServerPlayer) {
         // ELSE
@@ -47,33 +51,40 @@ public class ForgeTool {
         return playerModel;
     }
 
-    public static AchievementModel getForgeAchievement(String nickname, Advancement advancement) {
-        AchievementModel achievementModel = new AchievementModel();
-        DisplayModel displayModel = new DisplayModel();
+    /**
+     * 构造成就模型；成就未配置公告或无法解析时返回 null
+     */
+    public static AchievementModel getForgeAchievement(PlatformContext context, String nickname, Advancement advancement) {
         // IF >= forge-1.21
-//        if (advancement.display().isEmpty()) {
-//            return achievementModel;
-//        }
-//        if (advancement.parent().isPresent()) {
-//            achievementModel.setKey(advancement.parent().get().toString());
+//        if (advancement.display().isEmpty() || !advancement.display().get().shouldAnnounceChat() || advancement.name().isEmpty()) {
+//            return null;
 //        }
 //        DisplayInfo displayInfo = advancement.display().get();
         // ELSE
-//        achievementModel.setKey(advancement.getId().toString());
-//        if (advancement.getDisplay() == null) {
-//            return achievementModel;
+//        if (advancement.getDisplay() == null || !advancement.getDisplay().shouldAnnounceChat()) {
+//            return null;
 //        }
 //        DisplayInfo displayInfo = advancement.getDisplay();
         // END IF
 
+        AchievementModel achievementModel = new AchievementModel();
+        // IF >= forge-1.21
+//        if (advancement.parent().isPresent()) {
+//            achievementModel.setKey(advancement.parent().get().toString());
+//        }
+        // ELSE
+//        achievementModel.setKey(advancement.getId().toString());
+        // END IF
+
+        DisplayModel displayModel = new DisplayModel();
         // IF >= forge-1.21
 //        displayModel.setFrame(displayInfo.getType().toString());
         // ELSE
 //        displayModel.setFrame(displayInfo.getFrame().toString());
         // END IF
 
-        displayModel.setTitle(parseTranslateModel(displayInfo.getTitle()));
-        displayModel.setDescription(parseTranslateModel(displayInfo.getDescription()));
+        displayModel.setTitle(context.parseTranslateModel(displayInfo.getTitle()));
+        displayModel.setDescription(context.parseTranslateModel(displayInfo.getDescription()));
         achievementModel.setDisplay(displayModel);
 
         // IF >= forge-1.21
@@ -101,54 +112,22 @@ public class ForgeTool {
 //                advancement.getDisplay().getTitle()
 //        );
         // END IF
-        achievementModel.setTranslation(parseTranslateModel(translatable));
+        achievementModel.setTranslation(context.parseTranslateModel(translatable));
 
         return achievementModel;
     }
 
-    // IF forge-1.16.5
-//    public static TranslateModel parseTranslateModel(ITextComponent iTextComponent) {
-//        if (!(iTextComponent instanceof TranslationTextComponent))
-//            return new TranslateModel(null, null, iTextComponent.getString());
-//        TranslationTextComponent translatableTextContent = (TranslationTextComponent) iTextComponent;
-    // ELSE IF forge-1.18.2
-//    public static TranslateModel parseTranslateModel(Component component) {
-//        if (!(component instanceof TranslatableComponent))
-//            return new TranslateModel(null, null, component.getString());
-//        TranslatableComponent translatableTextContent = (TranslatableComponent) component;
+    // IF >= forge-1.21
+//    public static MutableComponent buildComponent(JsonElement jsonElement) {
+//        return Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
+//    }
+    // ELSE IF >= forge-1.18
+//    public static MutableComponent buildComponent(JsonElement jsonElement) {
+//        return Component.Serializer.fromJson(jsonElement);
+//    }
     // ELSE
-//    public static TranslateModel parseTranslateModel(Component component) {
-//        if (!(component.getContents() instanceof TranslatableContents))
-//            return new TranslateModel(null, null, component.getString());
-//        TranslatableContents translatableTextContent = (TranslatableContents) component.getContents();
-        // END IF
-        Object[] rawArgs = translatableTextContent.getArgs();
-        TranslateModel[] childModels = new TranslateModel[rawArgs.length];
-        String[] stringsForFormat = new String[rawArgs.length];
-
-        for (int i = 0; i < rawArgs.length; i++) {
-            Object rawArg = rawArgs[i];
-
-            // IF forge-1.16.5
-//            TranslateModel childModel = (rawArg instanceof ITextComponent) ? parseTranslateModel((ITextComponent) rawArg)
-            // ELSE
-//            TranslateModel childModel = (rawArg instanceof Component) ? parseTranslateModel((Component) rawArg)
-                    // END IF
-
-                    : new TranslateModel(null, null, String.valueOf(rawArg));
-            childModels[i] = childModel;
-            stringsForFormat[i] = childModel.getText();
-        }
-
-        String finalText = GlobalContext.translate(translatableTextContent.getKey(), stringsForFormat);
-        if (finalText.equals(translatableTextContent.getKey())) {
-            // IF forge-1.16.5
-//            finalText = iTextComponent.getString();
-            // ELSE
-//            finalText = component.getString();
-            // END IF
-        }
-        return new TranslateModel(translatableTextContent.getKey(), childModels, finalText);
-    }
-
+//    public static IFormattableTextComponent buildComponent(JsonElement jsonElement) {
+//        return ITextComponent.Serializer.fromJson(jsonElement);
+//    }
+    // END IF
 }
