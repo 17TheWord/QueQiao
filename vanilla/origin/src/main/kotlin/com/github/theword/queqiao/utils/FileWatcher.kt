@@ -1,100 +1,151 @@
 package com.github.theword.queqiao.utils
 
-import com.github.theword.queqiao.tool.GlobalContext
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
-import java.io.RandomAccessFile
-import java.nio.charset.StandardCharsets
-import java.nio.file.*
-import java.util.concurrent.atomic.AtomicLong
+import org.slf4j.Logger
+import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
+import java.nio.charset.Charset
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
+import java.nio.file.attribute.BasicFileAttributes
 
+/**
+ * 日志 tail：单线程 200ms 轮询，避免 WatchService 事件丢失和额外的刷新线程。
+ *
+ * <p>只处理完整行；文件轮转或截断时重置指针；读取异常保留原指针，下一轮重试。
+ */
+class FileWatcher(
+    private val logPath: Path,
+    private val charset: Charset,
+    private val lineProcessor: LineProcessor,
+    private val logger: Logger,
+    private val pollIntervalMs: Long = DEFAULT_POLL_INTERVAL_MS
+) {
 
-class FileWatcher(private val lineProcessor: LineProcessor) {
+    @Volatile
+    private var running = true
 
-    /**
-     * 文件监控
-     * 同步调用会阻塞
-     *
-     * @param filePath String
-     * @throws IOException          异常
-     * @throws InterruptedException 异常
-     */
-    @Throws(IOException::class, InterruptedException::class)
-    fun watcherLog(filePath: Path) {
-        val fileName = filePath.fileName.toString()
-        val parentPath = filePath.parent
-        val watchService = FileSystems.getDefault().newWatchService()
+    private var position = 0L
+    private var fileKey: Any? = null
+    private var initialized = false
+    private val pending = ByteArrayOutputStream()
 
-        parentPath.register(
-            watchService,
-            StandardWatchEventKinds.ENTRY_CREATE,
-            StandardWatchEventKinds.ENTRY_MODIFY,
-            StandardWatchEventKinds.ENTRY_DELETE
-        )
-        val lastPointer = AtomicLong(0L)
-        do {
-            val key = watchService.take()
-            val watchEvents = key.pollEvents()
-            watchEvents.stream()
-                .filter { i: WatchEvent<*> -> StandardWatchEventKinds.ENTRY_MODIFY === i.kind() && fileName == (i.context() as Path).fileName.toString() }
-                .forEach { i: WatchEvent<*> ->
-                    if (i.count() > 1) {
-                        return@forEach
-                    }
-                    val configFile = Paths.get(parentPath.toString() + "/" + i.context()).toFile()
-                    val str = StringBuilder()
-                    lastPointer.set(getFileContent(configFile, lastPointer.get(), str))
+    fun run() {
+        while (running) {
+            try {
+                pollOnce()
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
+                return
+            } catch (e: Exception) {
+                logger.warn("监听日志时出现异常：{}", e.message, e)
+            }
 
-                    val line = str.toString()
-                    if (line.isNotEmpty() && line.length < 320 && GlobalContext.getConfig().isEnable) {
-                        lineProcessor.processLine(line)
-                    }
-                }
-            key.reset()
-        } while (true)
+            try {
+                Thread.sleep(pollIntervalMs)
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
+                return
+            }
+        }
     }
 
-    /**
-     * beginPointer > configFile 时会从头读取
-     *
-     * @param configFile   配置文件
-     * @param beginPointer 起点
-     * @param str          内容会拼接进去
-     * @return 读到了多少字节, -1 读取失败
-     */
-    private fun getFileContent(configFile: File, beginPointer: Long, str: StringBuilder): Long {
-        var currentPointer = beginPointer
-        if (currentPointer < 0) {
-            currentPointer = 0
+    fun stop() {
+        running = false
+    }
+
+    private fun pollOnce() {
+        if (!Files.isRegularFile(logPath)) {
+            if (initialized) {
+                // 文件被删除/移走：清空指针，等新文件出现后从头读取
+                reset()
+                fileKey = null
+            }
+            return
         }
-        var file: RandomAccessFile? = null
-        var top = true
-        try {
-            file = RandomAccessFile(configFile, "r")
-            if (currentPointer > file.length()) {
-                return 0
-            }
-            file.seek(currentPointer)
-            var line: String
-            while ((file.readLine().also { line = it }) != null) {
-                if (top) {
-                    top = false
-                } else {
-                    str.append("\n")
+
+        val attributes = Files.readAttributes(logPath, BasicFileAttributes::class.java)
+        val currentKey = attributes.fileKey()
+
+        if (!initialized) {
+            // 启动时从文件末尾开始，避免重放历史日志
+            initialized = true
+            fileKey = currentKey
+            position = attributes.size()
+            return
+        }
+
+        if (currentKey != null && currentKey != fileKey) {
+            logger.info("检测到日志文件轮转，从头读取：{}", logPath)
+            reset()
+            fileKey = currentKey
+        } else if (attributes.size() < position) {
+            logger.info("检测到日志文件截断，从头读取：{}", logPath)
+            reset()
+        }
+
+        if (attributes.size() > position) {
+            readAvailable()
+        }
+    }
+
+    private fun reset() {
+        position = 0L
+        pending.reset()
+    }
+
+    private fun readAvailable() {
+        Files.newByteChannel(logPath, StandardOpenOption.READ).use { channel ->
+            channel.position(position)
+            val buffer = ByteBuffer.allocate(READ_BUFFER_BYTES)
+            while (running) {
+                buffer.clear()
+                val read = channel.read(buffer)
+                if (read <= 0) {
+                    break
                 }
-                str.append(String(line.toByteArray(StandardCharsets.ISO_8859_1), charset("GBK")))
+                buffer.flip()
+                val bytes = ByteArray(buffer.remaining())
+                buffer.get(bytes)
+                position += read
+                pending.write(bytes)
+                drainCompleteLines()
             }
-            return file.filePointer
-        } catch (e: IOException) {
-            GlobalContext.getLogger().error("Error reading file content", e)
-            return -1
-        } finally {
-            if (file != null) {
+        }
+    }
+
+    private fun drainCompleteLines() {
+        val data = pending.toByteArray()
+        var lastNewline = -1
+        for (index in data.indices.reversed()) {
+            if (data[index] == '\n'.code.toByte()) {
+                lastNewline = index
+                break
+            }
+        }
+
+        if (lastNewline < 0) {
+            // 没有完整行：保留半行；异常超长时放弃，避免内存无限增长
+            if (data.size > MAX_PENDING_BYTES) {
+                logger.warn("日志中存在超过 {} 字节且没有换行的内容，已丢弃", MAX_PENDING_BYTES)
+                pending.reset()
+            }
+            return
+        }
+
+        val completeBytes = data.copyOfRange(0, lastNewline)
+        val remainingBytes = data.copyOfRange(lastNewline + 1, data.size)
+        pending.reset()
+        pending.write(remainingBytes)
+
+        val text = String(completeBytes, charset)
+        for (line in text.split('\n')) {
+            val cleaned = line.removeSuffix("\r")
+            if (cleaned.isNotEmpty() && cleaned.length < MAX_LINE_LENGTH) {
                 try {
-                    file.close()
-                } catch (e: IOException) {
-                    GlobalContext.getLogger().error("Error closing file", e)
+                    lineProcessor.processLine(cleaned)
+                } catch (e: Exception) {
+                    logger.warn("处理日志行失败：{}", cleaned, e)
                 }
             }
         }
@@ -102,39 +153,9 @@ class FileWatcher(private val lineProcessor: LineProcessor) {
 
     companion object {
 
-        private const val REFRESH_INTERVAL_MS = 1000L
-
-        /**
-         * 文件监听
-         *
-         * @param filePath 文件路径
-         */
-        fun fileListen(filePath: String, lineProcessor: LineProcessor) {
-            val path = Paths.get(filePath)
-            // 监听
-            Thread {
-                try {
-                    FileWatcher(lineProcessor).watcherLog(path)
-                } catch (e: Exception) {
-                    GlobalContext.getLogger().error("监听日志时出现异常", e)
-                }
-            }.start()
-
-            // 刷新日志
-            Thread {
-                try {
-                    while (!Thread.currentThread().isInterrupted) {
-                        FileWriter(path.toFile(), true).use { writer ->
-                            writer.flush()
-                        }
-                        Thread.sleep(REFRESH_INTERVAL_MS)
-                    }
-                } catch (e: InterruptedException) {
-                    Thread.currentThread().interrupt()
-                } catch (e: IOException) {
-                    GlobalContext.getLogger().error("写日志时出现异常", e)
-                }
-            }.start()
-        }
+        private const val DEFAULT_POLL_INTERVAL_MS = 200L
+        private const val READ_BUFFER_BYTES = 8192
+        private const val MAX_PENDING_BYTES = 1024 * 1024
+        private const val MAX_LINE_LENGTH = 320
     }
 }

@@ -1,40 +1,37 @@
 package com.github.theword.queqiao
 
-import com.github.theword.queqiao.tool.GlobalContext
-import com.github.theword.queqiao.tool.event.PlayerChatEvent
-import com.github.theword.queqiao.tool.event.PlayerJoinEvent
-import com.github.theword.queqiao.tool.event.PlayerQuitEvent
-import com.github.theword.queqiao.tool.event.model.PlayerModel
+import io.github.theword.queqiao.core.config.ConfigKeys
+import io.github.theword.queqiao.core.event.PlayerChatEvent
+import io.github.theword.queqiao.core.event.PlayerJoinEvent
+import io.github.theword.queqiao.core.event.PlayerQuitEvent
+import io.github.theword.queqiao.core.event.model.PlayerModel
+import io.github.theword.queqiao.core.runtime.QueQiaoRuntime
 
-class EventProcessor {
+class EventProcessor(private val runtime: QueQiaoRuntime) {
+
     /**
      * 监听玩家聊天
      */
     fun onPlayerChat(playerName: String, message: String) {
-        if (!GlobalContext.getConfig().subscribeEvent.isPlayerChat) return
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_CHAT)) return
         val player = PlayerModel(playerName)
-        val event = PlayerChatEvent(player, "", message, message)
-        GlobalContext.sendEvent(event)
+        // 日志里没有可靠的原始组件 JSON，raw_message 留空
+        runtime.sendEvent(PlayerChatEvent(player, "", "", message))
     }
-
 
     /**
      * 监听玩家加入事件
      */
     fun onPlayerJoin(playerName: String) {
-        if (!GlobalContext.getConfig().subscribeEvent.isPlayerJoin) return
-        val player = PlayerModel(playerName)
-        val event = PlayerJoinEvent(player)
-        GlobalContext.sendEvent(event)
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_JOIN)) return
+        runtime.sendEvent(PlayerJoinEvent(PlayerModel(playerName)))
     }
 
     /**
      * 监听玩家离开事件
      */
     fun onPlayerQuit(playerName: String) {
-        if (!GlobalContext.getConfig().subscribeEvent.isPlayerQuit) return
-        val player = PlayerModel(playerName)
-        val event = PlayerQuitEvent(player)
-        GlobalContext.sendEvent(event)
+        if (!runtime.getConfig().get(ConfigKeys.SubscribeEvent.PLAYER_QUIT)) return
+        runtime.sendEvent(PlayerQuitEvent(PlayerModel(playerName)))
     }
 }
