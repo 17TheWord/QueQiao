@@ -147,6 +147,12 @@ jobs:
         run: |
           if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm i --no-audit --no-fund; fi
 
+      # 版本目录（fabric/fabric-1.16.5 等）是 init.sh 从 origin 模板生成的，不提交到仓库。
+      # 缺少这一步的话 checkout 出来的树里没有 gradle-wrapper.jar 与 gradlew，
+      # 会报 "Could not find or load main class org.gradle.wrapper.GradleWrapperMain"。
+      - name: Init version dirs
+        run: chmod +x init.sh && ./init.sh
+
       - name: Run E2E
         run: |
           chmod +x tests/e2e/run.sh
