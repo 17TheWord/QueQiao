@@ -89,11 +89,17 @@ jobs:
               add_dir fabric all
               ;;
             *)
+              # 目前只有这些加载器的 runServer 能直接跑起来。
+              # forge/neoforge 的 ForgeGradle、paper/folia 的 paperweight、
+              # spigot 的 BuildTools、vanilla 的自定义程序、velocity 的代理端，
+              # run 任务形态都不同，需要单独适配后才会纳入自动矩阵。
+              SUPPORTED="fabric cleanroom"
               if [ "$LOADER" = "all" ]; then
-                for L in fabric folia forge neoforge paper spigot velocity vanilla gtnh cleanroom; do
+                for L in $SUPPORTED; do
                   [ -d "$L" ] && add_dir "$L" "$VERSION"
                 done
               else
+                # 显式指定则照跑，便于逐个验证适配进度
                 add_dir "$LOADER" "$VERSION"
               fi
               ;;
