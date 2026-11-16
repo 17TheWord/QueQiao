@@ -60,6 +60,9 @@ public class NeoForgeTool {
     }
 
     public static MutableComponent buildComponent(JsonElement jsonElement) {
-        return Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess());
+        // copy() 不可省略：Serializer 产出的组件，其 siblings 是不可变集合，
+        // 后续 append（如拼接消息前缀）会抛 UnsupportedOperationException。
+        // fabric 侧同样依赖 copy() 拿到可变实例。
+        return Component.Serializer.fromJson(jsonElement, minecraftServer.registryAccess()).copy();
     }
 }
