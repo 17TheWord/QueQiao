@@ -1,19 +1,23 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.TranslateModel;
-import net.kyori.adventure.text.TranslatableComponent;
-import net.kyori.adventure.text.TranslationArgument;
+import com.github.theword.queqiao.PlatformContext;
+import com.google.gson.JsonElement;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.event.model.achievement.DisplayModel;
+import io.papermc.paper.advancement.AdvancementDisplay;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import net.kyori.adventure.text.Component;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 
 public class FoliaTool {
+
+    public static Component buildComponent(JsonElement jsonElement) {
+        return GsonComponentSerializer.gson().deserializeFromTree(jsonElement);
+    }
 
     public static String getComponentText(Component component) {
         return PlainTextComponentSerializer.plainText().serialize(component);
@@ -23,9 +27,8 @@ public class FoliaTool {
         return GsonComponentSerializer.gson().serialize(component);
     }
 
-
     /**
-     * 获取SpigotPlayer
+     * 获取 FoliaPlayer
      *
      * @param foliaPlayer 玩家
      * @return FoliaPlayer
@@ -39,7 +42,6 @@ public class FoliaTool {
             playerModel.setAddress(foliaPlayer.getAddress().getHostString());
 
         playerModel.setHealth(foliaPlayer.getHealth());
-//        playerModel.setMaxHealth(foliaPlayer.getMaxHealth()); // Deprecated
         playerModel.setExperienceLevel(foliaPlayer.getLevel());
         playerModel.setExperienceProgress((double) foliaPlayer.getExp());
         playerModel.setTotalExperience(foliaPlayer.getTotalExperience());
@@ -53,53 +55,28 @@ public class FoliaTool {
         return playerModel;
     }
 
-    public static TranslateModel parseTranslateModel(Component component) {
-        // 1. 提前处理非翻译组件（Guard Clause）
-        if (!(component instanceof TranslatableComponent translatable)) {
-            return new TranslateModel(null, null, getComponentText(component));
+    public static AchievementModel getFoliaAdvancement(PlatformContext context, String nickname, Advancement advancement) {
+        AchievementModel achievementModel = new AchievementModel();
+        achievementModel.setKey(advancement.getKey().toString());
+        DisplayModel displayModel = new DisplayModel();
+
+        AdvancementDisplay advancementDisplay = advancement.getDisplay();
+        if (advancementDisplay == null) {
+            achievementModel.setDisplay(displayModel);
+            return achievementModel;
         }
 
-        // 2. 只有翻译组件才会执行到这里
-        String key = translatable.key();
-        List<TranslationArgument> arguments = translatable.arguments();
+        displayModel.setTitle(context.parseTranslateModel(advancementDisplay.title()));
+        displayModel.setDescription(context.parseTranslateModel(advancementDisplay.description()));
+        displayModel.setFrame(advancementDisplay.frame().name());
+        achievementModel.setDisplay(displayModel);
 
-        TranslateModel[] childModels = new TranslateModel[arguments.size()];
-        String[] stringsForFormat = new String[arguments.size()];
-
-        for (int i = 0; i < arguments.size(); i++) {
-            TranslationArgument arg = arguments.get(i);
-            // 注意：必须调用 .value() 才能拿到内部包裹的 Component 或基础类型
-            Object val = arg.value();
-
-            TranslateModel child;
-            if (val instanceof Component childComponent) {
-                // 递归解析，保留深层 key/args
-                child = parseTranslateModel(childComponent);
-            } else {
-                // 处理 Boolean, Number 等基础类型参数
-                child = new TranslateModel(null, null, String.valueOf(val));
-            }
-
-            childModels[i] = child;
-            stringsForFormat[i] = child.getText();
-        }
-
-        // 3. 业务逻辑：尝试翻译并回填
-        String finalText = GlobalContext.translate(key, stringsForFormat);
-
-        // 4. 回声检查：如果找不到 Key，由你已有的 getComponentText 兜底
-        if (finalText.equals(key)) {
-            finalText = getComponentText(component);
-        } else if (!component.children().isEmpty()) {
-            // 补充：如果翻译成功，但组件带有子组件（Siblings），需要拼接
-            StringBuilder sb = new StringBuilder(finalText);
-            for (Component childComponent : component.children()) {
-                sb.append(parseTranslateModel(childComponent).getText());
-            }
-            finalText = sb.toString();
-        }
-
-        return new TranslateModel(key, childModels, finalText);
+        Component translatable = Component.translatable(
+                achievementModel.getTranslationKey(displayModel.getFrame()),
+                Component.text(nickname),
+                advancement.displayName()
+        );
+        achievementModel.setTranslation(context.parseTranslateModel(translatable));
+        return achievementModel;
     }
-
 }
