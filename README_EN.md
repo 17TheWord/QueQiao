@@ -119,6 +119,7 @@
 
 ## Related Projects
 
+- [`@17TheWord/mcqq`](https://github.com/17TheWord/mcqq): Direct-connect edition of QueQiao, using the official QQ Bot API v2 without a separate adapter
 - [`@kterna/queqiao_mcdr`](https://github.com/kterna/queqiao_mcdr): `MCDR` implementation of `QueQiao` for message exchange
 
 ## Compatibility
