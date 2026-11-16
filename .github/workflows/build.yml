@@ -25,7 +25,7 @@ on:
           - 'folia'
           - 'forge'
           - 'neoforge'
-          - 'spigot'
+          - 'spigot'  
           - 'paper'
           - 'velocity'
           - 'vanilla'
@@ -45,7 +45,7 @@ env:
 
 jobs:
   generate-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -57,7 +57,7 @@ jobs:
           ./matrix.sh -path "vanilla","spigot","velocity","forge","neoforge","fabric","folia","paper","gtnh","cleanroom" -loader "${{ github.event.inputs.target_loader || 'all' }}" -version "${{ github.event.inputs.target_version || 'all' }}"
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs: generate-matrix
     strategy:
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
