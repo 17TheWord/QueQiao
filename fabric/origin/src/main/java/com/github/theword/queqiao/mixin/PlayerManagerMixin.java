@@ -1,8 +1,6 @@
 package com.github.theword.queqiao.mixin;
 
-
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.PlayerJoinEvent;
+import com.github.theword.queqiao.callback.PlayerJoinCallback;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
 
@@ -15,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.github.theword.queqiao.utils.FabricTool.getFabricPlayer;
-
 @Mixin(PlayerManager.class)
 public class PlayerManagerMixin {
 
@@ -26,9 +22,6 @@ public class PlayerManagerMixin {
         // ELSE
 //    private void onPlayerJoin(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
 // END IF
-        if (!GlobalContext.getConfig().getSubscribeEvent().isPlayerJoin()) return;
-
-        PlayerJoinEvent event = new PlayerJoinEvent(getFabricPlayer(player));
-        GlobalContext.sendEvent(event);
+        PlayerJoinCallback.EVENT.invoker().onJoin(player);
     }
 }
