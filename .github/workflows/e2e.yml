@@ -13,14 +13,28 @@ name: E2E
 on:
   workflow_dispatch:
     inputs:
-      full:
-        description: '跑全部版本（否则只跑最新一个）'
-        type: boolean
-        default: true
-      loader:
-        description: '加载器目录名，如 fabric / forge'
+      target_loader:
+        description: '只测指定加载器（velocity / spigot / vanilla 目前没有 runServer，会失败）'
         required: false
-        default: 'fabric'
+        default: 'all'
+        type: choice
+        options:
+          - 'all'
+          - 'fabric'
+          - 'folia'
+          - 'forge'
+          - 'neoforge'
+          - 'spigot'
+          - 'paper'
+          - 'velocity'
+          - 'vanilla'
+          - 'gtnh'
+          - 'cleanroom'
+      target_version:
+        description: '只测指定版本，例如 1.21.11；留空或 all 表示全部'
+        required: false
+        default: 'all'
+        type: string
   pull_request:
     paths:
       - 'tests/e2e/**'
@@ -46,36 +60,52 @@ jobs:
       - name: Build matrix
         id: m
         run: |
-          FULL="${{ inputs.full }}"
-          LOADER="${{ inputs.loader }}"
+          LOADER="${{ inputs.target_loader }}"
+          VERSION="${{ inputs.target_version }}"
           [ -z "$LOADER" ] && LOADER="fabric"
+          [ -z "$VERSION" ] && VERSION="all"
 
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ "${{ github.event_name }}" != "schedule" ]; then
-            FULL="false"
-          fi
-
-          if [ "$FULL" = "true" ] || [ "${{ github.event_name }}" = "schedule" ]; then
-            ITEMS=""
-            for d in "$LOADER"/*-*/; do
+          ITEMS=""
+          add_dir() {
+            # $1=加载器  $2=版本过滤（all 或具体版本）
+            for d in "$1"/*-*; do
               [ -d "$d" ] || continue
               name=$(basename "$d")
-              [ "$name" = "origin" ] && continue
-              ITEMS="$ITEMS{\"target\":\"$LOADER/$name\"},"
+              ver="${name#"$1"-}"
+              if [ "$2" = "all" ] || [ "$ver" = "$2" ]; then
+                ITEMS="$ITEMS{\"target\":\"$1/$name\"},"
+              fi
             done
-            ITEMS="${ITEMS%,}"
-            if [ -z "$ITEMS" ]; then
-              echo "未扫描到 $LOADER 下的版本目录" >&2
-              exit 1
-            fi
-          else
-            # 注意：不要用 */ 结尾的 glob，末尾斜杠会干扰 sort -V，
-            # 导致 1.21 排在 1.21.11 之后
-            LATEST=$(ls -d "$LOADER"/*-* | grep -v origin | sort -V | tail -1)
-            ITEMS="{\"target\":\"$LATEST\"}"
-          fi
+          }
 
+          case "${{ github.event_name }}" in
+            pull_request)
+              # PR 只跑冒烟：fabric 最新一个。
+              # 不要用 */ 结尾的 glob，末尾斜杠会干扰 sort -V
+              LATEST=$(ls -d fabric/*-* | grep -v origin | sort -V | tail -1)
+              ITEMS="{\"target\":\"$LATEST\"}"
+              ;;
+            schedule)
+              add_dir fabric all
+              ;;
+            *)
+              if [ "$LOADER" = "all" ]; then
+                for L in fabric folia forge neoforge paper spigot velocity vanilla gtnh cleanroom; do
+                  [ -d "$L" ] && add_dir "$L" "$VERSION"
+                done
+              else
+                add_dir "$LOADER" "$VERSION"
+              fi
+              ;;
+          esac
+
+          ITEMS="${ITEMS%,}"
+          if [ -z "$ITEMS" ]; then
+            echo "没有匹配到版本目录（loader=$LOADER, version=$VERSION）" >&2
+            exit 1
+          fi
           echo "matrix=[$ITEMS]" >> $GITHUB_OUTPUT
-          echo "矩阵: [$ITEMS]"
+          echo "共 $(echo "$ITEMS" | grep -o 'target' | wc -l) 个目标：[$ITEMS]"
 
   e2e:
     needs: plan
@@ -84,7 +114,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 8
       matrix:
         include: ${{ fromJson(needs.plan.outputs.matrix) }}
 
