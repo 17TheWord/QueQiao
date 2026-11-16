@@ -26,11 +26,8 @@ on:
       - 'tests/e2e/**'
       - '.github/workflows/e2e.yml'
       - '*/origin/src/main/**'
-  push:
-    branches: [main]
-    paths:
-      - 'tests/e2e/**'
-      - '.github/workflows/e2e.yml'
+  # 不挂 push 触发：main 上不一定有 tests/ 目录，
+  # 且代码变更已由 pull_request 覆盖
   schedule:
     - cron: '0 18 * * 0'
 
