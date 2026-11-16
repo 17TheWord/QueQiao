@@ -235,6 +235,8 @@ ws.on('open', async () => {
 | 交互效果在新版本失效但不报错 | 1.21.5 前后字段名不同 | 按目标版本选 `clickEvent` / `click_event` |
 | `send_private_msg` 返回 200 但目标没收到 | uuid 不存在时也未报错 | 已知语义问题，调用方需自行确认在线状态 |
 | 假玩家登录失败 | `online-mode=true`，或 `version` 与服务端不符 | 改 `online-mode=false`，版本号对齐 |
+| **同平台 `broadcast` 500 但 `send_actionbar` 200** | `broadcast` 与私聊走 `withPrefix` 拼接前缀，而 actionbar/title 不走。若平台 `buildComponent` 未 `.copy()` 出可变实例，`MutableComponent.append` 会对不可变 siblings 调 `add`，抛 `UnsupportedOperationException` | 平台侧 `buildComponent` 结尾补 `.copy()`；日志里搜 `ImmutableCollections.add` 可快速定位 |
+| `PartialReadError: Missing characters in string` | mineflayer 对该 MC 版本的部分数据包结构支持不全（如 ArmorTrimMaterial） | 不影响测试结论，假玩家仍能上线，可忽略 |
 
 ## 九、CI 环境特有的坑（本地永远测不出来）
 
