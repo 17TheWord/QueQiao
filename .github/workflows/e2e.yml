@@ -146,6 +146,7 @@ jobs:
           key: e2e-${{ matrix.target }}-${{ hashFiles('tests/e2e/package-lock.json') }}
           restore-keys: |
             e2e-${{ matrix.target }}-
+            ${{ runner.os }}-gradle-
             e2e-
 
       - name: Install test deps
@@ -158,6 +159,14 @@ jobs:
       # 会报 "Could not find or load main class org.gradle.wrapper.GradleWrapperMain"。
       - name: Init version dirs
         run: chmod +x init.sh && ./init.sh
+
+      # forge/neoforge 等用的是自己的 Gradle 版本（如 8.12），首次会下载发行包并 fork daemon。
+      # 这一步把它们挪到 run.sh 之外，避免和「等 WebSocket 就绪」的超时窗口抢时间。
+      - name: Warm up Gradle wrapper
+        run: |
+          cd "${{ matrix.target }}"
+          chmod +x gradlew
+          ./gradlew --version
 
       - name: Run E2E
         run: |
