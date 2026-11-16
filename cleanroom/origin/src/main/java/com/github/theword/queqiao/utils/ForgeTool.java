@@ -1,11 +1,10 @@
 package com.github.theword.queqiao.utils;
 
-import com.github.theword.queqiao.tool.GlobalContext;
-import com.github.theword.queqiao.tool.event.model.PlayerModel;
-import com.github.theword.queqiao.tool.event.model.TranslateModel;
-import com.github.theword.queqiao.tool.event.model.achievement.AchievementModel;
-import com.github.theword.queqiao.tool.event.model.achievement.DisplayModel;
+import com.github.theword.queqiao.PlatformContext;
 import com.google.gson.JsonElement;
+import io.github.theword.queqiao.core.event.model.PlayerModel;
+import io.github.theword.queqiao.core.event.model.achievement.AchievementModel;
+import io.github.theword.queqiao.core.event.model.achievement.DisplayModel;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -33,14 +32,17 @@ public class ForgeTool {
         return playerModel;
     }
 
-    public static AchievementModel getForgeAchievement(String nickname, Advancement advancement) {
+    public static AchievementModel getForgeAchievement(PlatformContext context, String nickname, Advancement advancement) {
         AchievementModel achievementModel = new AchievementModel();
         DisplayModel displayModel = new DisplayModel();
+        if (advancement.getDisplay() == null) {
+            return achievementModel;
+        }
         achievementModel.setKey(advancement.getId().toString());
         DisplayInfo displayInfo = advancement.getDisplay();
         displayModel.setFrame(displayInfo.getFrame().toString());
-        displayModel.setTitle(parseTranslateModel(displayInfo.getTitle()));
-        displayModel.setDescription(parseTranslateModel(displayInfo.getDescription()));
+        displayModel.setTitle(context.parseTranslateModel(displayInfo.getTitle()));
+        displayModel.setDescription(context.parseTranslateModel(displayInfo.getDescription()));
         achievementModel.setDisplay(displayModel);
 
         TextComponentTranslation translation = new TextComponentTranslation(
@@ -48,49 +50,17 @@ public class ForgeTool {
                 new TextComponentString(nickname),
                 advancement.getDisplayText()
         );
-        achievementModel.setTranslation(parseTranslateModel(translation));
+        achievementModel.setTranslation(context.parseTranslateModel(translation));
         return achievementModel;
     }
 
-    /** 调用原版方法反序列化Json文本组件, 并将异常输出到日志
+    /**
+     * 调用原版方法反序列化 Json 文本组件。
+     *
      * @param jsonElement 消息体
-     * @return 文本组件, 或null如果解析出错
+     * @return 文本组件
      */
-    public static ITextComponent parseJsonToTextWrapped(JsonElement jsonElement) {
-        try {
-            return ITextComponent.Serializer.fromJsonLenient(jsonElement.toString());
-        } catch (Throwable e) {
-            GlobalContext.getLogger().error("Error handling Broadcast Message {} : ", jsonElement, e);
-        }
-        return null;
+    public static ITextComponent buildComponent(JsonElement jsonElement) {
+        return ITextComponent.Serializer.fromJsonLenient(jsonElement.toString());
     }
-
-    public static TranslateModel parseTranslateModel(ITextComponent iTextComponent) {
-        if (!(iTextComponent instanceof TextComponentTranslation))
-            return new TranslateModel(null, null, iTextComponent.getUnformattedText());
-
-        TextComponentTranslation textComponentTranslation = (TextComponentTranslation) iTextComponent;
-        Object[] rawArgs = textComponentTranslation.getFormatArgs();
-        TranslateModel[] childModels = new TranslateModel[rawArgs.length];
-        String[] stringsForFormat = new String[rawArgs.length];
-
-        for (int i = 0; i < rawArgs.length; i++) {
-            Object rawArg = rawArgs[i];
-            TranslateModel childModel;
-            if (rawArg instanceof ITextComponent) {
-                childModel = parseTranslateModel((ITextComponent) rawArg);
-            } else {
-                childModel = new TranslateModel(null, null, String.valueOf(rawArg));
-            }
-            childModels[i] = childModel;
-            stringsForFormat[i] = childModel.getText();
-        }
-
-        String finalText = GlobalContext.translate(textComponentTranslation.getKey(), stringsForFormat);
-        if (finalText.equals(textComponentTranslation.getKey())) {
-            finalText = textComponentTranslation.getUnformattedText();
-        }
-        return new TranslateModel(textComponentTranslation.getKey(), childModels, finalText);
-    }
-
 }

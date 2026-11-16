@@ -14,14 +14,34 @@ on:
         options:
           - 'false'
           - 'true'
+      target_loader:
+        description: '只构建指定加载器'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - 'all'
+          - 'fabric'
+          - 'folia'
+          - 'forge'
+          - 'neoforge'
+          - 'spigot'
+          - 'paper'
+          - 'velocity'
+          - 'vanilla'
+          - 'gtnh'
+          - 'cleanroom'
+      target_version:
+        description: '只构建指定版本，例如 1.12.2 或 all'
+        required: false
+        default: 'all'
+        type: string
 
 permissions:
   contents: write
 
 env:
   GH_TOKEN: ${{ github.token }}
-  GH_USERNAME: ${{ github.actor }}
-  PACKAGE_READ_ONLY_TOKEN: ${{ secrets.PACKAGE_READ_ONLY_TOKEN }}
 
 jobs:
   generate-matrix:
@@ -32,7 +52,9 @@ jobs:
       - uses: actions/checkout@v6
       - name: Generate Matrix
         id: set-matrix
-        run: chmod 777 matrix.sh && ./matrix.sh -path "vanilla","spigot","velocity","forge","neoforge","fabric","folia","paper","gtnh","cleanroom"
+        run: |
+          chmod 777 matrix.sh
+          ./matrix.sh -path "vanilla","spigot","velocity","forge","neoforge","fabric","folia","paper","gtnh","cleanroom" -loader "${{ github.event.inputs.target_loader || 'all' }}" -version "${{ github.event.inputs.target_version || 'all' }}"
 
   build:
     runs-on: ubuntu-latest
