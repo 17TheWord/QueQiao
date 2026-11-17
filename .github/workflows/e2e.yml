@@ -73,6 +73,11 @@ jobs:
               name=$(basename "$d")
               ver="${name#"$1"-}"
               if [ "$2" = "all" ] || [ "$ver" = "$2" ]; then
+                # 跳过已知无法在 dev 环境起 runServer 的目标（显式指定加载器时仍可跑，用于排查）
+                if [ -n "${EXCLUDED:-}" ] && [[ " $EXCLUDED " == *" $1/$name "* ]]; then
+                  echo "跳过已知问题目标: $1/$name" >&2
+                  continue
+                fi
                 ITEMS="$ITEMS{\"target\":\"$1/$name\"},"
               fi
             done
@@ -90,10 +95,13 @@ jobs:
               ;;
             *)
               # 目前只有这些加载器的 runServer 能直接跑起来。
-              # forge/neoforge 的 ForgeGradle、paper/folia 的 paperweight、
-              # spigot 的 BuildTools、vanilla 的自定义程序、velocity 的代理端，
-              # run 任务形态都不同，需要单独适配后才会纳入自动矩阵。
-              SUPPORTED="fabric cleanroom"
+              # paper/folia 的 paperweight、spigot 的 BuildTools、vanilla 的自定义程序、
+              # velocity 的代理端，run 任务形态都不同，需单独适配后才会纳入自动矩阵。
+              SUPPORTED="fabric forge cleanroom"
+              # forge 1.21 的 dev 环境起不来：Forge 51.x 换了 mod 发现机制（Bootstrap + JPMS），
+              # 分离的 build/resources 与 build/classes 会被判成「有 mods.toml 但找不到类」。
+              # 1.16.5 ~ 1.20.1 均正常，仅 1.21 受影响。
+              EXCLUDED="forge/forge-1.21"
               if [ "$LOADER" = "all" ]; then
                 for L in $SUPPORTED; do
                   [ -d "$L" ] && add_dir "$L" "$VERSION"
