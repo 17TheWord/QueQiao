@@ -68,6 +68,7 @@ jobs:
           ITEMS=""
           add_dir() {
             # $1=加载器  $2=版本过滤（all 或具体版本）
+            local script java
             for d in "$1"/*-*; do
               [ -d "$d" ] || continue
               name=$(basename "$d")
@@ -78,7 +79,10 @@ jobs:
                   echo "跳过已知问题目标: $1/$name" >&2
                   continue
                 fi
-                ITEMS="$ITEMS{\"target\":\"$1/$name\"},"
+                # paper/folia 没有 runServer：走 paper.sh 下载官方服务端，且只支持 JDK 17
+                script="run.sh"; java="21"
+                case "$1" in paper|folia) script="paper.sh"; java="17" ;; esac
+                ITEMS="$ITEMS{\"target\":\"$1/$name\",\"script\":\"$script\",\"java\":\"$java\"},"
               fi
             done
           }
@@ -88,7 +92,7 @@ jobs:
               # PR 只跑冒烟：fabric 最新一个。
               # 不要用 */ 结尾的 glob，末尾斜杠会干扰 sort -V
               LATEST=$(ls -d fabric/*-* | grep -v origin | sort -V | tail -1)
-              ITEMS="{\"target\":\"$LATEST\"}"
+              ITEMS="{\"target\":\"$LATEST\",\"script\":\"run.sh\",\"java\":\"21\"}"
               ;;
             schedule)
               add_dir fabric all
@@ -97,7 +101,7 @@ jobs:
               # 目前只有这些加载器的 runServer 能直接跑起来。
               # paper/folia 的 paperweight、spigot 的 BuildTools、vanilla 的自定义程序、
               # velocity 的代理端，run 任务形态都不同，需单独适配后才会纳入自动矩阵。
-              SUPPORTED="fabric forge cleanroom gtnh neoforge"
+              SUPPORTED="fabric forge cleanroom gtnh neoforge paper"
               # forge 1.21 的 dev 环境起不来：Forge 51.x 换了 mod 发现机制（Bootstrap + JPMS），
               # 分离的 build/resources 与 build/classes 会被判成「有 mods.toml 但找不到类」。
               # 1.16.5 ~ 1.20.1 均正常，仅 1.21 受影响。
@@ -135,10 +139,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Chose JDK 21
+      - name: Chose JDK ${{ matrix.java }}
         uses: actions/setup-java@v5
         with:
-          java-version: '21'
+          java-version: '${{ matrix.java }}'
           distribution: 'temurin'
 
       - uses: actions/setup-node@v5
@@ -178,8 +182,8 @@ jobs:
 
       - name: Run E2E
         run: |
-          chmod +x tests/e2e/run.sh
-          bash tests/e2e/run.sh "${{ matrix.target }}"
+          chmod +x tests/e2e/run.sh tests/e2e/paper.sh
+          bash "tests/e2e/${{ matrix.script }}" "${{ matrix.target }}"
 
       - name: Dump server log on failure
         if: failure()
