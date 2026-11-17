@@ -68,6 +68,9 @@ jobs:
     runs-on: ubuntu-26.04
     needs: generate-matrix
     strategy:
+      # 发布矩阵必须跑完：默认 fail-fast 会在第一个目标失败时取消其余 job，
+      # 结果就是「只看到一个错误、其余无结果」，排查和补发都没法做。
+      fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v6
