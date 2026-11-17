@@ -146,6 +146,14 @@ dependencies {
 //    implementation "org.slf4j:slf4j-api:${slf4j_version}"
 //    implementation "org.slf4j:slf4j-simple:${slf4j_version}"
     // END IF
+    // 强制 jopt-simple 5.0.4：1.20.1+ 改用 bootstrap + JPMS 启动，Mojang 随游戏提供该版本，
+    // 但传递依赖可能要求 6.0+，Gradle 仲裁成高版本后 modlauncher 会报
+    // "Module jopt.simple not found, required by cpw.mods.modlauncher"（官方 MDK 同款处理）
+    // IF > forge-1.19.2
+//    implementation('net.sf.jopt-simple:jopt-simple:5.0.4') {
+//        version { strictly '5.0.4' }
+//    }
+    // END IF
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}")
 }
