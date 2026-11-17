@@ -34,6 +34,62 @@ function record(name, pass, detail, skip) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+/**
+ * 判定一个聊天类数据包走向哪个显示通道。
+ *
+ * 动作栏在协议史上换过四种承载方式，都要认：
+ *   1.8 ~ 1.12    title 包，action=2（TIP: 早期也支持 chat position=2，两种都算数）
+ *   1.13 ~ 1.16   chat 包，position=2
+ *   1.17 ~ 1.21   system_chat 包的 isActionBar（或独立的 set_action_bar_text）
+ *   26.x          action_bar 独立包
+ * 认不出结构时返回 'unknown'，由调用方按跳过处理，而不是判失败。
+ */
+function classifyChatPacket(name, data) {
+  const n = String(name || '').toLowerCase().replace(/[^a-z_]/g, '');
+  if (n === 'set_action_bar_text' || n === 'action_bar' || n === 'actionbar') return 'actionbar';
+  if (n === 'title' || n === 'set_title_text') {
+    // 标题包的子类型：0=TITLE 1=SUBTITLE 2=ACTIONBAR，只有 2 是动作栏
+    const a = data.action !== undefined ? data.action : data.actionId;
+    if (a === 2 || (typeof a === 'string' && a.toLowerCase() === 'actionbar')) return 'actionbar';
+    return null;
+  }
+  if (n === 'system_chat' || n === 'systemchat') {
+    if (typeof data.isActionBar === 'boolean') return data.isActionBar ? 'actionbar' : 'chat';
+    return 'unknown';
+  }
+  if (n === 'chat' || n === 'chatmessage') {
+    const pos = data.position !== undefined ? data.position : data.positionId;
+    if (pos === 2 || pos === 'game_info') return 'actionbar';
+    if (pos === 0 || pos === 1) return 'chat';
+    return 'unknown';
+  }
+  return null;
+}
+
+/**
+ * 发一条消息，检查它在客户端侧落到哪个通道。
+ * 只有「内容到达」且「通道正确」才算通过——这正是 200 覆盖不到的部分。
+ */
+async function checkChannel(ws, apiName, expect, marker, frames) {
+  const label = expect === 'actionbar' ? 'actionbar 进动作栏通道' : 'broadcast 进聊天区通道';
+  frames.length = 0;
+  const r = await api(ws, apiName, { message: { text: marker } });
+  await sleep(2000);
+
+  const hits = frames.filter((f) => f.raw.includes(marker));
+  if (!hits.length) {
+    record(label, false, `code=${r.code}，未收到含 ${marker} 的数据包`);
+    return;
+  }
+  const known = hits.filter((f) => f.ch !== 'unknown');
+  if (!known.length) {
+    record(label, true, '当前协议无法判定通道，跳过（内容已到达）', true);
+    return;
+  }
+  record(label, known.some((f) => f.ch === expect),
+    `channel=${known.map((f) => f.ch).join(',')}，期望 ${expect}`);
+}
+
 function api(ws, name, data, timeout = 10000) {
   return new Promise((resolve, reject) => {
     const echo = `t${++seq}`;
@@ -117,8 +173,28 @@ async function testErrors(ws) {
   } catch (e) { record('畸形 JSON 后仍可请求', false, e.message); }
 }
 
+/** 语义化版本比较：a >= b 返回 true */
+function versionAtLeast(a, b) {
+  const pa = String(a).split('.').map((x) => parseInt(x, 10) || 0);
+  const pb = String(b).split('.').map((x) => parseInt(x, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const x = pa[i] || 0;
+    const y = pb[i] || 0;
+    if (x !== y) return x > y;
+  }
+  return true;
+}
+
 async function testEvents(ws) {
   console.log('\n=== 事件与投递 ===');
+
+  // mineflayer 最低支持 1.8.8；更老的协议（如 gtnh 的 1.7.10）无法模拟玩家。
+  // 这属于测试工具的限制，不是被测实现的缺陷，按跳过处理。
+  if (!versionAtLeast(MC_VERSION, '1.8.8')) {
+    record(`假玩家测试`, true, `mineflayer 最低支持 1.8.8，MC ${MC_VERSION} 跳过（API 层已覆盖）`, true);
+    return;
+  }
+
   let mineflayer;
   try {
     mineflayer = require('mineflayer');
@@ -134,6 +210,19 @@ async function testEvents(ws) {
   });
   const received = [];
   bot.on('message', (j) => received.push(j.toString()));
+
+  // 原始包监听：只看「内容对」不够，还要看「走没走对通道」。
+  // broadcast 进聊天区、actionbar 进动作栏，两者在协议上是同一个包的不同标志位，
+  // 客户端侧不做区分的话，actionbar 会静默显示成聊天消息（历史 bug）。
+  const frames = [];
+  bot._client.on('packet', (data, meta) => {
+    if (!meta || meta.state !== 'play') return;
+    const ch = classifyChatPacket(meta.name, data || {});
+    if (!ch) return;
+    let raw = '';
+    try { raw = JSON.stringify(data); } catch { raw = String(data); }
+    frames.push({ ch, raw });
+  });
 
   try {
     await new Promise((res, rej) => {
@@ -170,6 +259,10 @@ async function testEvents(ws) {
     record('私聊真实送达目标玩家',
       received.slice(before2).some((s) => s.includes('DELIVER-CHECK-PRIVATE')),
       `code=${rp.code}`);
+
+    // 通道校验：同一条文本走不同 api，必须落在不同显示位置
+    await checkChannel(ws, 'send_actionbar', 'actionbar', 'CHANNEL-ACTIONBAR', frames);
+    await checkChannel(ws, 'broadcast', 'chat', 'CHANNEL-CHAT', frames);
 
     bot.quit();
     await sleep(2500);

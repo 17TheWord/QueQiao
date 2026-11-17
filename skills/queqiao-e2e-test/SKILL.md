@@ -235,8 +235,33 @@ ws.on('open', async () => {
 | 交互效果在新版本失效但不报错 | 1.21.5 前后字段名不同 | 按目标版本选 `clickEvent` / `click_event` |
 | `send_private_msg` 返回 200 但目标没收到 | uuid 不存在时也未报错 | 已知语义问题，调用方需自行确认在线状态 |
 | 假玩家登录失败 | `online-mode=true`，或 `version` 与服务端不符 | 改 `online-mode=false`，版本号对齐 |
+| **同平台 `broadcast` 500 但 `send_actionbar` 200** | `broadcast` 与私聊走 `withPrefix` 拼接前缀，而 actionbar/title 不走。若平台 `buildComponent` 未 `.copy()` 出可变实例，`MutableComponent.append` 会对不可变 siblings 调 `add`，抛 `UnsupportedOperationException` | 平台侧 `buildComponent` 结尾补 `.copy()`；日志里搜 `ImmutableCollections.add` 可快速定位 |
+| `PartialReadError: Missing characters in string` | mineflayer 对该 MC 版本的部分数据包结构支持不全（如 ArmorTrimMaterial） | 不影响测试结论，假玩家仍能上线，可忽略 |
 
-## 九、清理
+## 九、CI 环境特有的坑（本地永远测不出来）
+
+这个仓库的版本目录（`fabric/fabric-1.16.5` 等）是 `init.sh` 从 `origin` 模板**生成**的，
+不进版本库。因此有三类「本地有、CI 没有」的依赖：
+
+| 现象 | 原因 | 处理 |
+| --- | --- | --- |
+| `Could not find or load main class org.gradle.wrapper.GradleWrapperMain` | `gradle-wrapper.jar` 被 `.gitignore` 的 `*/*-*/*` 挡住，CI checkout 出来没有 | 启动前先跑 `chmod +x init.sh && ./init.sh` |
+| `./gradlew: Permission denied` | `gradlew` 在 git 中记录为 `100644`（无 exec bit），Windows 不区分 exec bit 所以本地正常 | `chmod +x <target>/gradlew`（`init.sh` 重新生成后权限会正确） |
+| 等就绪超时，但日志里明明已经启动 | `./gradlew ... > log 2>&1 &` 时 Java stdout 是块缓冲，`grep` 读不到内容 | 改为**探测端口监听**判断就绪，不要依赖日志落盘 |
+
+### 验证原则：必须在干净 clone 里跑
+
+```bash
+git clone --depth 1 -b <branch> <repo> /tmp/sim
+cd /tmp/sim && chmod +x init.sh && ./init.sh
+cd tests/e2e && npm i
+bash run.sh ../../fabric/fabric-1.21.11
+```
+
+本地工作区因为残留了历史生成的文件（版本目录、wrapper jar、带权限的 gradlew），
+这些问题**永远不会暴露**。每次改 CI 相关逻辑，都要在干净副本里验证一遍再推。
+
+## 十、清理
 
 ```bash
 # 优雅停机优先走 RCON；直接杀进程也可，测试世界无保留价值
