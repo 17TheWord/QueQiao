@@ -37,13 +37,15 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 /**
  * 判定一个聊天类数据包走向哪个显示通道。
  *
- * 协议在 1.19 前后换过结构，两种都要认：
- *   1.8 ~ 1.18：chat 包，position 0=聊天 1=系统 2=动作栏
- *   1.19+    ：system_chat 包，isActionBar 布尔
+ * 协议前后换过两次结构，三种都要认：
+ *   1.8 ~ 1.18    chat 包，position 0=聊天 1=系统 2=动作栏
+ *   1.19 ~ 1.21   system_chat 包，isActionBar 布尔
+ *   26.x          action_bar 独立包，包本身即动作栏
  * 认不出结构时返回 'unknown'，由调用方按跳过处理，而不是判失败。
  */
 function classifyChatPacket(name, data) {
   const n = String(name || '').toLowerCase().replace(/[^a-z_]/g, '');
+  if (n === 'action_bar' || n === 'actionbar') return 'actionbar';
   if (n === 'system_chat' || n === 'systemchat') {
     if (typeof data.isActionBar === 'boolean') return data.isActionBar ? 'actionbar' : 'chat';
     return 'unknown';
