@@ -37,15 +37,22 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 /**
  * 判定一个聊天类数据包走向哪个显示通道。
  *
- * 协议前后换过两次结构，三种都要认：
- *   1.8 ~ 1.18    chat 包，position 0=聊天 1=系统 2=动作栏
- *   1.19 ~ 1.21   system_chat 包，isActionBar 布尔
- *   26.x          action_bar 独立包，包本身即动作栏
+ * 动作栏在协议史上换过四种承载方式，都要认：
+ *   1.8 ~ 1.12    title 包，action=2
+ *   1.13 ~ 1.16   chat 包，position=2
+ *   1.17 ~ 1.21   system_chat 包的 isActionBar（或独立的 set_action_bar_text）
+ *   26.x          action_bar 独立包
  * 认不出结构时返回 'unknown'，由调用方按跳过处理，而不是判失败。
  */
 function classifyChatPacket(name, data) {
   const n = String(name || '').toLowerCase().replace(/[^a-z_]/g, '');
-  if (n === 'action_bar' || n === 'actionbar') return 'actionbar';
+  if (n === 'set_action_bar_text' || n === 'action_bar' || n === 'actionbar') return 'actionbar';
+  if (n === 'title' || n === 'set_title_text') {
+    // 标题包的子类型：0=TITLE 1=SUBTITLE 2=ACTIONBAR，只有 2 是动作栏
+    const a = data.action !== undefined ? data.action : data.actionId;
+    if (a === 2 || (typeof a === 'string' && a.toLowerCase() === 'actionbar')) return 'actionbar';
+    return null;
+  }
   if (n === 'system_chat' || n === 'systemchat') {
     if (typeof data.isActionBar === 'boolean') return data.isActionBar ? 'actionbar' : 'chat';
     return 'unknown';
