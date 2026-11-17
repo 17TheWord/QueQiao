@@ -148,6 +148,10 @@ jobs:
           version: ${{ env.MOD_VERSION }}+${{ env.PUBLISH_LOADER }}-${{ matrix.config.mc-version }}
           version-type: ${{ env.VERSION_TYPE }}
           loaders: ${{ env.PUBLISH_LOADER }}
+          # CurseForge 现在要求每个文件至少包含一个「Environment」组版本（Client/Server），
+          # 缺了会直接 400 errorCode=1021，整批上传失败。
+          # QueQiao 跑在服务端，显式声明 server 而不是依赖从元数据推断。
+          environment: server
           game-versions: ${{ matrix.config.publish-version }}
           files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ env.PUBLISH_LOADER }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
