@@ -132,6 +132,33 @@
 
 - [Discord](https://discord.gg/SBUkMYsyf2)
 
+## 本地构建
+
+本仓库是**多版本**工程：`fabric/origin`、`forge/origin` 等 `origin` 目录是各加载器的唯一源码，`fabric-26.3`、`forge-26.1` 这类版本目录均由构建工具生成。
+
+因此**克隆后不能直接运行版本目录里的 `gradlew`**：`gradle/wrapper/gradle-wrapper.jar` 与 `gradle-wrapper.properties` 属于生成产物，此时尚未生成，脚本会在启动 `Gradle` 之前就失败。请先生成版本目录：
+
+```bash
+./init.sh    # Linux / macOS
+```
+
+```powershell
+./init.ps1   # Windows
+```
+
+脚本会调用 [`ModMultiVersionTool`](https://github.com/kitUIN/ModMultiVersionTool)，把 `origin` 的源码与 `Gradle Wrapper` 展开到各个版本目录。随仓库提交的只有 `gradlew`、`gradlew.bat` 和 `support_version.txt`（生成器的输入），其余文件都是生成产物。
+
+之后即可构建：
+
+```bash
+cd fabric/fabric-26.3
+./gradlew build    # Windows 使用 gradlew.bat build
+```
+
+产物输出到 `QueQiao-jar/<版本>/`。
+
+> 修改代码请改 `origin` 目录，然后重新执行 `init.sh` / `init.ps1`，不要直接修改生成的版本目录。CI 同样在构建前先执行 `init.sh`。
+
 ## 特别感谢
 
 - [@kitUIN](https://github.com/kitUIN)：提供代码上的帮助以及构建工具

@@ -28,7 +28,6 @@ val javaVersion = prop("java_version")
 val glavoRconVersion = prop("glavo_rcon_version")
 val snakeyamlVersion = prop("snakeyaml_version")
 val javaWebsocketVersion = prop("java_websocket_version")
-val mavenRepositoryUrl = prop("maven_repository_url")
 
 val minecraftVersion = prop("minecraft_version")
 val paperApiVersion = prop("paper_api_version")
@@ -38,13 +37,6 @@ val modVersion = fileProp("../../version.txt")
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri(mavenRepositoryUrl)
-        credentials {
-            username = System.getenv("GH_USERNAME")
-            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
-        }
-    }
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
@@ -52,7 +44,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:$paperApiVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("com.github.theword.queqiao:queqiao-tool:${toolVersion}")
+    implementation("io.github.17theword.queqiao:core:${toolVersion}")
     implementation("org.java-websocket:Java-WebSocket:${javaWebsocketVersion}")
     implementation("org.yaml:snakeyaml:${snakeyamlVersion}")
     implementation("org.glavo:rcon-java:${glavoRconVersion}")

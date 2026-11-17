@@ -29,7 +29,6 @@ val javaVersion = prop("java_version")
 val glavoRconVersion = prop("glavo_rcon_version")
 val snakeyamlVersion = prop("snakeyaml_version")
 val javaWebsocketVersion = prop("java_websocket_version")
-val mavenRepositoryUrl = prop("maven_repository_url")
 
 val minecraftVersion = prop("minecraft_version")
 val minecraftVersionRange = prop("minecraft_version_range")
@@ -88,20 +87,13 @@ repositories {
     maven(fg.forgeMaven)
     maven(fg.minecraftLibsMaven)
     mavenCentral()
-    maven {
-        url = uri(mavenRepositoryUrl)
-        credentials {
-            username = System.getenv("GH_USERNAME")
-            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
-        }
-    }
 }
 
 dependencies {
     implementation(minecraft.dependency("net.minecraftforge:forge:$forgeVersion"))
     annotationProcessor("net.minecraftforge:eventbus-validator:$eventbusValidatorVersion")
 
-    implementation("com.github.theword.queqiao:queqiao-tool:$toolVersion")
+    implementation("io.github.17theword.queqiao:core:$toolVersion")
     implementation("org.java-websocket:Java-WebSocket:$javaWebsocketVersion")
     implementation("org.yaml:snakeyaml:$snakeyamlVersion")
     implementation("org.glavo:rcon-java:$glavoRconVersion")
@@ -144,7 +136,7 @@ tasks {
         archiveClassifier.set("")
 
         dependencies {
-            include(dependency("com.github.theword.queqiao:queqiao-tool:${toolVersion}"))
+            include(dependency("io.github.17theword.queqiao:core:${toolVersion}"))
             include(dependency("org.java-websocket:Java-WebSocket:${javaWebsocketVersion}"))
             include(dependency("org.yaml:snakeyaml:${snakeyamlVersion}"))
             include(dependency("org.glavo:rcon-java:${glavoRconVersion}"))

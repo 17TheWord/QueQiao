@@ -28,7 +28,6 @@ val javaVersion = prop("java_version")
 val glavoRconVersion = prop("glavo_rcon_version")
 val snakeyamlVersion = prop("snakeyaml_version")
 val javaWebsocketVersion = prop("java_websocket_version")
-val mavenRepositoryUrl = prop("maven_repository_url")
 
 val minecraftVersion = prop("minecraft_version")
 val minecraftVersionRange = prop("minecraft_version_range")
@@ -46,13 +45,7 @@ base {
 
 repositories {
     mavenLocal()
-    maven {
-        url = uri(mavenRepositoryUrl)
-        credentials {
-            username = System.getenv("GH_USERNAME")
-            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
-        }
-    }
+    mavenCentral()
 }
 
 java {
@@ -73,7 +66,7 @@ fun DependencyHandler.implementationJarJar(dependencyNotation: String) {
 dependencies {
     implementation("net.neoforged:neoforge:$neoVersion")
 
-    implementationJarJar("com.github.theword.queqiao:queqiao-tool:$toolVersion")
+    implementationJarJar("io.github.17theword.queqiao:core:$toolVersion")
     implementationJarJar("org.java-websocket:Java-WebSocket:$javaWebsocketVersion")
     implementationJarJar("org.yaml:snakeyaml:$snakeyamlVersion")
     implementationJarJar("org.glavo:rcon-java:$glavoRconVersion")

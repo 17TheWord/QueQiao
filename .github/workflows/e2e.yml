@@ -1,0 +1,192 @@
+name: E2E
+
+# 端到端验证：真起服务端 + 假玩家 + WebSocket 全量 API 与事件。
+#
+# 触发策略：
+#   PR / push        → 只跑 fabric-26.1 冒烟，快速反馈
+#   手动             → 可指定加载器/版本，默认全部
+#   每周定时         → 跑全部受支持目标，及时发现回归
+#
+# 当前覆盖：fabric / forge / neoforge / paper（26.1 系列，JDK 25）。
+# spigot 需 BuildTools、velocity 是代理端，暂不纳入；fabric-26.3 缺协议数据无法模拟玩家。
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_loader:
+        description: '只测指定加载器'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - 'all'
+          - 'fabric'
+          - 'forge'
+          - 'neoforge'
+          - 'paper'
+      target_version:
+        description: '只测指定版本，例如 26.1；留空或 all 表示全部'
+        required: false
+        default: 'all'
+        type: string
+  pull_request:
+    paths:
+      - 'tests/e2e/**'
+      - '.github/workflows/e2e.yml'
+      - '*/origin/src/main/**'
+  # 不挂 push 触发：代码变更已由 pull_request 覆盖
+  schedule:
+    - cron: '0 18 * * 0'
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-26.04
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build matrix
+        id: m
+        run: |
+          LOADER="${{ inputs.target_loader }}"
+          VERSION="${{ inputs.target_version }}"
+          [ -z "$LOADER" ] && LOADER="all"
+          [ -z "$VERSION" ] && VERSION="all"
+
+          ITEMS=""
+          add_dir() {
+            # $1=加载器  $2=版本过滤（all 或具体版本）
+            for d in "$1"/*-*; do
+              [ -d "$d" ] || continue
+              name=$(basename "$d")
+              ver="${name#"$1"-}"
+              if [ "$2" = "all" ] || [ "$ver" = "$2" ]; then
+                if [ -n "${EXCLUDED:-}" ] && [[ " $EXCLUDED " == *" $1/$name "* ]]; then
+                  echo "跳过已知问题目标: $1/$name" >&2
+                  continue
+                fi
+                ITEMS="$ITEMS{\"target\":\"$1/$name\",\"java\":\"25\"},"
+              fi
+            done
+          }
+
+          case "${{ github.event_name }}" in
+            pull_request)
+              LATEST=$(ls -d fabric/*-* | grep -v origin | grep -v 'fabric-26\.3' | sort -V | tail -1)
+              ITEMS="{\"target\":\"$LATEST\",\"java\":\"25\"}"
+              ;;
+            schedule)
+              for L in fabric forge neoforge paper; do
+                [ -d "$L" ] && add_dir "$L" all
+              done
+              ;;
+            *)
+              SUPPORTED="fabric forge neoforge paper"
+              # minecraft-data 尚未收录 26.3 协议，mineflayer 无法上线
+              EXCLUDED="fabric/fabric-26.3"
+              if [ "$LOADER" = "all" ]; then
+                for L in $SUPPORTED; do
+                  [ -d "$L" ] && add_dir "$L" "$VERSION"
+                done
+              else
+                # 显式指定则照跑，便于逐个验证适配进度
+                add_dir "$LOADER" "$VERSION"
+              fi
+              ;;
+          esac
+
+          ITEMS="${ITEMS%,}"
+          if [ -z "$ITEMS" ]; then
+            echo "没有匹配到版本目录（loader=$LOADER, version=$VERSION）" >&2
+            exit 1
+          fi
+          echo "matrix=[$ITEMS]" >> $GITHUB_OUTPUT
+          echo "共 $(echo "$ITEMS" | grep -o 'target' | wc -l) 个目标：[$ITEMS]"
+
+  e2e:
+    needs: plan
+    runs-on: ubuntu-26.04
+    timeout-minutes: 35
+
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJson(needs.plan.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Chose JDK ${{ matrix.java }}
+        uses: actions/setup-java@v5
+        with:
+          java-version: '${{ matrix.java }}'
+          distribution: 'temurin'
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Cache Gradle
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: e2e-${{ matrix.target }}-${{ hashFiles('tests/e2e/package-lock.json') }}
+          restore-keys: |
+            e2e-${{ matrix.target }}-
+            ${{ runner.os }}-gradle-
+            e2e-
+
+      - name: Install test deps
+        working-directory: tests/e2e
+        run: |
+          if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm i --no-audit --no-fund; fi
+
+      # 版本目录（fabric/fabric-26.1 等）是 init.sh 从 origin 模板生成的，不提交到仓库。
+      # 缺少这一步的话 checkout 出来的树里没有 gradle-wrapper.jar 与 gradlew，
+      # 会报 "Could not find or load class org.gradle.wrapper.GradleWrapperMain"。
+      - name: Init version dirs
+        run: chmod +x init.sh && ./init.sh
+
+      # 首次会下载 Gradle 发行包与插件，挪到 run.sh 之外，避免和「等 WebSocket 就绪」的超时窗口抢时间
+      - name: Warm up Gradle wrapper
+        run: |
+          cd "${{ matrix.target }}"
+          chmod +x gradlew
+          ./gradlew --version
+
+      - name: Run E2E
+        run: |
+          chmod +x tests/e2e/run.sh
+          bash tests/e2e/run.sh "${{ matrix.target }}"
+
+      - name: Dump server log on failure
+        if: failure()
+        run: |
+          LOG="${{ matrix.target }}/run/server-e2e.log"
+          echo "===== 日志路径: $LOG ====="
+          if [ -f "$LOG" ]; then
+            echo "----- 最后 60 行 -----"
+            tail -60 "$LOG"
+            echo "----- 异常行 -----"
+            grep -nE "ERROR|Exception|Caused by|FAILURE" "$LOG" | tail -25 || true
+          else
+            echo "未生成服务端日志，检查 gradlew runServer 是否成功启动"
+            ls -la "${{ matrix.target }}/run/" 2>/dev/null || true
+          fi
+
+      - name: Upload log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-log-${{ strategy.job-index }}
+          path: ${{ matrix.target }}/run/server-e2e.log
+          if-no-files-found: ignore
+          retention-days: 7

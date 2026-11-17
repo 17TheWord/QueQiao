@@ -29,7 +29,6 @@ val javaWebsocketVersion = prop("java_websocket_version")
 val slf4jVersion = prop("slf4j_version")
 val commonsIoVersion = prop("commons_io_version")
 val junitJupiterVersion = prop("junit_jupiter_version")
-val mavenRepositoryUrl = prop("maven_repository_url")
 
 val apiVersion = prop("api_version")
 
@@ -50,20 +49,13 @@ repositories {
         name = "sonatype"
         url = uri("https://oss.sonatype.org/content/groups/public/")
     }
-    maven {
-        url = uri(mavenRepositoryUrl)
-        credentials {
-            username = System.getenv("GH_USERNAME")
-            password = System.getenv("PACKAGE_READ_ONLY_TOKEN")
-        }
-    }
 }
 
 dependencies {
     implementation("com.velocitypowered:velocity-api:$apiVersion-SNAPSHOT")
     annotationProcessor("com.velocitypowered:velocity-api:$apiVersion-SNAPSHOT")
 
-    implementation("com.github.theword.queqiao:queqiao-tool:$toolVersion")
+    implementation("io.github.17theword.queqiao:core:$toolVersion")
     implementation("org.java-websocket:Java-WebSocket:$javaWebsocketVersion")
     implementation("org.yaml:snakeyaml:$snakeyamlVersion")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
@@ -114,7 +106,7 @@ tasks {
         archiveClassifier.set("")
 
         dependencies {
-            include(dependency("com.github.theword.queqiao:queqiao-tool:$toolVersion"))
+            include(dependency("io.github.17theword.queqiao:core:$toolVersion"))
             include(dependency("commons-io:commons-io:$commonsIoVersion"))
             include(dependency("org.java-websocket:Java-WebSocket:$javaWebsocketVersion"))
             include(dependency("org.yaml:snakeyaml:$snakeyamlVersion"))
