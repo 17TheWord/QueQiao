@@ -97,7 +97,7 @@ jobs:
               # 目前只有这些加载器的 runServer 能直接跑起来。
               # paper/folia 的 paperweight、spigot 的 BuildTools、vanilla 的自定义程序、
               # velocity 的代理端，run 任务形态都不同，需单独适配后才会纳入自动矩阵。
-              SUPPORTED="fabric forge cleanroom"
+              SUPPORTED="fabric forge cleanroom gtnh"
               # forge 1.21 的 dev 环境起不来：Forge 51.x 换了 mod 发现机制（Bootstrap + JPMS），
               # 分离的 build/resources 与 build/classes 会被判成「有 mods.toml 但找不到类」。
               # 1.16.5 ~ 1.20.1 均正常，仅 1.21 受影响。

@@ -117,8 +117,28 @@ async function testErrors(ws) {
   } catch (e) { record('畸形 JSON 后仍可请求', false, e.message); }
 }
 
+/** 语义化版本比较：a >= b 返回 true */
+function versionAtLeast(a, b) {
+  const pa = String(a).split('.').map((x) => parseInt(x, 10) || 0);
+  const pb = String(b).split('.').map((x) => parseInt(x, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const x = pa[i] || 0;
+    const y = pb[i] || 0;
+    if (x !== y) return x > y;
+  }
+  return true;
+}
+
 async function testEvents(ws) {
   console.log('\n=== 事件与投递 ===');
+
+  // mineflayer 最低支持 1.8.8；更老的协议（如 gtnh 的 1.7.10）无法模拟玩家。
+  // 这属于测试工具的限制，不是被测实现的缺陷，按跳过处理。
+  if (!versionAtLeast(MC_VERSION, '1.8.8')) {
+    record(`假玩家测试`, true, `mineflayer 最低支持 1.8.8，MC ${MC_VERSION} 跳过（API 层已覆盖）`, true);
+    return;
+  }
+
   let mineflayer;
   try {
     mineflayer = require('mineflayer');
