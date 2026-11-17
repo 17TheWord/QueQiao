@@ -164,11 +164,12 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: e2e-${{ matrix.target }}-${{ hashFiles('tests/e2e/package-lock.json') }}
+          # 只复用「同一目标」的缓存。原先的 e2e- 与 ${runner.os}-gradle- 前缀
+          # 会把别的目标的缓存也拉进来，一旦某次保存的是下载到一半的残缺缓存，
+          # 后续编译就会报缺包（例如 forge 的 brigadier 找不到）。v2 用于丢弃旧缓存。
+          key: e2e-v2-${{ matrix.target }}-${{ hashFiles('tests/e2e/package-lock.json', '*/origin/build.gradle*', '*/origin/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
-            e2e-${{ matrix.target }}-
-            ${{ runner.os }}-gradle-
-            e2e-
+            e2e-v2-${{ matrix.target }}-
 
       - name: Install test deps
         working-directory: tests/e2e
