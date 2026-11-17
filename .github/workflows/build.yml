@@ -1,9 +1,24 @@
 name: Build Plugin and Mod
 
+# 26 线的发布节奏与 main 线一致：tag 才是发版。
+#   push 26 分支        → 只构建验证，不发布
+#   push 26-v* tag      → 构建 + 发布（version-type=release）
+#   手动 + publish_beta → 构建 + 发布为 beta
+#
+# tag 用 26-v 前缀而不是裸 v：main 线的过滤是 v*，两个命名空间必须分开，
+# 否则同一个 tag 会同时触发两条线的构建，并让两条线争抢同一个 Release。
+
 on:
   push:
     branches:
-      - main
+      - '26'
+    tags:
+      - '26-v*'
+    # 只改 CI / 测试 / 文档时不触发整条矩阵的构建
+    paths-ignore:
+      - '.github/workflows/**'
+      - 'tests/**'
+      - '**.md'
   workflow_dispatch:
     inputs:
       publish_beta:
@@ -104,7 +119,8 @@ jobs:
       - name: Set Version Type
         id: set-version-type
         run: |
-          if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
+          # tag 即正式发布；分支 push 与手动触发一律 beta
+          if [[ "${GITHUB_REF}" == refs/tags/26-v* ]]; then
             echo "VERSION_TYPE=release" >> $GITHUB_ENV
           else
             echo "VERSION_TYPE=beta" >> $GITHUB_ENV
@@ -124,7 +140,7 @@ jobs:
 
       - uses: Kir-Antipov/mc-publish@v3.3
         if: |
-          (github.ref == 'refs/heads/main' && github.event_name == 'push' && matrix.config.mc-loader != 'vanilla') ||
+          (startsWith(github.ref, 'refs/tags/26-v') && matrix.config.mc-loader != 'vanilla') ||
           (github.event_name == 'workflow_dispatch' && github.event.inputs.publish_beta == 'true' && matrix.config.mc-loader != 'vanilla')
         with:
           modrinth-id: rVJvtYoX
@@ -139,5 +155,10 @@ jobs:
           files: QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ env.PUBLISH_LOADER }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
 
       - name: Upload to Release
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && matrix.config.mc-loader == 'vanilla'
-        run: gh release upload v${{ env.MOD_VERSION }} QueQiao-jar/${{ env.MOD_VERSION }}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${{ env.MOD_VERSION }}.jar
+        if: startsWith(github.ref, 'refs/tags/26-v') && matrix.config.mc-loader == 'vanilla'
+        run: |
+          TAG="26-v${MOD_VERSION}"
+          JAR="QueQiao-jar/${MOD_VERSION}/QueQiao-${{ matrix.config.mc-loader }}+${{ matrix.config.mc-version }}-${MOD_VERSION}.jar"
+          # Create Release 与本工作流并行，release 可能尚未建立，这里做一次兜底
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --generate-notes --verify-tag --title "$TAG"
+          gh release upload "$TAG" "$JAR" --clobber

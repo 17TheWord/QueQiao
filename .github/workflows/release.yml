@@ -1,9 +1,19 @@
 name: Create Release
 
+# 发布流程：打 26-v* tag 时创建 Release。
+#
+# 与旧版的关键区别：
+#   1. 只由 tag 触发，不再由 push main 触发（26 线的发布分支是 26）
+#   2. 移除了 --cleanup-tag —— 那会删掉刚推上来的 tag，
+#      导致 build 工作流的上传步骤失去目标，也无法重放
+#   3. 改为「不存在才创建」，与 Build 工作流里的兜底逻辑兼容
+#
+# 26 线用 26-v 前缀，与 main 线的 v* 分开：同一个 tag 不能代表两条产品线。
+
 on:
   push:
-    branches:
-      - main
+    tags:
+      - '26-v*'
 
 permissions:
   contents: write
@@ -16,36 +26,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Read version.txt and save to variable
-        shell: pwsh
-        run: |
-          $mod_version = Get-Content version.txt
-          Write-Host "Version: $mod_version"
-          echo "MOD_VERSION=$mod_version" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_ENV
 
-      - name: Check if Release exists
-        id: check-release
+      - name: Read version.txt
+        id: ver
         run: |
-          # Check if the release exists
-          RESPONSE=$(gh release view v${{ env.MOD_VERSION }} -R ${{ github.repository }} 2>&1 || true)
-          if echo "$RESPONSE" | grep -q "Not Found"; then
-            echo "Release v${{ env.MOD_VERSION }} does not exist. Skipping deletion."
-            echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
-          else
-            echo "Release v${{ env.MOD_VERSION }} exists."
-            echo "RELEASE_EXISTS=true" >> $GITHUB_ENV
+          MOD_VERSION=$(tr -d '\r\n' < version.txt)
+          echo "version.txt: $MOD_VERSION"
+          echo "MOD_VERSION=$MOD_VERSION" >> $GITHUB_ENV
+
+      - name: Verify tag matches version.txt
+        run: |
+          EXPECTED="26-v${MOD_VERSION}"
+          if [ "${GITHUB_REF_NAME}" != "$EXPECTED" ]; then
+            echo "✗ tag 名 ${GITHUB_REF_NAME} 与 version.txt（${MOD_VERSION}）不一致，应打 ${EXPECTED}"
+            exit 1
           fi
+          echo "✓ tag 与 version.txt 一致：${EXPECTED}"
 
-      - name: Delete Release if exists
+      - name: Create Release if absent
         run: |
-          # Try to delete the release and handle errors gracefully
-          set +e
-          gh release delete v${{ env.MOD_VERSION }} -R ${{ github.repository }} -y --cleanup-tag
-          if [ $? -eq 0 ]; then
-            echo "Release v${{ env.MOD_VERSION }} deleted successfully."
+          TAG="26-v${MOD_VERSION}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG 已存在，跳过创建（可能已由 Build 工作流兜底创建）"
           else
-            echo "Failed to delete release v${{ env.MOD_VERSION }}. It might not exist or there might be another issue."
+            gh release create "$TAG" --generate-notes --verify-tag --title "$TAG"
+            echo "Release $TAG 已创建"
           fi
-
-      - name: Create Release with temp note
-        run: gh release create v${{ env.MOD_VERSION }} --generate-notes
