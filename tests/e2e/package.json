@@ -1,0 +1,14 @@
+{
+  "name": "queqiao-e2e",
+  "private": true,
+  "version": "1.0.0",
+  "description": "QueQiao 端到端验证：真实服务端 + WebSocket 客户端 + 假玩家",
+  "scripts": {
+    "test": "node e2e.js"
+  },
+  "dependencies": {
+    "minecraft-data": "^3.119.0",
+    "mineflayer": "^4.39.0",
+    "ws": "^8.18.0"
+  }
+}
