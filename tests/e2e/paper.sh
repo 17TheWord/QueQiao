@@ -74,15 +74,13 @@ port_listening() {
 detect_java() {
   [[ -n "$JAVA_BIN" ]] && { echo "$JAVA_BIN"; return; }
 
+  # CI：setup-java 已按矩阵的 java 版本设好 JAVA_HOME，直接采用
+  if [[ -n "${JAVA_HOME:-}" && -x "$JAVA_HOME/bin/java" ]]; then
+    echo "$JAVA_HOME/bin/java"; return
+  fi
+
   local cand
-  # CI：setup-java 会导出 JAVA_HOME_17_X64
-  for cand in "${JAVA_HOME_17_X64:-}/bin/java" \
-              "${JAVA_HOME:-}/bin/java"; do
-    if [[ -x "$cand" ]] && "$cand" -version 2>&1 | grep -q '"17'; then
-      echo "$cand"; return
-    fi
-  done
-  # 本地：Gradle toolchain 下载的 JDK 17
+  # 本地：Paper 1.17 需要 JDK 17，优先找 Gradle toolchain 下载的那份
   for cand in "$(dirname "$ROOT")/.jdks"/*17*/bin/java \
               "${GRADLE_USER_HOME:-$HOME/.gradle}/jdks"/*17*/bin/java \
               /c/*/Build/Gradle/jdks/*17*/bin/java.exe \

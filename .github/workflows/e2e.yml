@@ -79,9 +79,18 @@ jobs:
                   echo "跳过已知问题目标: $1/$name" >&2
                   continue
                 fi
-                # paper/folia 没有 runServer：走 paper.sh 下载官方服务端，且只支持 JDK 17
+                # paper/folia 没有 runServer：走 paper.sh 下载官方服务端。
+                # JDK 按 MC 版本定：1.20.5 起服务端要求 21，更早的用 17。
                 script="run.sh"; java="21"
-                case "$1" in paper|folia) script="paper.sh"; java="17" ;; esac
+                case "$1" in
+                  paper|folia)
+                    script="paper.sh"
+                    case "$ver" in
+                      1.2[1-9]*|1.20.[5-9]*|1.20.1[0-9]*) java="21" ;;
+                      *) java="17" ;;
+                    esac
+                    ;;
+                esac
                 ITEMS="$ITEMS{\"target\":\"$1/$name\",\"script\":\"$script\",\"java\":\"$java\"},"
               fi
             done
