@@ -34,6 +34,55 @@ function record(name, pass, detail, skip) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+/**
+ * 判定一个聊天类数据包走向哪个显示通道。
+ *
+ * 协议前后换过两次结构，三种都要认：
+ *   1.8 ~ 1.18    chat 包，position 0=聊天 1=系统 2=动作栏
+ *   1.19 ~ 1.21   system_chat 包，isActionBar 布尔
+ *   26.x          action_bar 独立包，包本身即动作栏
+ * 认不出结构时返回 'unknown'，由调用方按跳过处理，而不是判失败。
+ */
+function classifyChatPacket(name, data) {
+  const n = String(name || '').toLowerCase().replace(/[^a-z_]/g, '');
+  if (n === 'action_bar' || n === 'actionbar') return 'actionbar';
+  if (n === 'system_chat' || n === 'systemchat') {
+    if (typeof data.isActionBar === 'boolean') return data.isActionBar ? 'actionbar' : 'chat';
+    return 'unknown';
+  }
+  if (n === 'chat' || n === 'chatmessage') {
+    const pos = data.position !== undefined ? data.position : data.positionId;
+    if (pos === 2 || pos === 'game_info') return 'actionbar';
+    if (pos === 0 || pos === 1) return 'chat';
+    return 'unknown';
+  }
+  return null;
+}
+
+/**
+ * 发一条消息，检查它在客户端侧落到哪个通道。
+ * 只有「内容到达」且「通道正确」才算通过——这正是 200 覆盖不到的部分。
+ */
+async function checkChannel(ws, apiName, expect, marker, frames) {
+  const label = expect === 'actionbar' ? 'actionbar 进动作栏通道' : 'broadcast 进聊天区通道';
+  frames.length = 0;
+  const r = await api(ws, apiName, { message: { text: marker } });
+  await sleep(2000);
+
+  const hits = frames.filter((f) => f.raw.includes(marker));
+  if (!hits.length) {
+    record(label, false, `code=${r.code}，未收到含 ${marker} 的数据包`);
+    return;
+  }
+  const known = hits.filter((f) => f.ch !== 'unknown');
+  if (!known.length) {
+    record(label, true, '当前协议无法判定通道，跳过（内容已到达）', true);
+    return;
+  }
+  record(label, known.some((f) => f.ch === expect),
+    `channel=${known.map((f) => f.ch).join(',')}，期望 ${expect}`);
+}
+
 function api(ws, name, data, timeout = 10000) {
   return new Promise((resolve, reject) => {
     const echo = `t${++seq}`;
@@ -170,6 +219,19 @@ async function testEvents(ws) {
   const received = [];
   bot.on('message', (j) => received.push(j.toString()));
 
+  // 原始包监听：只看「内容对」不够，还要看「走没走对通道」。
+  // broadcast 进聊天区、actionbar 进动作栏，两者历史上共用过同一个包的不同标志位，
+  // 客户端侧不做区分的话，actionbar 会静默显示成聊天消息（历史 bug）。
+  const frames = [];
+  bot._client.on('packet', (data, meta) => {
+    if (!meta || meta.state !== 'play') return;
+    const ch = classifyChatPacket(meta.name, data || {});
+    if (!ch) return;
+    let raw = '';
+    try { raw = JSON.stringify(data); } catch { raw = String(data); }
+    frames.push({ ch, raw });
+  });
+
   try {
     await new Promise((res, rej) => {
       bot.once('spawn', res);
@@ -205,6 +267,10 @@ async function testEvents(ws) {
     record('私聊真实送达目标玩家',
       received.slice(before2).some((s) => s.includes('DELIVER-CHECK-PRIVATE')),
       `code=${rp.code}`);
+
+    // 通道校验：同一条文本走不同 api，必须落在不同显示位置
+    await checkChannel(ws, 'send_actionbar', 'actionbar', 'CHANNEL-ACTIONBAR', frames);
+    await checkChannel(ws, 'broadcast', 'chat', 'CHANNEL-CHAT', frames);
 
     bot.quit();
     await sleep(2500);
