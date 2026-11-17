@@ -136,9 +136,9 @@ public class PlatformContext extends AbstractPlatformContext<MinecraftServer, Te
     @Override
     public PlatformResult<Void> sendActionBarComponent(Text component) {
         // IF >= fabric-1.19.2
-//        sendPacket(new GameMessageS2CPacket(component, false));
+//        sendPacket(new GameMessageS2CPacket(component, true));
         // ELSE
-//        sendPacket(new GameMessageS2CPacket(component, MessageType.CHAT, UUID.randomUUID()));
+//        sendPacket(new GameMessageS2CPacket(component, MessageType.GAME_INFO, UUID.randomUUID()));
         // END IF
         return PlatformResult.success(null);
     }
